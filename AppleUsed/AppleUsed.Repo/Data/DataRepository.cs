@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using AppleUsed.Data.Entities;
+using AppleUsed.Repo.Identity;
 
 namespace AppleUsed.Repo.Data
 {
     public class DataRepository<T> : IRepository<T> where T : BaseAuditClass  
     {  
-        private readonly DataContext context;  
+        private readonly AppDbContext context;  
         private DbSet<T> entities;  
         string errorMessage = string.Empty;  
   
-        public DataRepository(DataContext context)  
+        public DataRepository(AppDbContext context)  
         {  
             this.context = context;  
             entities = context.Set<T>();  

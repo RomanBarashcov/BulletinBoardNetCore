@@ -7,6 +7,7 @@ using AppleUsed.Repo.Data;
 using AppleUsed.Repo.Identity;
 using AppleUsed.Service;
 using AppleUsed.Service.Interfaces;
+using System;
 
 namespace AppleUsed.Web
 {
@@ -15,14 +16,16 @@ namespace AppleUsed.Web
         public static void AddDbContext(this IServiceCollection serviceCollection,
             string dataConnectionString = null, string authConnectionString = null)
         {
-            serviceCollection.AddDbContext<DataContext>(options =>
-                options.UseSqlite(dataConnectionString ?? GetDataConnectionStringFromConfig()));
+            serviceCollection.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(dataConnectionString ?? GetDataConnectionStringFromConfig()));
 
-            serviceCollection.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseSqlite(authConnectionString ?? GetAuthConnectionFromConfig()));
+            serviceCollection.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
 
-            serviceCollection.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<AppIdentityDbContext>();
+            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
         }
         
         public static void AddRepository(this IServiceCollection serviceCollection)

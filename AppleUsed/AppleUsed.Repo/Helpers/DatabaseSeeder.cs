@@ -3,14 +3,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using AppleUsed.Data.Entities;
 using AppleUsed.Repo.Data;
+using AppleUsed.Repo.Identity;
 
 namespace AppleUsed.Repo.Helpers
 {
     public class DatabaseSeeder
     {
-        private readonly DataContext _dataContext;
+        private readonly AppDbContext _dataContext;
 
-        public DatabaseSeeder(DataContext dataContext)
+        public DatabaseSeeder(AppDbContext dataContext)
         {
             _dataContext = dataContext;
         }

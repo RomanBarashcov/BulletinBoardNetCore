@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using AppleUsed.Repo.Data;
+using AppleUsed.Repo.Identity;
 
 namespace AppleUsed.Repo
 {
@@ -13,17 +14,17 @@ namespace AppleUsed.Repo
     /// Please see the following URL for more information:
     /// https://docs.microsoft.com/en-us/ef/core/miscellaneous/configuring-dbcontext#using-idbcontextfactorytcontext
     /// </remarks>
-    public class DbContextFactory : IDesignTimeDbContextFactory<DataContext>
+    public class DbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
         private static string DataConnectionString => new DatabaseConfiguration().GetDataConnectionString();
 
-        public DataContext CreateDbContext(string[] args)
+        public AppDbContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
-            optionsBuilder.UseSqlite(DataConnectionString);
+            optionsBuilder.UseSqlServer(DataConnectionString);
 
-            return new DataContext(optionsBuilder.Options);
+            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }
