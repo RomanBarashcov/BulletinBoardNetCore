@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>aspnet-AppleUsed.Web-727D117F-8A93-4C18-BEAC-B62DEA978353</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="app.db" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
+
+    <PackageReference Include="ClacksMiddlware" version="2.0.2" />
+
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="OwaspHeaders.Core" version="3.3.2" />
+  
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\AppleUsed.Data\AppleUsed.Data.csproj" />
+    <ProjectReference Include="..\AppleUsed.Repo\AppleUsed.Repo.csproj" />
+    <ProjectReference Include="..\AppleUsed.Service\AppleUsed.Service.csproj" />
+  </ItemGroup>
+</Project>

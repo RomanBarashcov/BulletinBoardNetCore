@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AppleUsed.Data\AppleUsed.Data.csproj" />
+    <ProjectReference Include="..\AppleUsed.Repo\AppleUsed.Repo.csproj" />
+  </ItemGroup>
+</Project>
