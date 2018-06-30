@@ -17,9 +17,6 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AppleUsed.Data\AppleUsed.Data.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\AppleUsed.Web\appsettings.json" CopyToPublishDirectory="Always" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>

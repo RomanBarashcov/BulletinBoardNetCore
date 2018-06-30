@@ -1,6 +1,6 @@
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using AppleUsed.Service.Interfaces;
+using AppleUsed.BLL.Interfaces;
 
 namespace AppleUsed.Web.Extensions
 {

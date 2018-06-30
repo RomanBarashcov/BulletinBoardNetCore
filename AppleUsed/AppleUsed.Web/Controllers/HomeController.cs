@@ -1,18 +1,18 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using AppleUsed.Service.Interfaces;
+using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Models.ViewModels;
 
 namespace AppleUsed.Web.Controllers.Home
 {
     public class HomeController : Controller
     {
-        private readonly IBookService _bookService;
+        //private readonly IBookBLL _bookBLL;
 
-        public HomeController(IBookService bookService)
-        {
-            _bookService = bookService;
-        }
+        //public HomeController(IBookBLL bookBLL)
+        //{
+        //    _bookBLL = bookBLL;
+        //}
 
         public IActionResult Index()
         {

@@ -1,9 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AppleUsed.DAL.Entities;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace AppleUsed.Repo.Identity
+namespace AppleUsed.DAL.Identity
 {
-    // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
+        public virtual ICollection<Ad> Ads { get; set; }
+        public ApplicationUser()
+        {
+            Ads = new List<Ad>();
+        }
     }
 }

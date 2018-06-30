@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using AppleUsed.Service.Interfaces;
+using AppleUsed.BLL.Interfaces;
 
-namespace AppleUsed.Service
+namespace AppleUsed.BLL.Services
 {
     // This class is used by the application to send email for account confirmation and password reset.
     // For more details see https://go.microsoft.com/fwlink/?LinkID=532713

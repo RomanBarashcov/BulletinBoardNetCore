@@ -19,8 +19,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\AppleUsed.Data\AppleUsed.Data.csproj" />
-    <ProjectReference Include="..\AppleUsed.Repo\AppleUsed.Repo.csproj" />
-    <ProjectReference Include="..\AppleUsed.Service\AppleUsed.Service.csproj" />
+    <ProjectReference Include="..\AppleUsed.Repo\AppleUsed.DAL.csproj" />
+    <ProjectReference Include="..\AppleUsed.Service\AppleUsed.BLL.csproj" />
   </ItemGroup>
 </Project>

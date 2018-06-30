@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppleUsed.Data", "AppleUsed.Data\AppleUsed.Data.csproj", "{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppleUsed.DAL", "AppleUsed.Repo\AppleUsed.DAL.csproj", "{C5217DF9-58A1-4927-A362-E872D08DD938}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppleUsed.Repo", "AppleUsed.Repo\AppleUsed.Repo.csproj", "{C5217DF9-58A1-4927-A362-E872D08DD938}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppleUsed.Service", "AppleUsed.Service\AppleUsed.Service.csproj", "{C864A59A-7CC6-4A7A-B644-EEE589F84C03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppleUsed.BLL", "AppleUsed.Service\AppleUsed.BLL.csproj", "{C864A59A-7CC6-4A7A-B644-EEE589F84C03}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppleUsed.Web", "AppleUsed.Web\AppleUsed.Web.csproj", "{84FB7387-0A7D-4B73-B724-0C79FFB821FD}"
 EndProject
@@ -21,18 +19,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Debug|x64.Build.0 = Debug|Any CPU
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Debug|x86.Build.0 = Debug|Any CPU
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Release|x64.ActiveCfg = Release|Any CPU
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Release|x64.Build.0 = Release|Any CPU
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Release|x86.ActiveCfg = Release|Any CPU
-		{9BB9E230-0DA8-4F98-ACE6-C1F0B94157BC}.Release|x86.Build.0 = Release|Any CPU
 		{C5217DF9-58A1-4927-A362-E872D08DD938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C5217DF9-58A1-4927-A362-E872D08DD938}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5217DF9-58A1-4927-A362-E872D08DD938}.Debug|x64.ActiveCfg = Debug|Any CPU

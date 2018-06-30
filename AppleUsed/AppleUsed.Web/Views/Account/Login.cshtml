@@ -1,5 +1,5 @@
 ﻿@using System.Linq
-@using AppleUsed.Repo.Identity
+@using AppleUsed.DAL.Identity
 @using AppleUsed.Web.Models.ViewModels.AccountViewModels
 @model LoginViewModel
 @inject SignInManager<ApplicationUser> SignInManager
@@ -48,7 +48,7 @@
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
-            <h4>Use another service to log in.</h4>
+            <h4>Use another BLL to log in.</h4>
             <hr />
             @{
                 var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -56,8 +56,8 @@
                 {
                     <div>
                         <p>
-                            There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                            for details on setting up this ASP.NET application to support logging in via external services.
+                            There are no external authentication BLLs configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
+                            for details on setting up this ASP.NET application to support logging in via external BLLs.
                         </p>
                     </div>
                 }

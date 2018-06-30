@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AppleUsed.Service.Interfaces
+namespace AppleUsed.BLL.Interfaces
 {
     public interface IEmailSender
     {

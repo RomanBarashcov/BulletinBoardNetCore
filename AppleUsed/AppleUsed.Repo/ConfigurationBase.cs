@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 
-namespace AppleUsed.Repo
+namespace AppleUsed.DAL
 {
     public abstract class ConfigurationBase
     {

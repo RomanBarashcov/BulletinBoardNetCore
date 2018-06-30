@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using AppleUsed.Repo.Data;
-using AppleUsed.Repo.Identity;
+using AppleUsed.DAL.Identity;
 
-namespace AppleUsed.Repo
+namespace AppleUsed.DAL
 {
     /// <summary>
     /// This factory is provided so that the EF Core tools can build a full context

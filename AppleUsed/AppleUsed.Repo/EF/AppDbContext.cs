@@ -1,11 +1,11 @@
-﻿using AppleUsed.Data.Entities;
-using AppleUsed.Repo.Extentions;
+﻿using AppleUsed.DAL.Entities;
+using AppleUsed.DAL.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AppleUsed.Repo.Identity
+namespace AppleUsed.DAL.Identity
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -25,13 +25,21 @@ namespace AppleUsed.Repo.Identity
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
            CancellationToken cancellationToken = default(CancellationToken))
         {
-            ChangeTracker.ApplyAuditInformation();
-
             return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
-        public DbSet<Book> Books { get; set; }
-        public DbSet<Series> Series { get; set; }
-        public DbSet<BookSeries> BookSeries { get; set; }
+        public DbSet<Ad> Ads { get; set; }
+        public DbSet<AdPhotos> AdPhotos { get; set; }
+        public DbSet<Characteristics> Characteristics { get; set; }
+        public DbSet<ProductColors> ProductColors { get; set; }
+        public DbSet<ProductTypes> ProductTypes { get; set; }
+        public DbSet<ProductModels> ProductModels { get; set; }
+        public DbSet<ProductStates> ProductStates { get; set; }
+        public DbSet<ProductMemories> ProductMemories { get; set; }
+        public DbSet<CityArea> CityAreas { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
+        public DbSet<Services> Services { get; set; }
+
     }
 }
