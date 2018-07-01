@@ -10,6 +10,7 @@ namespace AppleUsed.DAL.Entities
         public string AdPhotoName { get; set; }
         public byte[] Photo { get; set; }
 
-        public virtual Ad Ad { get; set; }
+        public string AdId { get; set; }
+        public Ad Ad { get; set; }
     }
 }

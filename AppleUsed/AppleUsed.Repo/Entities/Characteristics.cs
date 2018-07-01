@@ -7,11 +7,12 @@ namespace AppleUsed.DAL.Entities
     public class Characteristics
     {
         public string CharacteristicsId { get; set; }
-        public virtual ProductTypes ProductTypes { get; set; }
-        public virtual ProductModels ProductModels { get; set; }
-        public virtual ProductMemories ProductMemories { get; set; }
-        public virtual ProductColors ProductColors { get; set; }
-        public virtual ProductStates ProductStates { get; set; }
-        public virtual Ad Ad { get; set; }
+        public ProductTypes ProductTypes { get; set; }
+        public ProductModels ProductModels { get; set; }
+        public ProductMemories ProductMemories { get; set; }
+        public ProductColors ProductColors { get; set; }
+        public ProductStates ProductStates { get; set; }
+
+        public Ad Ad { get; set; }
     }
 }

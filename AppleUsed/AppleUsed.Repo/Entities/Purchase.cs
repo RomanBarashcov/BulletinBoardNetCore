@@ -16,6 +16,6 @@ namespace AppleUsed.DAL.Entities
         public DateTime EndDateActiveBLL { get; set; }
         public bool IsPayed { get; set; }
 
-        public virtual Ad Ad { get; set; }
+        public Ad Ad { get; set; }
     }
 }

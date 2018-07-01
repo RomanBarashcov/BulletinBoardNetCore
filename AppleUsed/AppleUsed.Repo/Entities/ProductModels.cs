@@ -8,5 +8,8 @@ namespace AppleUsed.DAL.Entities
     {
         public string ProductModelsId { get; set; }
         public string Name { get; set; }
+
+        public string ProdyctTypesId { get; set; }
+        public ProductTypes ProductTypes { get; set; }
     }
 }

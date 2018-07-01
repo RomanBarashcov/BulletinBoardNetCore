@@ -9,10 +9,6 @@ namespace AppleUsed.DAL.Entities
         public string ProductTypesId { get; set; }
         public string Name { get; set; }
 
-        public virtual IEnumerable<ProductModels> ProductModels { get; set; }
-        public ProductTypes()
-        {
-            ProductModels = new List<ProductModels>();
-        }
+        public List<ProductModels> ProductModels { get; set; }
     }
 }

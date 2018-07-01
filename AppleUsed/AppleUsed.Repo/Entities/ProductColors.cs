@@ -9,6 +9,7 @@ namespace AppleUsed.DAL.Entities
         public string ProductColorsId { get; set; }
         public string Name { get; set; }
 
-        public virtual ProductTypes ProductType { get; set; }
+        public string ProductTypeId { get; set; }
+        public ProductTypes ProductType { get; set; }
     }
 }

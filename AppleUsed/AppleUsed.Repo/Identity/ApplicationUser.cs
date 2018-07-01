@@ -8,10 +8,6 @@ namespace AppleUsed.DAL.Identity
 {
     public class ApplicationUser : IdentityUser
     {
-        public virtual ICollection<Ad> Ads { get; set; }
-        public ApplicationUser()
-        {
-            Ads = new List<Ad>();
-        }
+        public List<Ad> Ads { get; set; }
     }
 }

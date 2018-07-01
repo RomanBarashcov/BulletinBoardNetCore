@@ -9,6 +9,7 @@ namespace AppleUsed.DAL.Entities
         public string CityId { get; set; }
         public string Name { get; set; }
 
-        public virtual CityArea CityArea { get; set; }
+        public string CityAreaId { get; set; }
+        public CityArea CityArea { get; set; }
     }
 }
