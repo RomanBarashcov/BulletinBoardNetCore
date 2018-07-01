@@ -9,6 +9,7 @@ namespace AppleUsed.DAL.Entities
         public string AdViewsId { get; set; }
         public int SumViews { get; set; }
 
+        public string AdId { get; set; }
         public Ad Ad { get; set; }
     }
 }

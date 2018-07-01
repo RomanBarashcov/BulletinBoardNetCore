@@ -9,18 +9,6 @@ namespace AppleUsed.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AdViews",
-                columns: table => new
-                {
-                    AdViewsId = table.Column<string>(nullable: false),
-                    SumViews = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AdViews", x => x.AdViewsId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -38,21 +26,21 @@ namespace AppleUsed.DAL.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
                     Id = table.Column<string>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: true),
                     SecurityStamp = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    PhoneNumber = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -287,25 +275,71 @@ namespace AppleUsed.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Purchases",
+                name: "Ads",
                 columns: table => new
                 {
-                    PurchaseId = table.Column<string>(nullable: false),
-                    ServicesId = table.Column<string>(nullable: true),
-                    TotalCost = table.Column<decimal>(nullable: false),
-                    DateOfPayment = table.Column<DateTime>(nullable: false),
-                    StartDateActiveBLL = table.Column<DateTime>(nullable: false),
-                    EndDateActiveBLL = table.Column<DateTime>(nullable: false),
-                    IsPayed = table.Column<bool>(nullable: false)
+                    AdId = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Price = table.Column<decimal>(nullable: false),
+                    DateCreated = table.Column<DateTime>(nullable: false),
+                    DateUpdated = table.Column<DateTime>(nullable: false),
+                    CityId = table.Column<string>(nullable: true),
+                    ApplicationUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Purchases", x => x.PurchaseId);
+                    table.PrimaryKey("PK_Ads", x => x.AdId);
                     table.ForeignKey(
-                        name: "FK_Purchases_Services_ServicesId",
-                        column: x => x.ServicesId,
-                        principalTable: "Services",
-                        principalColumn: "ServicesId",
+                        name: "FK_Ads_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Ads_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "CityId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdPhotos",
+                columns: table => new
+                {
+                    AdPhotosId = table.Column<string>(nullable: false),
+                    AdPhotoName = table.Column<string>(nullable: true),
+                    Photo = table.Column<byte[]>(nullable: true),
+                    AdId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdPhotos", x => x.AdPhotosId);
+                    table.ForeignKey(
+                        name: "FK_AdPhotos_Ads_AdId",
+                        column: x => x.AdId,
+                        principalTable: "Ads",
+                        principalColumn: "AdId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdViews",
+                columns: table => new
+                {
+                    AdViewsId = table.Column<string>(nullable: false),
+                    SumViews = table.Column<int>(nullable: false),
+                    AdId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdViews", x => x.AdViewsId);
+                    table.ForeignKey(
+                        name: "FK_AdViews_Ads_AdId",
+                        column: x => x.AdId,
+                        principalTable: "Ads",
+                        principalColumn: "AdId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -318,11 +352,18 @@ namespace AppleUsed.DAL.Migrations
                     ProductModelsId = table.Column<string>(nullable: true),
                     ProductMemoriesId = table.Column<string>(nullable: true),
                     ProductColorsId = table.Column<string>(nullable: true),
-                    ProductStatesId = table.Column<string>(nullable: true)
+                    ProductStatesId = table.Column<string>(nullable: true),
+                    AdId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Characteristics", x => x.CharacteristicsId);
+                    table.ForeignKey(
+                        name: "FK_Characteristics_Ads_AdId",
+                        column: x => x.AdId,
+                        principalTable: "Ads",
+                        principalColumn: "AdId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Characteristics_ProductColors_ProductColorsId",
                         column: x => x.ProductColorsId,
@@ -356,73 +397,32 @@ namespace AppleUsed.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ads",
+                name: "Purchases",
                 columns: table => new
                 {
-                    AdId = table.Column<string>(nullable: false),
-                    Title = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    Price = table.Column<decimal>(nullable: false),
-                    DateCreated = table.Column<DateTime>(nullable: false),
-                    DateUpdated = table.Column<DateTime>(nullable: false),
-                    CityId = table.Column<string>(nullable: true),
-                    AdViewsId = table.Column<string>(nullable: true),
-                    CharacteristicsId = table.Column<string>(nullable: true),
-                    PurchasedId = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ads", x => x.AdId);
-                    table.ForeignKey(
-                        name: "FK_Ads_AdViews_AdViewsId",
-                        column: x => x.AdViewsId,
-                        principalTable: "AdViews",
-                        principalColumn: "AdViewsId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Ads_Characteristics_CharacteristicsId",
-                        column: x => x.CharacteristicsId,
-                        principalTable: "Characteristics",
-                        principalColumn: "CharacteristicsId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Ads_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "CityId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Ads_Purchases_PurchasedId",
-                        column: x => x.PurchasedId,
-                        principalTable: "Purchases",
-                        principalColumn: "PurchaseId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Ads_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AdPhotos",
-                columns: table => new
-                {
-                    AdPhotosId = table.Column<string>(nullable: false),
-                    AdPhotoName = table.Column<string>(nullable: true),
-                    Photo = table.Column<byte[]>(nullable: true),
+                    PurchaseId = table.Column<string>(nullable: false),
+                    ServicesId = table.Column<string>(nullable: true),
+                    TotalCost = table.Column<decimal>(nullable: false),
+                    DateOfPayment = table.Column<DateTime>(nullable: false),
+                    StartDateActiveBLL = table.Column<DateTime>(nullable: false),
+                    EndDateActiveBLL = table.Column<DateTime>(nullable: false),
+                    IsPayed = table.Column<bool>(nullable: false),
                     AdId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AdPhotos", x => x.AdPhotosId);
+                    table.PrimaryKey("PK_Purchases", x => x.PurchaseId);
                     table.ForeignKey(
-                        name: "FK_AdPhotos_Ads_AdId",
+                        name: "FK_Purchases_Ads_AdId",
                         column: x => x.AdId,
                         principalTable: "Ads",
                         principalColumn: "AdId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Purchases_Services_ServicesId",
+                        column: x => x.ServicesId,
+                        principalTable: "Services",
+                        principalColumn: "ServicesId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -432,18 +432,9 @@ namespace AppleUsed.DAL.Migrations
                 column: "AdId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ads_AdViewsId",
+                name: "IX_Ads_ApplicationUserId",
                 table: "Ads",
-                column: "AdViewsId",
-                unique: true,
-                filter: "[AdViewsId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ads_CharacteristicsId",
-                table: "Ads",
-                column: "CharacteristicsId",
-                unique: true,
-                filter: "[CharacteristicsId] IS NOT NULL");
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ads_CityId",
@@ -451,16 +442,11 @@ namespace AppleUsed.DAL.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ads_PurchasedId",
-                table: "Ads",
-                column: "PurchasedId",
+                name: "IX_AdViews_AdId",
+                table: "AdViews",
+                column: "AdId",
                 unique: true,
-                filter: "[PurchasedId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ads_UserId",
-                table: "Ads",
-                column: "UserId");
+                filter: "[AdId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -500,6 +486,13 @@ namespace AppleUsed.DAL.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Characteristics_AdId",
+                table: "Characteristics",
+                column: "AdId",
+                unique: true,
+                filter: "[AdId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Characteristics_ProductColorsId",
@@ -542,6 +535,13 @@ namespace AppleUsed.DAL.Migrations
                 column: "ProductTypesId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Purchases_AdId",
+                table: "Purchases",
+                column: "AdId",
+                unique: true,
+                filter: "[AdId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Purchases_ServicesId",
                 table: "Purchases",
                 column: "ServicesId");
@@ -551,6 +551,9 @@ namespace AppleUsed.DAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AdPhotos");
+
+            migrationBuilder.DropTable(
+                name: "AdViews");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -568,25 +571,13 @@ namespace AppleUsed.DAL.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Ads");
-
-            migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "AdViews");
-
-            migrationBuilder.DropTable(
                 name: "Characteristics");
-
-            migrationBuilder.DropTable(
-                name: "Cities");
 
             migrationBuilder.DropTable(
                 name: "Purchases");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "ProductColors");
@@ -601,13 +592,22 @@ namespace AppleUsed.DAL.Migrations
                 name: "ProductStates");
 
             migrationBuilder.DropTable(
-                name: "CityAreas");
+                name: "Ads");
 
             migrationBuilder.DropTable(
                 name: "Services");
 
             migrationBuilder.DropTable(
                 name: "ProductTypes");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "CityAreas");
         }
     }
 }

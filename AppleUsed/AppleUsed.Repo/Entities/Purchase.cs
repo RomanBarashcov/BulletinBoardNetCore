@@ -8,7 +8,7 @@ namespace AppleUsed.DAL.Entities
     {
         public string PurchaseId { get; set; }
 
-        public virtual Services Services { get; set; }
+        public Services Services { get; set; }
 
         public decimal TotalCost { get; set; }
         public DateTime DateOfPayment { get; set; }
@@ -16,6 +16,7 @@ namespace AppleUsed.DAL.Entities
         public DateTime EndDateActiveBLL { get; set; }
         public bool IsPayed { get; set; }
 
+        public string AdId { get; set; }
         public Ad Ad { get; set; }
     }
 }

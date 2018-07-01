@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppleUsed.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180701071911_InitMigration")]
+    [Migration("20180701072853_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,9 +26,7 @@ namespace AppleUsed.DAL.Migrations
                     b.Property<string>("AdId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AdViewsId");
-
-                    b.Property<string>("CharacteristicsId");
+                    b.Property<string>("ApplicationUserId");
 
                     b.Property<string>("CityId");
 
@@ -40,29 +38,13 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<decimal>("Price");
 
-                    b.Property<string>("PurchasedId");
-
                     b.Property<string>("Title");
-
-                    b.Property<string>("UserId");
 
                     b.HasKey("AdId");
 
-                    b.HasIndex("AdViewsId")
-                        .IsUnique()
-                        .HasFilter("[AdViewsId] IS NOT NULL");
-
-                    b.HasIndex("CharacteristicsId")
-                        .IsUnique()
-                        .HasFilter("[CharacteristicsId] IS NOT NULL");
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("CityId");
-
-                    b.HasIndex("PurchasedId")
-                        .IsUnique()
-                        .HasFilter("[PurchasedId] IS NOT NULL");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Ads");
                 });
@@ -90,9 +72,15 @@ namespace AppleUsed.DAL.Migrations
                     b.Property<string>("AdViewsId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AdId");
+
                     b.Property<int>("SumViews");
 
                     b.HasKey("AdViewsId");
+
+                    b.HasIndex("AdId")
+                        .IsUnique()
+                        .HasFilter("[AdId] IS NOT NULL");
 
                     b.ToTable("AdViews");
                 });
@@ -101,6 +89,8 @@ namespace AppleUsed.DAL.Migrations
                 {
                     b.Property<string>("CharacteristicsId")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AdId");
 
                     b.Property<string>("ProductColorsId");
 
@@ -113,6 +103,10 @@ namespace AppleUsed.DAL.Migrations
                     b.Property<string>("ProductTypesId");
 
                     b.HasKey("CharacteristicsId");
+
+                    b.HasIndex("AdId")
+                        .IsUnique()
+                        .HasFilter("[AdId] IS NOT NULL");
 
                     b.HasIndex("ProductColorsId");
 
@@ -230,6 +224,8 @@ namespace AppleUsed.DAL.Migrations
                     b.Property<string>("PurchaseId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AdId");
+
                     b.Property<DateTime>("DateOfPayment");
 
                     b.Property<DateTime>("EndDateActiveBLL");
@@ -243,6 +239,10 @@ namespace AppleUsed.DAL.Migrations
                     b.Property<decimal>("TotalCost");
 
                     b.HasKey("PurchaseId");
+
+                    b.HasIndex("AdId")
+                        .IsUnique()
+                        .HasFilter("[AdId] IS NOT NULL");
 
                     b.HasIndex("ServicesId");
 
@@ -430,25 +430,13 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.Ad", b =>
                 {
-                    b.HasOne("AppleUsed.DAL.Entities.AdViews", "AdViews")
-                        .WithOne("Ad")
-                        .HasForeignKey("AppleUsed.DAL.Entities.Ad", "AdViewsId");
-
-                    b.HasOne("AppleUsed.DAL.Entities.Characteristics", "Characteristics")
-                        .WithOne("Ad")
-                        .HasForeignKey("AppleUsed.DAL.Entities.Ad", "CharacteristicsId");
+                    b.HasOne("AppleUsed.DAL.Identity.ApplicationUser", "ApplicationUser")
+                        .WithMany("Ads")
+                        .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("AppleUsed.DAL.Entities.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId");
-
-                    b.HasOne("AppleUsed.DAL.Entities.Purchase", "Purchased")
-                        .WithOne("Ad")
-                        .HasForeignKey("AppleUsed.DAL.Entities.Ad", "PurchasedId");
-
-                    b.HasOne("AppleUsed.DAL.Identity.ApplicationUser", "User")
-                        .WithMany("Ads")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.AdPhotos", b =>
@@ -458,8 +446,19 @@ namespace AppleUsed.DAL.Migrations
                         .HasForeignKey("AdId");
                 });
 
+            modelBuilder.Entity("AppleUsed.DAL.Entities.AdViews", b =>
+                {
+                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
+                        .WithOne("AdViews")
+                        .HasForeignKey("AppleUsed.DAL.Entities.AdViews", "AdId");
+                });
+
             modelBuilder.Entity("AppleUsed.DAL.Entities.Characteristics", b =>
                 {
+                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
+                        .WithOne("Characteristics")
+                        .HasForeignKey("AppleUsed.DAL.Entities.Characteristics", "AdId");
+
                     b.HasOne("AppleUsed.DAL.Entities.ProductColors", "ProductColors")
                         .WithMany()
                         .HasForeignKey("ProductColorsId");
@@ -504,6 +503,10 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.Purchase", b =>
                 {
+                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
+                        .WithOne("Purchased")
+                        .HasForeignKey("AppleUsed.DAL.Entities.Purchase", "AdId");
+
                     b.HasOne("AppleUsed.DAL.Entities.Services", "Services")
                         .WithMany()
                         .HasForeignKey("ServicesId");

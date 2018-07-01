@@ -15,18 +15,12 @@ namespace AppleUsed.DAL.Entities
         public DateTime DateUpdated { get; set; }
 
         public City City { get; set; }
-
         public List<AdPhotos> Photos { get; set; }
-
-        public string AdViewsId { get; set; }
         public AdViews AdViews { get; set; }
-
-        public string CharacteristicsId { get; set; }
         public Characteristics Characteristics { get; set; }
-
-        public string PurchasedId { get; set; }
         public Purchase Purchased { get; set; }
 
-        public ApplicationUser User { get; set; }
+        public string ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

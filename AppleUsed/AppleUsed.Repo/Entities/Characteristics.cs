@@ -13,6 +13,7 @@ namespace AppleUsed.DAL.Entities
         public ProductColors ProductColors { get; set; }
         public ProductStates ProductStates { get; set; }
 
+        public string AdId { get; set; }
         public Ad Ad { get; set; }
     }
 }
