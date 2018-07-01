@@ -6,7 +6,7 @@ namespace AppleUsed.DAL.Entities
 {
     public class ProductMemories
     {
-        public string ProductMemoriesId { get; set; }
+        public int ProductMemoriesId { get; set; }
         public string Name { get; set; }
     }
 }

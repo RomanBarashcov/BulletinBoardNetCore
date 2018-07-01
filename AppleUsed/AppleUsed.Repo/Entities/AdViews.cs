@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace AppleUsed.DAL.Entities
 {
     public class AdViews
     {
-        public string AdViewsId { get; set; }
+        public int AdViewsId { get; set; }
         public int SumViews { get; set; }
 
-        public string AdId { get; set; }
-        public Ad Ad { get; set; }
+        [ForeignKey("AdId")]
+        public virtual Ad Ads { get; set; }
     }
 }

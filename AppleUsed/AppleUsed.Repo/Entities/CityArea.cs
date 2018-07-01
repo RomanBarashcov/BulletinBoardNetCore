@@ -6,9 +6,13 @@ namespace AppleUsed.DAL.Entities
 {
     public class CityArea
     {
-        public string CityAreaId { get; set; }
+        public int CityAreaId { get; set; }
         public string Name { get; set; }
 
-        public List<City> Cities { get; set; }
+        public virtual ICollection<City> Cities { get; set; }
+        public CityArea()
+        {
+            Cities = new List<City>();
+        }
     }
 }

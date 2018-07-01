@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppleUsed.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180701072853_InitMigration")]
+    [Migration("20180701200449_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,12 +23,17 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.Ad", b =>
                 {
-                    b.Property<string>("AdId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("AdId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AdViewsId");
 
                     b.Property<string>("ApplicationUserId");
 
-                    b.Property<string>("CityId");
+                    b.Property<int?>("CharacteristicsId");
+
+                    b.Property<int?>("CityId");
 
                     b.Property<DateTime>("DateCreated");
 
@@ -38,23 +43,36 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<decimal>("Price");
 
+                    b.Property<int?>("PurchasedId");
+
                     b.Property<string>("Title");
 
                     b.HasKey("AdId");
 
+                    b.HasIndex("AdViewsId")
+                        .IsUnique()
+                        .HasFilter("[AdViewsId] IS NOT NULL");
+
                     b.HasIndex("ApplicationUserId");
 
+                    b.HasIndex("CharacteristicsId")
+                        .IsUnique()
+                        .HasFilter("[CharacteristicsId] IS NOT NULL");
+
                     b.HasIndex("CityId");
+
+                    b.HasIndex("PurchasedId");
 
                     b.ToTable("Ads");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.AdPhotos", b =>
                 {
-                    b.Property<string>("AdPhotosId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("AdPhotosId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdId");
+                    b.Property<int?>("AdId");
 
                     b.Property<string>("AdPhotoName");
 
@@ -69,44 +87,42 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.AdViews", b =>
                 {
-                    b.Property<string>("AdViewsId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("AdViewsId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdId");
+                    b.Property<int?>("AdId");
 
                     b.Property<int>("SumViews");
 
                     b.HasKey("AdViewsId");
 
-                    b.HasIndex("AdId")
-                        .IsUnique()
-                        .HasFilter("[AdId] IS NOT NULL");
+                    b.HasIndex("AdId");
 
                     b.ToTable("AdViews");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.Characteristics", b =>
                 {
-                    b.Property<string>("CharacteristicsId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("CharacteristicsId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdId");
+                    b.Property<int?>("AdId");
 
-                    b.Property<string>("ProductColorsId");
+                    b.Property<int?>("ProductColorsId");
 
-                    b.Property<string>("ProductMemoriesId");
+                    b.Property<int?>("ProductMemoriesId");
 
-                    b.Property<string>("ProductModelsId");
+                    b.Property<int?>("ProductModelsId");
 
-                    b.Property<string>("ProductStatesId");
+                    b.Property<int?>("ProductStatesId");
 
-                    b.Property<string>("ProductTypesId");
+                    b.Property<int?>("ProductTypesId");
 
                     b.HasKey("CharacteristicsId");
 
-                    b.HasIndex("AdId")
-                        .IsUnique()
-                        .HasFilter("[AdId] IS NOT NULL");
+                    b.HasIndex("AdId");
 
                     b.HasIndex("ProductColorsId");
 
@@ -123,10 +139,11 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.City", b =>
                 {
-                    b.Property<string>("CityId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("CityId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CityAreaId");
+                    b.Property<int?>("CityAreaId");
 
                     b.Property<string>("Name");
 
@@ -139,8 +156,9 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.CityArea", b =>
                 {
-                    b.Property<string>("CityAreaId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("CityAreaId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name");
 
@@ -151,12 +169,13 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.ProductColors", b =>
                 {
-                    b.Property<string>("ProductColorsId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("ProductColorsId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("ProductTypeId");
+                    b.Property<int?>("ProductTypeId");
 
                     b.HasKey("ProductColorsId");
 
@@ -167,8 +186,9 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.ProductMemories", b =>
                 {
-                    b.Property<string>("ProductMemoriesId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("ProductMemoriesId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name");
 
@@ -179,14 +199,13 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.ProductModels", b =>
                 {
-                    b.Property<string>("ProductModelsId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("ProductModelsId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("ProductTypesId");
-
-                    b.Property<string>("ProdyctTypesId");
+                    b.Property<int?>("ProductTypesId");
 
                     b.HasKey("ProductModelsId");
 
@@ -197,8 +216,9 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.ProductStates", b =>
                 {
-                    b.Property<string>("ProductStatesId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("ProductStatesId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name");
 
@@ -209,8 +229,9 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.ProductTypes", b =>
                 {
-                    b.Property<string>("ProductTypesId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("ProductTypesId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name");
 
@@ -221,10 +242,11 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.Purchase", b =>
                 {
-                    b.Property<string>("PurchaseId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("PurchaseId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AdId");
+                    b.Property<int?>("AdId");
 
                     b.Property<DateTime>("DateOfPayment");
 
@@ -232,7 +254,7 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<bool>("IsPayed");
 
-                    b.Property<string>("ServicesId");
+                    b.Property<int?>("ServicesId");
 
                     b.Property<DateTime>("StartDateActiveBLL");
 
@@ -240,9 +262,7 @@ namespace AppleUsed.DAL.Migrations
 
                     b.HasKey("PurchaseId");
 
-                    b.HasIndex("AdId")
-                        .IsUnique()
-                        .HasFilter("[AdId] IS NOT NULL");
+                    b.HasIndex("AdId");
 
                     b.HasIndex("ServicesId");
 
@@ -251,8 +271,9 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.Services", b =>
                 {
-                    b.Property<string>("ServicesId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("ServicesId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Cost");
 
@@ -430,34 +451,46 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.Ad", b =>
                 {
+                    b.HasOne("AppleUsed.DAL.Entities.AdViews", "AdViews")
+                        .WithOne()
+                        .HasForeignKey("AppleUsed.DAL.Entities.Ad", "AdViewsId");
+
                     b.HasOne("AppleUsed.DAL.Identity.ApplicationUser", "ApplicationUser")
                         .WithMany("Ads")
                         .HasForeignKey("ApplicationUserId");
 
+                    b.HasOne("AppleUsed.DAL.Entities.Characteristics", "Characteristics")
+                        .WithOne()
+                        .HasForeignKey("AppleUsed.DAL.Entities.Ad", "CharacteristicsId");
+
                     b.HasOne("AppleUsed.DAL.Entities.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId");
+
+                    b.HasOne("AppleUsed.DAL.Entities.Purchase", "Purchased")
+                        .WithMany()
+                        .HasForeignKey("PurchasedId");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.AdPhotos", b =>
                 {
-                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
+                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ads")
                         .WithMany("Photos")
                         .HasForeignKey("AdId");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.AdViews", b =>
                 {
-                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
-                        .WithOne("AdViews")
-                        .HasForeignKey("AppleUsed.DAL.Entities.AdViews", "AdId");
+                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ads")
+                        .WithMany()
+                        .HasForeignKey("AdId");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.Characteristics", b =>
                 {
-                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
-                        .WithOne("Characteristics")
-                        .HasForeignKey("AppleUsed.DAL.Entities.Characteristics", "AdId");
+                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ads")
+                        .WithMany()
+                        .HasForeignKey("AdId");
 
                     b.HasOne("AppleUsed.DAL.Entities.ProductColors", "ProductColors")
                         .WithMany()
@@ -503,9 +536,9 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.Purchase", b =>
                 {
-                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
-                        .WithOne("Purchased")
-                        .HasForeignKey("AppleUsed.DAL.Entities.Purchase", "AdId");
+                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ads")
+                        .WithMany()
+                        .HasForeignKey("AdId");
 
                     b.HasOne("AppleUsed.DAL.Entities.Services", "Services")
                         .WithMany()
