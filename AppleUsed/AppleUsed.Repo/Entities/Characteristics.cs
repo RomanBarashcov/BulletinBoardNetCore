@@ -25,6 +25,6 @@ namespace AppleUsed.DAL.Entities
         public virtual ProductStates ProductStates { get; set; }
 
         [ForeignKey("AdId")]
-        public virtual Ad Ads { get; set; }
+        public virtual Ad Ad { get; set; }
     }
 }

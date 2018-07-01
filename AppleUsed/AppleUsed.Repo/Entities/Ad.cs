@@ -9,7 +9,6 @@ namespace AppleUsed.DAL.Entities
 {
     public class Ad
     {
-        [Key]
         public int AdId { get; set; }
 
         public string Title { get; set; }
@@ -20,6 +19,7 @@ namespace AppleUsed.DAL.Entities
 
         [ForeignKey("CityId")]
         public virtual City City { get; set; }
+
         public virtual ICollection<AdPhotos> Photos { get; set; }
 
         [ForeignKey("AdViewsId")]

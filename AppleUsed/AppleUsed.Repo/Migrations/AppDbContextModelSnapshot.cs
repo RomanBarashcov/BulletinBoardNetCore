@@ -106,7 +106,7 @@ namespace AppleUsed.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AdId");
+                    b.Property<int>("AdId");
 
                     b.Property<int?>("ProductColorsId");
 
@@ -119,8 +119,6 @@ namespace AppleUsed.DAL.Migrations
                     b.Property<int?>("ProductTypesId");
 
                     b.HasKey("CharacteristicsId");
-
-                    b.HasIndex("AdId");
 
                     b.HasIndex("ProductColorsId");
 
@@ -458,7 +456,7 @@ namespace AppleUsed.DAL.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("AppleUsed.DAL.Entities.Characteristics", "Characteristics")
-                        .WithOne()
+                        .WithOne("Ad")
                         .HasForeignKey("AppleUsed.DAL.Entities.Ad", "CharacteristicsId");
 
                     b.HasOne("AppleUsed.DAL.Entities.City", "City")
@@ -486,10 +484,6 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.Characteristics", b =>
                 {
-                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ads")
-                        .WithMany()
-                        .HasForeignKey("AdId");
-
                     b.HasOne("AppleUsed.DAL.Entities.ProductColors", "ProductColors")
                         .WithMany()
                         .HasForeignKey("ProductColorsId");

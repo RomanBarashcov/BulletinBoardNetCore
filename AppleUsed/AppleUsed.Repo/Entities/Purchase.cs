@@ -19,6 +19,6 @@ namespace AppleUsed.DAL.Entities
         public bool IsPayed { get; set; }
 
         [ForeignKey("AdId")]
-        public virtual Ad Ads { get; set; }
+        public virtual Ad Ad { get; set; }
     }
 }
