@@ -32,7 +32,7 @@ namespace AppleUsed.Web
             services.AddDbContext();
             //services.AddRepository();
             services.AddTransientServices();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1); ;
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1); 
             services.AddFeatureFolders();
         }
 

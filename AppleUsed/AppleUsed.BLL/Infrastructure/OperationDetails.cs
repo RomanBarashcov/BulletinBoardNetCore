@@ -4,9 +4,9 @@ using System.Text;
 
 namespace AppleUsed.BLL.Infrastructure
 {
-    public class OperationDetails
+    public class OperationDetails<T>
     {
-        public OperationDetails(bool succedeed, string message, string prop)
+        public OperationDetails(bool succedeed, string message, T prop)
         {
             Succedeed = succedeed;
             Message = message;
@@ -15,6 +15,6 @@ namespace AppleUsed.BLL.Infrastructure
 
         public bool Succedeed { get; private set; }
         public string Message { get; private set; }
-        public string Property { get; private set; }
+        public T Property { get; private set; }
     }
 }

@@ -12,13 +12,15 @@ namespace AppleUsed.DAL.Entities
         [ForeignKey("ServicesId")]
         public virtual Services Services { get; set; }
 
-        public decimal TotalCost { get; set; }
-        public DateTime DateOfPayment { get; set; }
-        public DateTime StartDateActiveBLL { get; set; }
-        public DateTime EndDateActiveBLL { get; set; }
-        public bool IsPayed { get; set; }
-
         [ForeignKey("AdId")]
         public virtual Ad Ad { get; set; }
+
+        public decimal TotalCost { get; set; }
+        public DateTime DateOfPayment { get; set; }
+        public DateTime StartDateService { get; set; }
+        public DateTime EndDateService { get; set; }
+        public bool IsPayed { get; set; }
+
+        
     }
 }

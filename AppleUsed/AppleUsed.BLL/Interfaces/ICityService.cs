@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AppleUsed.BLL.DTO
+namespace AppleUsed.BLL.Interfaces
 {
-    class Class1
+    public interface ICityService
     {
     }
 }

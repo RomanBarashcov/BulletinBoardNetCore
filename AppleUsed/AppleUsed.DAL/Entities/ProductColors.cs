@@ -9,8 +9,5 @@ namespace AppleUsed.DAL.Entities
     {
         public int ProductColorsId { get; set; }
         public string Name { get; set; }
-
-        [ForeignKey("ProductTypeId")]
-        public virtual ProductTypes ProductType { get; set; }
     }
 }

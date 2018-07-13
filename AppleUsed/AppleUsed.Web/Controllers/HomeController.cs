@@ -7,12 +7,12 @@ namespace AppleUsed.Web.Controllers.Home
 {
     public class HomeController : Controller
     {
-        //private readonly IBookBLL _bookBLL;
+        private readonly ISeedService _seedService;
 
-        //public HomeController(IBookBLL bookBLL)
-        //{
-        //    _bookBLL = bookBLL;
-        //}
+        public HomeController(ISeedService seedService)
+        {
+            _seedService = seedService;
+        }
 
         public IActionResult Index()
         {

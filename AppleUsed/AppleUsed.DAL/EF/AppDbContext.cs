@@ -1,4 +1,5 @@
-﻿using AppleUsed.DAL.Entities;
+﻿using AppleUsed.DAL.EF;
+using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

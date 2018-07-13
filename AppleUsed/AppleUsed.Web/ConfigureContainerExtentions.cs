@@ -12,7 +12,7 @@ using System;
 namespace AppleUsed.Web
 {
     public static class ConfigureContainerExtensions
-    {
+    { 
         public static void AddDbContext(this IServiceCollection serviceCollection,
             string dataConnectionString = null, string authConnectionString = null)
         {
@@ -35,7 +35,11 @@ namespace AppleUsed.Web
 
         public static void AddTransientServices(this IServiceCollection serviceCollection)
         {
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseSqlServer(GetDataConnectionStringFromConfig());
+
             serviceCollection.AddTransient<IEmailSender, EmailSender>();
+            serviceCollection.AddTransient<ISeedService>(s => new SeedService(new AppDbContext(optionsBuilder.Options)));
         }
 
         /// <summary>

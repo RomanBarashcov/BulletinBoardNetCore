@@ -61,6 +61,19 @@ namespace AppleUsed.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductColors",
+                columns: table => new
+                {
+                    ProductColorsId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductColors", x => x.ProductColorsId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductMemories",
                 columns: table => new
                 {
@@ -242,26 +255,6 @@ namespace AppleUsed.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductColors",
-                columns: table => new
-                {
-                    ProductColorsId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
-                    ProductTypeId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductColors", x => x.ProductColorsId);
-                    table.ForeignKey(
-                        name: "FK_ProductColors_ProductTypes_ProductTypeId",
-                        column: x => x.ProductTypeId,
-                        principalTable: "ProductTypes",
-                        principalColumn: "ProductTypesId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProductModels",
                 columns: table => new
                 {
@@ -282,6 +275,35 @@ namespace AppleUsed.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AdPhotos",
+                columns: table => new
+                {
+                    AdPhotosId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AdPhotoName = table.Column<string>(nullable: true),
+                    Photo = table.Column<byte[]>(nullable: true),
+                    AdId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdPhotos", x => x.AdPhotosId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdViews",
+                columns: table => new
+                {
+                    AdViewsId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    SumViews = table.Column<int>(nullable: false),
+                    AdId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdViews", x => x.AdViewsId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Characteristics",
                 columns: table => new
                 {
@@ -292,7 +314,7 @@ namespace AppleUsed.DAL.Migrations
                     ProductMemoriesId = table.Column<int>(nullable: true),
                     ProductColorsId = table.Column<int>(nullable: true),
                     ProductStatesId = table.Column<int>(nullable: true),
-                    AdId = table.Column<int>(nullable: false)
+                    AdId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -330,47 +352,18 @@ namespace AppleUsed.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AdPhotos",
-                columns: table => new
-                {
-                    AdPhotosId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AdPhotoName = table.Column<string>(nullable: true),
-                    Photo = table.Column<byte[]>(nullable: true),
-                    AdId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AdPhotos", x => x.AdPhotosId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AdViews",
-                columns: table => new
-                {
-                    AdViewsId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    SumViews = table.Column<int>(nullable: false),
-                    AdId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AdViews", x => x.AdViewsId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Purchases",
                 columns: table => new
                 {
                     PurchaseId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ServicesId = table.Column<int>(nullable: true),
+                    AdId = table.Column<int>(nullable: true),
                     TotalCost = table.Column<decimal>(nullable: false),
                     DateOfPayment = table.Column<DateTime>(nullable: false),
-                    StartDateActiveBLL = table.Column<DateTime>(nullable: false),
-                    EndDateActiveBLL = table.Column<DateTime>(nullable: false),
-                    IsPayed = table.Column<bool>(nullable: false),
-                    AdId = table.Column<int>(nullable: true)
+                    StartDateService = table.Column<DateTime>(nullable: false),
+                    EndDateService = table.Column<DateTime>(nullable: false),
+                    IsPayed = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -514,6 +507,11 @@ namespace AppleUsed.DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Characteristics_AdId",
+                table: "Characteristics",
+                column: "AdId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Characteristics_ProductColorsId",
                 table: "Characteristics",
                 column: "ProductColorsId");
@@ -542,11 +540,6 @@ namespace AppleUsed.DAL.Migrations
                 name: "IX_Cities_CityAreaId",
                 table: "Cities",
                 column: "CityAreaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductColors_ProductTypeId",
-                table: "ProductColors",
-                column: "ProductTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductModels_ProductTypesId",
@@ -580,6 +573,14 @@ namespace AppleUsed.DAL.Migrations
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
+                name: "FK_Characteristics_Ads_AdId",
+                table: "Characteristics",
+                column: "AdId",
+                principalTable: "Ads",
+                principalColumn: "AdId",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_Purchases_Ads_AdId",
                 table: "Purchases",
                 column: "AdId",
@@ -593,6 +594,10 @@ namespace AppleUsed.DAL.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_AdViews_Ads_AdId",
                 table: "AdViews");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Characteristics_Ads_AdId",
+                table: "Characteristics");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Purchases_Ads_AdId",
