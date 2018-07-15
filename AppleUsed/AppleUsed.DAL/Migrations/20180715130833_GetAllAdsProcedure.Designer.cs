@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppleUsed.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180713144108_InitMigration")]
-    partial class InitMigration
+    [Migration("20180715130833_GetAllAdsProcedure")]
+    partial class GetAllAdsProcedure
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -118,8 +118,6 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<int?>("ProductStatesId");
 
-                    b.Property<int?>("ProductTypesId");
-
                     b.HasKey("CharacteristicsId");
 
                     b.HasIndex("AdId");
@@ -131,8 +129,6 @@ namespace AppleUsed.DAL.Migrations
                     b.HasIndex("ProductModelsId");
 
                     b.HasIndex("ProductStatesId");
-
-                    b.HasIndex("ProductTypesId");
 
                     b.ToTable("Characteristics");
                 });
@@ -503,10 +499,6 @@ namespace AppleUsed.DAL.Migrations
                     b.HasOne("AppleUsed.DAL.Entities.ProductStates", "ProductStates")
                         .WithMany()
                         .HasForeignKey("ProductStatesId");
-
-                    b.HasOne("AppleUsed.DAL.Entities.ProductTypes", "ProductTypes")
-                        .WithMany()
-                        .HasForeignKey("ProductTypesId");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.City", b =>

@@ -309,7 +309,6 @@ namespace AppleUsed.DAL.Migrations
                 {
                     CharacteristicsId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ProductTypesId = table.Column<int>(nullable: true),
                     ProductModelsId = table.Column<int>(nullable: true),
                     ProductMemoriesId = table.Column<int>(nullable: true),
                     ProductColorsId = table.Column<int>(nullable: true),
@@ -342,12 +341,6 @@ namespace AppleUsed.DAL.Migrations
                         column: x => x.ProductStatesId,
                         principalTable: "ProductStates",
                         principalColumn: "ProductStatesId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Characteristics_ProductTypes_ProductTypesId",
-                        column: x => x.ProductTypesId,
-                        principalTable: "ProductTypes",
-                        principalColumn: "ProductTypesId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -530,11 +523,6 @@ namespace AppleUsed.DAL.Migrations
                 name: "IX_Characteristics_ProductStatesId",
                 table: "Characteristics",
                 column: "ProductStatesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Characteristics_ProductTypesId",
-                table: "Characteristics",
-                column: "ProductTypesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_CityAreaId",

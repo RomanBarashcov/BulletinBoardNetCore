@@ -1,0 +1,104 @@
+﻿@model AppleUsed.Web.Models.ViewModels.AdViewModels.AdViewModel
+
+@{
+    ViewData["Title"] = "View";
+}
+
+
+<h4>Новое Объявление </h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="View">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AdDTO.Title" class="control-label"></label>
+                <input asp-for="AdDTO.Title" class="form-control" />
+                <span asp-validation-for="AdDTO.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdDTO.Description" class="control-label"></label>
+                <input asp-for="AdDTO.Description" class="form-control" />
+                <span asp-validation-for="AdDTO.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdDTO.Price" class="control-label"></label>
+                <input asp-for="AdDTO.Price" class="form-control" />
+                <span asp-validation-for="AdDTO.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdDTO.DateCreated" class="control-label"></label>
+                <input asp-for="AdDTO.DateCreated" class="form-control" />
+                <span asp-validation-for="AdDTO.DateCreated" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AdDTO.DateUpdated" class="control-label"></label>
+                <input asp-for="AdDTO.DateUpdated" class="form-control" />
+                <span asp-validation-for="AdDTO.DateUpdated" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Выберите категорию:</label>
+                @Html.DropDownListFor(m => m.AdDTO.SelectedProductType, Model.ProductTypesSelectList, new { Id = "ProductType" })
+            </div>
+            <div class="form-group" id="ProductModel">
+                <select asp-for="AdDTO.SelectedProductModel" asp-items="Model.ProductModelsSelectList">
+                    <option selected="selected" disabled="disabled">Выберите модель</option>
+                </select>
+            </div>
+                        
+            @*<div class="form-group">
+                <label asp-for="SelectedProductMemory" class="control-label"></label>
+                <input asp-for="SelectedProductMemory" class="form-control" />
+                <span asp-validation-for="SelectedProductMemory" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SelectedProductColor" class="control-label"></label>
+                <input asp-for="SelectedProductColor" class="form-control" />
+                <span asp-validation-for="SelectedProductColor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SelectedProductStates" class="control-label"></label>
+                <input asp-for="SelectedProductStates" class="form-control" />
+                <span asp-validation-for="SelectedProductStates" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <input asp-for="UserId" class="form-control" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserEmail" class="control-label"></label>
+                <input asp-for="UserEmail" class="form-control" />
+                <span asp-validation-for="UserEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#ProductModel").hide();
+    });
+
+    $("#ProductType").change(function () {
+        alert("Handler for .chande() called.");
+    });
+
+
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

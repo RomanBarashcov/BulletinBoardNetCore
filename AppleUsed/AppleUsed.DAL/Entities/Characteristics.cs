@@ -9,9 +9,6 @@ namespace AppleUsed.DAL.Entities
     {
         public int CharacteristicsId { get; set; }
 
-        [ForeignKey("ProductTypesId")]
-        public virtual ProductTypes ProductTypes { get; set; }
-
         [ForeignKey("ProductModelsId")]
         public virtual ProductModels ProductModels { get; set; }
 

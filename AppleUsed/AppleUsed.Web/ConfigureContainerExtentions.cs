@@ -39,7 +39,13 @@ namespace AppleUsed.Web
             optionsBuilder.UseSqlServer(GetDataConnectionStringFromConfig());
 
             serviceCollection.AddTransient<IEmailSender, EmailSender>();
-            serviceCollection.AddTransient<ISeedService>(s => new SeedService(new AppDbContext(optionsBuilder.Options)));
+            serviceCollection.AddTransient<IDataService, DataService>();
+
+            serviceCollection.AddTransient<ISeedService>(
+                s => new SeedService(new AppDbContext(optionsBuilder.Options)));
+
+            serviceCollection.AddTransient<IAdService>(
+                s => new AdService(new AppDbContext(optionsBuilder.Options), new DataService()));
         }
 
         /// <summary>

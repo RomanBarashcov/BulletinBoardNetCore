@@ -1,4 +1,5 @@
-﻿using AppleUsed.BLL.Infrastructure;
+﻿using AppleUsed.BLL.DTO;
+using AppleUsed.BLL.Infrastructure;
 using AppleUsed.DAL.Entities;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,10 @@ namespace AppleUsed.BLL.Interfaces
 {
     public interface IAdService
     {
-        Task<OperationDetails<List<Ad>>> GetAds();
+        OperationDetails<List<AdDTO>> GetAds();
         Task<OperationDetails<Ad>> GetAdById(int id);
-        //Task<AddAdQueryResult> GetDataForAddAd();
-        Task<OperationDetails<int>> CreateAd(string userId, Ad ad);
+        Task<AdDTO> GetDataForCreatingAd();
+        Task<OperationDetails<int>> CreateAdAsync(string userId, AdDTO ad);
         Task<OperationDetails<int>> AddImageToAd(int id, string imageName, byte[] imageData);
         Task<OperationDetails<int>> UpdateAd(int id, Ad ad);
         Task<OperationDetails<int>> DeleteAd(int id);

@@ -22,4 +22,8 @@
     <ProjectReference Include="..\AppleUsed.DAL\AppleUsed.DAL.csproj" />
     <ProjectReference Include="..\AppleUsed.BLL\AppleUsed.BLL.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
 </Project>
