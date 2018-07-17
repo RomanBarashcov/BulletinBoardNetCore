@@ -4,6 +4,12 @@
     <UserSecretsId>aspnet-AppleUsed.Web-727D117F-8A93-4C18-BEAC-B62DEA978353</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Helpers\**" />
+    <Content Remove="Helpers\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <None Remove="Helpers\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
@@ -14,6 +20,8 @@
     <PackageReference Include="ClacksMiddlware" version="2.0.2" />
 
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="OwaspHeaders.Core" version="3.3.2" />
   
   </ItemGroup>
@@ -21,9 +29,5 @@
   <ItemGroup>
     <ProjectReference Include="..\AppleUsed.DAL\AppleUsed.DAL.csproj" />
     <ProjectReference Include="..\AppleUsed.BLL\AppleUsed.BLL.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>

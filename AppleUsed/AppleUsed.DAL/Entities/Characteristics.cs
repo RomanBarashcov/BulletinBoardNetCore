@@ -9,17 +9,11 @@ namespace AppleUsed.DAL.Entities
     {
         public int CharacteristicsId { get; set; }
 
-        [ForeignKey("ProductModelsId")]
-        public virtual ProductModels ProductModels { get; set; }
-
-        [ForeignKey("ProductMemoriesId")]
-        public virtual ProductMemories ProductMemories { get; set; }
-
-        [ForeignKey("ProductColorsId")]
-        public virtual ProductColors ProductColors { get; set; }
-
-        [ForeignKey("ProductStatesId")]
-        public virtual ProductStates ProductStates { get; set; }
+        public int ProductTypesId { get; set; }
+        public int ProductModelsId { get; set; }
+        public int ProductMemoriesId { get; set; }
+        public int ProductColorsId { get; set; }
+        public int ProductStatesId { get; set; }
 
         [ForeignKey("AdId")]
         public virtual Ad Ad { get; set; }

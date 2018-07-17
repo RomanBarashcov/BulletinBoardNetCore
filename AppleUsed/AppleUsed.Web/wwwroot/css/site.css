@@ -32,4 +32,98 @@
     .carousel-caption {
         display: none;
     }
+
+
+
+    .navbar-green {
+        background-color: #5cb85c;
+        border-color: #5cb85c;
+    }
+
+    .navbar-green .navbar-nav > li > a {
+        color: #eee;
+    }
+
+    .navbar-green .navbar-nav > li > a:hover {
+        color: #ccc;
+    }
+
+    a {
+        color: #5cb85c;
+    }
+
+    a:hover {
+        color: #3c763d;
+        text-decoration: none;
+    }
+
+    .ad-list {
+        margin-bottom: 20px;
+        padding-top: 1px;
+        width: 100%;
+    }
+
+        .ad-list li .ad-in {
+            min-height: 100px;
+            width: 100%;
+        }
+
+        .ad-list li {
+            display: inline-block;
+            vertical-align: top;
+            list-style: none;
+            width: 24%;
+            margin: 26px 1% 7px 0;
+            transition: .2s;
+            width: 100%;
+        }
+
+    .ad-in {
+        background: #fff;
+        padding: 10px 10px 20px;
+        border-radius: 2px;
+        position: relative;
+        width: 100%;
+    }
+
+    .ad-list .ad-title {
+        font-size: 17px;
+        line-height: 120%;
+        min-height: 26px;
+        height: auto;
+        overflow: hidden;
+        padding: 0;
+        width: 100%;
+    }
+
+    .location {
+        color: #9b9b9b;
+        font-size: 13px;
+        font-weight: 400;
+        display: inline-block;
+        margin-top: 5px;
+        width: 42%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: top;
+        margin-right: 10px;
+    }
+
+    .last-modifaed {
+        font-size: 12px;
+        color: #9b9b9b;
+        margin-top: 6px;
+        margin-left: -1px;
+        width: auto;
+        display: inline-block;
+        vertical-align: top;
+        letter-spacing: -.1px;
+    }
+
+    .ad-list .ad-description .location {
+        margin: 0;
+        display: block;
+    }
+
 }

@@ -1,6 +1,7 @@
 ﻿using AppleUsed.BLL.DTO;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
+using AppleUsed.DAL.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,31 +11,28 @@ namespace AppleUsed.BLL.Services
 {
     public class DataService : IDataService
     {
-        public DataService() { }
+        private AppDbContext _db;
+
+        public DataService(AppDbContext db)
+        {
+            _db = db;
+        }
 
         public Ad TransformingAdDTOToAdEntities(AdDTO ad)
         {
+            int selectedProductTypeId = Convert.ToInt32(ad.SelectedProductType);
+            int selectedProductModelId = Convert.ToInt32(ad.SelectedProductModel);
+            int selectedProductMemorieId = Convert.ToInt32(ad.SelectedProductMemory);
+            int selectedProductColorsId = Convert.ToInt32(ad.SelectedProductColor);
+            int selectedProductStatesId = Convert.ToInt32(ad.SelectedProductStates);
+
             Characteristics characteristics = new Characteristics
             {
-                ProductModels = ad.ProductModelsList
-                       .Where(
-                                x => x.Name == ad.SelectedProductType
-                             ).FirstOrDefault(),
-
-                ProductMemories = ad.ProductMemoriesList
-                       .Where(
-                                x => x.Name == ad.SelectedProductMemory
-                             ).FirstOrDefault(),
-
-                ProductColors = ad.ProductColorsList
-                       .Where(
-                                x => x.Name == ad.SelectedProductColor
-                             ).FirstOrDefault(),
-
-                ProductStates = ad.ProductStatesList
-                       .Where(
-                                x => x.Name == ad.SelectedProductStates
-                           ).FirstOrDefault()
+                ProductTypesId = selectedProductTypeId,
+                ProductModelsId = selectedProductModelId,
+                ProductMemoriesId = selectedProductMemorieId,
+                ProductColorsId = selectedProductColorsId,
+                ProductStatesId = selectedProductStatesId
             };
 
             Ad Ad = new Ad
@@ -44,9 +42,9 @@ namespace AppleUsed.BLL.Services
                 Price = ad.Price,
                 DateCreated = DateTime.Now,
                 DateUpdated = DateTime.Now,
-                City = ad.CityesList.Where(x => x.Name == ad.SelectedCity).FirstOrDefault(),
-                Photos = ad.Photos,
-                Characteristics = characteristics,
+                //City = ad.CityesList.Where(x => x.Name == ad.SelectedCity).FirstOrDefault(),
+                //Photos = ad.PhotosList,
+                Characteristics = characteristics
             };
 
             return Ad;

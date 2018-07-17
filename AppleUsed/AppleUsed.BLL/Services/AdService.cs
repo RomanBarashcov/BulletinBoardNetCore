@@ -3,10 +3,13 @@ using AppleUsed.BLL.Infrastructure;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,17 +27,41 @@ namespace AppleUsed.BLL.Services
             _dataService = dataService;
         }
 
-        public OperationDetails<List<AdDTO>> GetAds()
+        public async Task<List<AdDTO>> GetAds()
         {
-            ProcedureService procedureService = new ProcedureService();
-            var result = procedureService.GetResultFromStoredProcedure("dbo.GetAllAds");
-            var res = new OperationDetails<List<AdDTO>>(true, "", new List<AdDTO>());
-            return res;
-        }
+            var ads = await (from ad in _db.Ads
+                       //join c in _db.Cities on ad.City.CityId equals c.CityId
+                       //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
+                       //join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
+                       join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
+                       join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
+                       join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
+                       join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
+                       join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
+                       join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
+                       join u in _db.Users on ad.ApplicationUser.Id equals u.Id
+                       select new AdDTO
+                       {
+                            AdId = ad.AdId,
+                            Title = ad.Title,
+                            Description = ad.Description,
+                            Price = ad.Price,
+                            DateCreated = ad.DateCreated,
+                            DateUpdated = ad.DateUpdated,
+                            //SelectedCityArea 
+                            //SelectedCity 
+                            PhotosList = _db.AdPhotos.Where(x=>x.Ad.AdId == ad.AdId).ToList(),
+                            //AdViews = av.SumViews,
+                            SelectedProductType = pt.Name,
+                            SelectedProductModel = pm.Name,
+                            SelectedProductMemory = prm.Name,
+                            SelectedProductColor = pc.Name,
+                            SelectedProductStates = prs.Name,
+                            User = u
 
-        public Task<OperationDetails<int>> AddImageToAd(int id, string imageName, byte[] imageData)
-        {
-            throw new NotImplementedException();
+                       }).ToListAsync();
+
+            return ads;
         }
 
         public async Task<AdDTO> GetDataForCreatingAd()
@@ -43,14 +70,23 @@ namespace AppleUsed.BLL.Services
             AdDTO adDto = new AdDTO();
             adDto.CityAreasList = await _db.CityAreas.ToListAsync();
             adDto.ProductTypesList = await (from t in _db.ProductTypes
-                                         select new ProductTypes
-                                         {
-                                             ProductTypesId = t.ProductTypesId,
-                                             Name = t.Name
+                                            select new ProductTypes
+                                            {
+                                                ProductTypesId = t.ProductTypesId,
+                                                Name = t.Name
+                                             
+                                            }).ToListAsync();
 
-                                         }).ToListAsync();
+            adDto.ProductModelsList = await (from m in _db.ProductModels
+                                             join t in _db.ProductTypes on m.ProductTypes equals t
+                                             select new ProductModels
+                                             {
+                                                 ProductModelsId = m.ProductModelsId,
+                                                 Name = m.Name,
+                                                 ProductTypes = t
 
-            adDto.ProductModelsList = await _db.ProductModels.ToListAsync();
+                                             }).ToListAsync();
+
             adDto.ProductMemoriesList = await _db.ProductMemories.ToListAsync();
             adDto.ProductColorsList = await _db.ProductColors.ToListAsync();
             adDto.ProductStatesList = await _db.ProductStates.ToListAsync();
@@ -58,7 +94,7 @@ namespace AppleUsed.BLL.Services
             return adDto;
         }
 
-        public async Task<OperationDetails<int>> CreateAdAsync(string userId, AdDTO ad)
+        public async Task<OperationDetails<int>> SaveAdAsync(string userName, AdDTO ad, IFormFileCollection productPhotos)
         {
             OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
             ApplicationUser user = new ApplicationUser();
@@ -66,9 +102,9 @@ namespace AppleUsed.BLL.Services
             if(ad == null)
                 return new OperationDetails<int>(false, "new Ad can't be null or empty", 0);
 
-            if (!String.IsNullOrEmpty(userId))
+            if (!String.IsNullOrEmpty(userName))
             {
-                user = await _db.Users.Where(x => x.Id == userId).FirstOrDefaultAsync();
+                user = await _db.Users.Where(x => x.UserName == userName).FirstOrDefaultAsync();
 
                 if (user != null)
                 {
@@ -78,20 +114,31 @@ namespace AppleUsed.BLL.Services
                     try
                     {
                         var addResult = await _db.Ads.AddAsync(newAd);
-                    }
-                    catch (Exception ex)
-                    {
-                        operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
-                    }
-
-                    try
-                    {
                         var saveChangesResult = await _db.SaveChangesAsync();
                         operationDetails = new OperationDetails<int>(true, "", newAd.AdId);
                     }
                     catch (Exception ex)
                     {
                         operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
+                    }
+
+                    if (productPhotos.Count > 0)
+                    {
+                        var binaryPhotoList = await GetBinaryPhotoList(productPhotos);
+                        binaryPhotoList.ForEach(x => x.Ad = newAd);
+                        newAd.Characteristics.Ad = newAd;
+
+                        try
+                        {
+                            await _db.AdPhotos.AddRangeAsync(binaryPhotoList);
+                            newAd.Photos = binaryPhotoList;
+                            _db.Update(newAd);
+                            await _db.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
+                        }
                     }
                 }
             }
@@ -114,5 +161,24 @@ namespace AppleUsed.BLL.Services
             throw new NotImplementedException();
         }
 
+        private async Task<List<AdPhotos>> GetBinaryPhotoList(IFormFileCollection productPhotos)
+        {
+            List<AdPhotos> photosList = new List<AdPhotos>();
+
+            foreach (var uploadedFile in productPhotos)
+            {
+                using (var binaryReader = new BinaryReader(uploadedFile.OpenReadStream()))
+                {
+                    photosList.Add(
+                        new AdPhotos
+                        {
+                            Photo = binaryReader.ReadBytes((int)uploadedFile.Length),
+                            AdPhotoName = uploadedFile.FileName,
+                        });
+                }
+            }
+
+            return photosList;
+        }
     }
 }

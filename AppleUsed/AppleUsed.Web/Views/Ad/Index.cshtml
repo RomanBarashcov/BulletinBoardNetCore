@@ -1,0 +1,133 @@
+﻿@model List<AppleUsed.BLL.DTO.AdDTO>
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h2>View</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Заголовок
+            </th>
+            <th>
+                Описание
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Опубликовано
+            </th>
+            <th>
+                Обновлено
+            </th>
+            @*<th>
+                SelectedCityArea
+            </th>
+            <th>
+                SelectedCity
+
+            </th>*@
+            <th>
+                Тип 
+            </th>
+            <th>
+                Модель
+            </th>
+            <th>
+                Память
+            </th>
+            <th>
+                Цвет
+            </th>
+            <th>
+                Состояние
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateUpdated)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.SelectedCityArea)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SelectedCity)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.SelectedProductType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SelectedProductModel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SelectedProductMemory)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SelectedProductColor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SelectedProductStates)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+
+<div class="ad-list">
+    <ul>
+        <li>
+            <div class="ad-in">
+                <div class="ad-photo">
+                    <a target="_blank" href="#">
+                        <!-- <span  class="star"></span> -->
+                        <!--<img src="/f/offers/0084/975/181/030/b0df162b-57f1-42e0-bdf3-ea5c02ffdc03.jpg">-->
+                    </a>
+                </div>
+                <div class="ad-title">
+                    <a target="_blank" href="#">iPhone 6 16 ГБ Space Gray</a>
+                    <span class="ad-title-price">
+                        <b>10 000 руб.</b>
+                    </span>
+                </div>
+                <div class="ad-description">
+                    <div class="location-and-last-modifaied">
+                        <span class="location">м. Площадь Ильича</span>
+                        <span class="last-modifaed">сегодня в 09:51</span>
+                    </div>
+                    <span class="ad-description">Продам iPhone 6 на 16 Gb. В идеальном состоянии. В подарок два чехла и стоит защитное стекло.</span>
+
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -1,4 +1,5 @@
 ﻿using AppleUsed.BLL.DTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,6 @@ namespace AppleUsed.Web.Models.ViewModels.AdViewModels
         public SelectList ProductMemoriesSelectList { get; set; }
         public SelectList ProductColorsSelectList { get; set; }
         public SelectList ProductStatesSelectList { get; set; }
-
+        public IFormFileCollection Photos { get; set; }
     }
 }

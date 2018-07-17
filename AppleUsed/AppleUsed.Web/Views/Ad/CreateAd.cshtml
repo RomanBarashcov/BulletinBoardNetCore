@@ -1,4 +1,5 @@
 ﻿@model AppleUsed.Web.Models.ViewModels.AdViewModels.AdViewModel
+@using Newtonsoft.Json
 
 @{
     ViewData["Title"] = "View";
@@ -7,77 +8,81 @@
 
 <h4>Новое Объявление </h4>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="View">
+        <form asp-action="SaveAd" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <blockquote style="border-left:5px solid #5cb85c">
+                <p> Заполните объявление </p>
+            </blockquote>
+
             <div class="form-group">
-                <label asp-for="AdDTO.Title" class="control-label"></label>
+                <label class="control-label">Заголовок : </label>
                 <input asp-for="AdDTO.Title" class="form-control" />
                 <span asp-validation-for="AdDTO.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AdDTO.Description" class="control-label"></label>
-                <input asp-for="AdDTO.Description" class="form-control" />
-                <span asp-validation-for="AdDTO.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AdDTO.Price" class="control-label"></label>
+                <label class="control-label">Стоимость : </label>
                 <input asp-for="AdDTO.Price" class="form-control" />
                 <span asp-validation-for="AdDTO.Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AdDTO.DateCreated" class="control-label"></label>
-                <input asp-for="AdDTO.DateCreated" class="form-control" />
-                <span asp-validation-for="AdDTO.DateCreated" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AdDTO.DateUpdated" class="control-label"></label>
-                <input asp-for="AdDTO.DateUpdated" class="form-control" />
-                <span asp-validation-for="AdDTO.DateUpdated" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Выберите категорию:</label>
-                @Html.DropDownListFor(m => m.AdDTO.SelectedProductType, Model.ProductTypesSelectList, new { Id = "ProductType" })
-            </div>
-            <div class="form-group" id="ProductModel">
-                <select asp-for="AdDTO.SelectedProductModel" asp-items="Model.ProductModelsSelectList">
+                <label class="control-label">Выберите категорию : </label>
+                <select asp-for="AdDTO.SelectedProductType" asp-items="Model.ProductTypesSelectList" id="ProductType" class="form-control">
                     <option selected="selected" disabled="disabled">Выберите модель</option>
                 </select>
             </div>
-                        
-            @*<div class="form-group">
-                <label asp-for="SelectedProductMemory" class="control-label"></label>
-                <input asp-for="SelectedProductMemory" class="form-control" />
-                <span asp-validation-for="SelectedProductMemory" class="text-danger"></span>
+            <div class="form-group" id="ProductModel">
+                <label class="control-label">Выберите модель : </label>
+                <select asp-for="AdDTO.SelectedProductModel" asp-items="Model.ProductModelsSelectList" id="ProductModelItems" class="form-control">
+                    <option selected="selected" disabled="disabled"> </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Память : </label>
+                <select asp-for="AdDTO.SelectedProductMemory" asp-items="Model.ProductMemoriesSelectList" class="form-control">
+                    <option selected="selected" disabled="disabled"> </option>
+                </select>
             </div>
             <div class="form-group">
-                <label asp-for="SelectedProductColor" class="control-label"></label>
-                <input asp-for="SelectedProductColor" class="form-control" />
-                <span asp-validation-for="SelectedProductColor" class="text-danger"></span>
+                <label class="control-label">Цвет : </label>
+                <select asp-for="AdDTO.SelectedProductColor" asp-items="Model.ProductColorsSelectList" class="form-control">
+                    <option selected="selected" disabled="disabled"> </option>
+                </select>
             </div>
             <div class="form-group">
-                <label asp-for="SelectedProductStates" class="control-label"></label>
-                <input asp-for="SelectedProductStates" class="form-control" />
-                <span asp-validation-for="SelectedProductStates" class="text-danger"></span>
+                <label class="control-label">Состояние : </label>
+                <select asp-for="AdDTO.SelectedProductStates" asp-items="Model.ProductStatesSelectList" class="form-control">
+                    <option selected="selected" disabled="disabled"> </option>
+                </select>
             </div>
+
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
+                <label class="control-label">Описание товара : </label>
+                @Html.TextAreaFor(m => m.AdDTO.Description, new { @class = "form-control", @row = 3 })
+                <span asp-validation-for="AdDTO.Description" class="text-danger"></span>
             </div>
+
+            <blockquote style="border-left:5px solid #5cb85c">
+                <p>Фото товара : </p>
+            </blockquote>
+
             <div class="form-group">
-                <label asp-for="UserEmail" class="control-label"></label>
-                <input asp-for="UserEmail" class="form-control" />
-                <span asp-validation-for="UserEmail" class="text-danger"></span>
+                <div id="Product-Photos">
+                    <input name="Photos" type="file" class="form-control" />
+                    <input name="Photos" type="file" class="form-control" />
+                    <input name="Photos" type="file" class="form-control" />
+                    <input name="Photos" type="file" class="form-control" />
+                    <input name="Photos" type="file" class="form-control" />
+                    <p></p>
+                </div>
             </div>
+
             <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>*@
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Подать" class="btn btn-success" />
             </div>
         </form>
     </div>
@@ -89,13 +94,55 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#ProductModel").hide();
+        $('#ProductModel').hide();
     });
 
-    $("#ProductType").change(function () {
-        alert("Handler for .chande() called.");
+    $('#ProductType').on('change', function () {
+
+        var data = GetDataForSendController(this.value);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetProductModelsSelectList")",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: data ,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+       
+                var items = '';
+                $('#ProductModelItems').empty();
+
+                $.each(data, function (i, selectedModel) {
+                    items += "<option value='" + selectedModel.value + "'>" + selectedModel.text + "</option>";
+                });
+
+                $('#ProductModelItems').html(items);
+
+                console.log(items);
+
+                $('#ProductModel').show();
+                data.empty;
+            },
+            failure: function (errMsg) {
+                alert(errMsg);
+            }
+        });
     });
 
+
+    function GetDataForSendController(selectedValue) {
+
+        var data = '@Html.Raw(Json.Serialize(Model.AdDTO))';
+        var parseData = $.parseJSON(data);
+        parseData.selectedProductType = selectedValue;
+        data = JSON.stringify(parseData);
+
+        return data;
+    }
 
 </script>
 
