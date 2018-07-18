@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class AdService : IAdService
+    public class AdService : IAdService , IDisposable
     {
         private AppDbContext _db;
         private IDataService _dataService;
@@ -29,37 +30,118 @@ namespace AppleUsed.BLL.Services
 
         public async Task<List<AdDTO>> GetAds()
         {
-            var ads = await (from ad in _db.Ads
-                       //join c in _db.Cities on ad.City.CityId equals c.CityId
-                       //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
-                       //join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
-                       join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
-                       join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
-                       join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
-                       join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
-                       join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
-                       join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
-                       join u in _db.Users on ad.ApplicationUser.Id equals u.Id
-                       select new AdDTO
-                       {
-                            AdId = ad.AdId,
-                            Title = ad.Title,
-                            Description = ad.Description,
-                            Price = ad.Price,
-                            DateCreated = ad.DateCreated,
-                            DateUpdated = ad.DateUpdated,
-                            //SelectedCityArea 
-                            //SelectedCity 
-                            PhotosList = _db.AdPhotos.Where(x=>x.Ad.AdId == ad.AdId).ToList(),
-                            //AdViews = av.SumViews,
-                            SelectedProductType = pt.Name,
-                            SelectedProductModel = pm.Name,
-                            SelectedProductMemory = prm.Name,
-                            SelectedProductColor = pc.Name,
-                            SelectedProductStates = prs.Name,
-                            User = u
 
-                       }).ToListAsync();
+            List<AdDTO> ads = new List<AdDTO>();
+
+            ads = await (from ad in _db.Ads
+                             //join c in _db.Cities on ad.City.CityId equals c.CityId
+                             //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
+                             //join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
+                         join ap in _db.AdPhotos on ad.AdId equals ap.Ad.AdId into aPhotos
+                         join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
+                         join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
+                         join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
+                         join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
+                         join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
+                         join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
+                         join u in _db.Users on ad.ApplicationUser.Id equals u.Id
+                         select new AdDTO
+                         {
+                             AdId = ad.AdId,
+                             Title = ad.Title,
+                             Description = ad.Description,
+                             Price = ad.Price,
+                             DateCreated = ad.DateCreated,
+                             DateUpdated = ad.DateUpdated,
+                             //SelectedCityArea 
+                             //SelectedCity 
+                             PhotosList = aPhotos.ToList(),
+                             //AdViews = av.SumViews,
+                             SelectedProductType = pt.Name,
+                             SelectedProductModel = pm.Name,
+                             SelectedProductMemory = prm.Name,
+                             SelectedProductColor = pc.Name,
+                             SelectedProductStates = prs.Name,
+                             User = u
+
+                         }).ToListAsync();
+
+            //List<AdDTO> ads = new List<AdDTO>();
+            //List<AdPhotos> photos = new List<AdPhotos>();
+
+            ////List<AdPhotos> photos = await (from p in _db.AdPhotos
+            ////                               join ad in _db.Ads on p.Ad.AdId equals ad.AdId
+            ////                               select new AdPhotos
+            ////                               {
+            ////                                   Ad = ad,
+            ////                                   AdPhotosId = p.AdPhotosId,
+            ////                                   AdPhotoName = p.AdPhotoName,
+            ////                                   Photo = p.Photo
+
+            ////                               }).ToListAsync();
+
+            //ProcedureService procedureService = new ProcedureService();
+            //SqlDataReader photosReader = procedureService.GetResultFromStoredProcedure("dbo.GetAllPhotos");
+
+            //if (photosReader.HasRows)
+            //{
+            //    while (photosReader.Read())
+            //    {
+
+            //            int adPhotosId = Int32.Parse(photosReader["AdPhotosId"].ToString());
+            //            string adPhotoName = photosReader["AdPhotoName"].ToString();
+            //            byte[] photo = Encoding.ASCII.GetBytes(photosReader["Photo"].ToString());
+            //            int adId = Int32.Parse(photosReader["AdId"].ToString());
+
+
+            //            photos.Add(new AdPhotos
+            //            {
+            //                AdPhotosId = adPhotosId,
+            //                AdPhotoName = adPhotoName,
+            //                Photo = photo,
+            //                Ad = _db.Ads.Where(x => x.AdId == adId).FirstOrDefault()
+            //            });
+            //    }
+            //}
+
+            //photosReader.Close();
+
+            //SqlDataReader reader = procedureService.GetResultFromStoredProcedure("dbo.GetAllAds");
+
+            //if (reader.HasRows)
+            //{
+            //    while (reader.Read())
+            //    {
+            //        ApplicationUser user = await _db.Users.Where(x => x.Id == reader["UserId"].ToString()).FirstOrDefaultAsync();
+
+            //        ads.Add(new AdDTO
+            //        {
+            //            AdId = Int32.Parse(reader["AdId"].ToString()),
+            //            Title = reader["Title"].ToString(),
+            //            Description = reader["Description"].ToString(),
+            //            Price = Decimal.Parse(reader["Price"].ToString()),
+            //            DateCreated = DateTime.Parse(reader["DateCreated"].ToString()),
+            //            DateUpdated = DateTime.Parse(reader["DateUpdated"].ToString()),
+            //            PhotosList = photos.Where(x => x.Ad.AdId == Int32.Parse(reader["AdId"].ToString())).ToList(),
+            //            SelectedProductType = reader["ProductType"].ToString(),
+            //            SelectedProductModel = reader["ProductModel"].ToString(),
+            //            SelectedProductMemory = reader["ProductMemory"].ToString(),
+            //            SelectedProductColor = reader["ProductColor"].ToString(),
+            //            SelectedProductStates = reader["ProductState"].ToString(),
+            //            User = user
+
+            //        });
+            //    }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("No rows found.");
+            //}
+
+
+
+            //reader.Close();
+            
 
             return ads;
         }
@@ -78,7 +160,7 @@ namespace AppleUsed.BLL.Services
                                             }).ToListAsync();
 
             adDto.ProductModelsList = await (from m in _db.ProductModels
-                                             join t in _db.ProductTypes on m.ProductTypes equals t
+                                             join t in _db.ProductTypes on m.ProductTypes.ProductTypesId equals t.ProductTypesId
                                              select new ProductModels
                                              {
                                                  ProductModelsId = m.ProductModelsId,
@@ -124,7 +206,7 @@ namespace AppleUsed.BLL.Services
 
                     if (productPhotos.Count > 0)
                     {
-                        var binaryPhotoList = await GetBinaryPhotoList(productPhotos);
+                        var binaryPhotoList = GetBinaryPhotoList(productPhotos);
                         binaryPhotoList.ForEach(x => x.Ad = newAd);
                         newAd.Characteristics.Ad = newAd;
 
@@ -161,7 +243,7 @@ namespace AppleUsed.BLL.Services
             throw new NotImplementedException();
         }
 
-        private async Task<List<AdPhotos>> GetBinaryPhotoList(IFormFileCollection productPhotos)
+        private List<AdPhotos> GetBinaryPhotoList(IFormFileCollection productPhotos)
         {
             List<AdPhotos> photosList = new List<AdPhotos>();
 
@@ -179,6 +261,31 @@ namespace AppleUsed.BLL.Services
             }
 
             return photosList;
+        }
+
+
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            // подавляем финализацию
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    
+                }
+                // освобождаем неуправляемые объекты
+
+                _db = null;
+                disposed = true;
+            }
         }
     }
 }

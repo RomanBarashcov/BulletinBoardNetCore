@@ -24,7 +24,7 @@ namespace AppleUsed.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var model =  await _adService.GetAds();
+            List<AdDTO> model =  await _adService.GetAds();
             return View(model);
         }
 

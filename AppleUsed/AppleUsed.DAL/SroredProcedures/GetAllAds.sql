@@ -18,3 +18,4 @@ Inner join ProductMemories as prm ON ch.ProductMemoriesId = prm.ProductMemoriesI
 Inner join ProductColors AS pc ON ch.ProductColorsId = pc.ProductColorsId
 Inner join ProductStates AS prs ON ch.ProductStatesId = prs.ProductStatesId
 Inner join AspNetUsers AS u ON a.ApplicationUserId = u.Id
+

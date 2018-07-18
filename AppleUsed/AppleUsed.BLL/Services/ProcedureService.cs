@@ -32,9 +32,11 @@ namespace AppleUsed.BLL.Services
             reader = cmd.ExecuteReader();
             // Data is accessible through the DataReader object here.
 
+            
+
             return reader;
 
-            sqlConnection.Close();
+            
         }
     }
 }
