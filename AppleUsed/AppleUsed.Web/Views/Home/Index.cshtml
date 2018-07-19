@@ -2,44 +2,26 @@
     ViewData["Title"] = "Home Page";
 }
 
-<form asp-area="" asp-controller="Ad" asp-action="Index" method="get" id="searchForm">
-    <div class="serach-tab col-lg-12">
-        <div class="weapper">
-            <div class="col-lg-2"></div>
-            <div class="inline-block col-lg-8">
-                <div class="padding">
-                    <input class="search-by-prod-name" type="text" name="searchByProdName" value="" placeholder="Например: MacBook Pro" />
-                </div>
-                <div class="padding">
-                    <input class="serch-by-location" type="text" name="searchWithLocation" value="" placeholder="Например: Киев" />
-                </div>
-                <div class="padding">
-                    <button class="btn btn-success btn-main-search">Найти!</button>
-                </div>
-            </div>
-            <div class="col-lg-2"></div>
-        </div>
-    </div>
-</form>
+@await Html.PartialAsync("_SearchBarPartial")
 
 <nav class="nav_menu">
     <ul>
         <li class="nav_menu_item iphone">
-            <a href="#">
+            <a href="~/Ad/Index/?titleFilter=iphone">
                 <span class="inner_block">
                     <span>iPhone</span>
                 </span>
             </a>
         </li>
         <li class="nav_menu_item ipad">
-            <a href="#">
+            <a href="~/Ad/Index/?titleFilter=ipad">
                 <span class="inner_block">
                     <span>iPad</span>
                 </span>
             </a>
         </li>
         <li class="nav_menu_item imac_macbook">
-            <a href="#">
+            <a href="~/Ad/Index/?titleFilter=mac">
                 <span class="inner_block">
                     <span>Mac и Macbook</span>
 
@@ -47,7 +29,7 @@
             </a>
         </li>
         <li class="nav_menu_item apple">
-            <a href="#">
+            <a href="~/Ad/Index">
                 <span class="inner_block">
                     <span>Apple товары</span>
 

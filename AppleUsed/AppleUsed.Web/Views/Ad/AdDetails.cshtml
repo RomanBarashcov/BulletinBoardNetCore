@@ -1,0 +1,128 @@
+﻿@model AppleUsed.BLL.DTO.AdDTO
+
+@{
+    ViewData["Title"] = "AdDetails";
+}
+
+
+<br />
+
+<div>
+    <span>
+        <a asp-action="Index"> Назад</a>
+    </span>    
+</div>
+
+<br />
+
+<div class="ad-title-details col-md-8">
+    <strong> @Model.Title</strong>
+</div>
+
+<div class="Content col-lg-12">
+
+    <div class="Contact-Bar col-lg-4">
+        <div class="ad-price">
+            <strong> @Model.Price .грн</strong>
+        </div>
+        <hr />
+        <div class="btn-block">
+            <p>
+                <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
+                <button class="btn btn-lg btn-success btn-block">Написать владельцу</button>
+            </p>
+        </div>
+    </div>
+
+    <div class="ad-Content col-lg-8">
+
+        <div class="photo">
+            @{
+                string imgSrc = "";
+                if (Model.PhotosList.FirstOrDefault() != null)
+                {
+                    var base64 = Convert.ToBase64String(Model.PhotosList.FirstOrDefault().Photo);
+                    imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                }
+
+                <img style='width:640px; height:480px;' src="@imgSrc" />
+            }
+        </div>
+        <div class="ad-simple-info">
+            <table>
+                <thead>
+                    <tr>
+                        <th> Добавлено : </th>
+                        <td>@Model.DateUpdated</td>
+                        <th> Город : </th>
+                        <td>Киев</td>
+                        <th>Область : </th>
+                        <td>Киевская</td>
+                    </tr>
+                </thead>
+             </table>
+        </div>
+        <hr />
+        <div class="ad-base-info">
+            <table>
+                <thead>
+                    <tr>
+                        <th> Тип : </th>
+                        <td>@Model.SelectedProductType</td>
+                        <th>
+                            Память :
+                        </th>
+                        <td>
+                            @Model.SelectedProductMemory
+                        </td>
+                    </tr>
+                    <tr>
+                        <th> Модель : </th>
+                        <td>@Model.SelectedProductModel</td>
+                        <th>
+                            Цвет :
+                        </th>
+                        <td>
+                            @Model.SelectedProductColor
+                        </td>
+                    </tr>
+                    <tr>
+                        <th> Состояние :</th>
+                        <td>@Model.SelectedProductStates</td>
+                    </tr>
+
+                </thead>
+            </table>
+        </div>
+
+        <hr />
+
+        <div class="ad-full-description">
+
+            @Model.Description
+
+        </div>
+
+        <hr />
+
+        <div class="Ad-Photos">
+            @{
+                foreach (var item in Model.PhotosList)
+                {
+                    var imgSrc2 = "";
+                    if (item.Photo != null)
+                    {
+                        var base64 = Convert.ToBase64String(item.Photo);
+                        imgSrc2 = String.Format("data:image/gif;base64,{0}", base64);
+                    }
+
+                    <img style='width:640px; height:480px;' src="@imgSrc2" />
+                }
+            }
+        </div>
+    </div>
+
+</div>
+
+
+

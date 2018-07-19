@@ -52,11 +52,11 @@
                 <ul class="nav navbar-nav navbar-right">
                     @{ if (User.Identity.IsAuthenticated)
                         {
-                            <li><a asp-area="" asp-controller="Ad" asp-action="CreateAd">+ ПОДАТЬ ОБЪЯВЛЕНИЕ</a></li>
+                            <li><a asp-area="" asp-controller="Ad" asp-action="CreateAd">+ Подать объявление</a></li>
                         }
                         else
                         {
-                            <li><a asp-area="" asp-controller="Account" asp-action="Login">+ ПОДАТЬ ОБЪЯВЛЕНИЕ</a></li>
+                            <li><a asp-area="" asp-controller="Account" asp-action="Login">+ Подать объявление</a></li>
                         }
                     }
                 </ul>
@@ -65,14 +65,16 @@
     </nav>
 
     <div class="container body-content">
-   
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; 2017 - AppleUsed.Web</p>
-            </footer>
-    </div>
 
+        @RenderBody()
+
+    </div>
+    <hr />
+    <div class="container body-content">
+        <footer>
+            <p>&copy; 2017 - AppleUsed.Web</p>
+        </footer>
+    </div>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

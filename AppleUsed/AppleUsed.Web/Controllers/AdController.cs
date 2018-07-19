@@ -22,16 +22,33 @@ namespace AppleUsed.Web.Controllers
             _adService = adService;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string titleFilter, string cityFilter)
         {
-            List<AdDTO> model =  await _adService.GetAds();
+            List<AdDTO> ads =  await _adService.GetAds(titleFilter, cityFilter);
+            AdIndexViewModel model = new AdIndexViewModel { AdDTO = ads };
+            AdDTO dataForFilter = await _adService.GetDataForCreatingAdOrDataForFilter();
+
+            model.ProductColorsFilterItems = new Dictionary<string, bool>();
+
+            for (int i = 0; i <= dataForFilter.ProductColorsList.Count - 1; i++)
+            {
+                model.ProductColorsFilterItems.Add(dataForFilter.ProductColorsList[i].Name, false);
+            }
+
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Filter(AdIndexViewModel model)
+        {
+            return View("Index");
         }
 
         [HttpGet]
         public async Task<IActionResult> CreateAd()
         {
-            var adDTO = await _adService.GetDataForCreatingAd();
+            var adDTO = await _adService.GetDataForCreatingAdOrDataForFilter();
             AdViewModel model = new AdViewModel { AdDTO = adDTO };
 
             //model.CityAreasSelectList = new SelectList(model.AdDTO.CityAreasList, "CityAreaId", "Name");
@@ -42,6 +59,36 @@ namespace AppleUsed.Web.Controllers
             model.ProductStatesSelectList = new SelectList(model.AdDTO.ProductStatesList, "ProductStatesId", "Name");
 
             return View(model);
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public JsonResult GetProductModelsSelectList()
+        {
+            AdDTO model = new AdDTO();
+
+            {
+                MemoryStream stream = new MemoryStream();
+                Request.Body.CopyTo(stream);
+                stream.Position = 0;
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string requestBody = reader.ReadToEnd();
+                    if (requestBody.Length > 0)
+                    {
+
+                        var obj = JsonConvert.DeserializeObject<AdDTO>(requestBody);
+                        if (obj != null)
+                        {
+                            model = obj;
+                        }
+                    }
+                }
+            }
+
+            int selectedProductTypeId = Convert.ToInt32(model.SelectedProductType);
+
+            return Json(new SelectList(model.ProductModelsList.Where(x => x.ProductTypes.ProductTypesId == selectedProductTypeId), "ProductModelsId", "Name"));
         }
 
         [HttpPost]
@@ -59,38 +106,15 @@ namespace AppleUsed.Web.Controllers
                 return View(model);
             }
 
-            return View();
+            return View("Index");
         }
 
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public JsonResult GetProductModelsSelectList()
+        [HttpGet]
+        public async Task<IActionResult> AdDetails(int? id)
         {
-
-            AdDTO model = new AdDTO();
-
-            {
-                MemoryStream stream = new MemoryStream();
-                Request.Body.CopyTo(stream);
-                stream.Position = 0;
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    string requestBody = reader.ReadToEnd();
-                    if (requestBody.Length > 0)
-                    {
-                        
-                        var obj = JsonConvert.DeserializeObject<AdDTO>(requestBody);
-                        if (obj != null)
-                        {
-                            model = obj;
-                        }
-                    }
-                }
-            }
-
-            int selectedProductTypeId = Convert.ToInt32(model.SelectedProductType);
-
-            return Json(new SelectList(model.ProductModelsList.Where(x => x.ProductTypes.ProductTypesId == selectedProductTypeId), "ProductModelsId", "Name"));
+            var model = await _adService.GetAdById(id??0);
+            return View(model);
         }
+
     }
 }

@@ -39,6 +39,8 @@ namespace AppleUsed.Web
             optionsBuilder.UseSqlServer(GetDataConnectionStringFromConfig());
 
             serviceCollection.AddTransient<IEmailSender, EmailSender>();
+            serviceCollection.AddTransient<IImageCompressorService, ImageCompressorService>();
+
             serviceCollection.AddTransient<IDataService>(
                 s => new DataService(new AppDbContext(optionsBuilder.Options)));
 
@@ -47,7 +49,8 @@ namespace AppleUsed.Web
 
             serviceCollection.AddTransient<IAdService>(
                 s => new AdService(new AppDbContext(optionsBuilder.Options),
-                new DataService(new AppDbContext(optionsBuilder.Options))));
+                new DataService(new AppDbContext(optionsBuilder.Options)), 
+                new ImageCompressorService()));
         }
 
         /// <summary>

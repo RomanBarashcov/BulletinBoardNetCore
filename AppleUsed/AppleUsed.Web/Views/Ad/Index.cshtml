@@ -1,36 +1,56 @@
-﻿@model List<AppleUsed.BLL.DTO.AdDTO>
-
+﻿@model AppleUsed.Web.Models.ViewModels.AdViewModels.AdIndexViewModel
 @{
     ViewData["Title"] = "View";
 }
 
-<form asp-area="" asp-controller="Ad" asp-action="Index" method="get" id="searchForm">
-    <div class="serach-tab col-lg-12">
-        <div class="weapper">
-            <div class="col-lg-2"></div>
-            <div class="inline-block col-lg-8">
-                <div class="padding">
-                    <input class="search-by-prod-name" type="text" name="searchByProdName" value="" placeholder="Например: MacBook Pro" />
+
+@await Html.PartialAsync("_SearchBarPartial")
+
+
+@*<div class="ad-filter-area col-sm-pull-2">
+
+        <div class="form-group-sm">
+
+            <form asp-area="" asp-controller="Ad" asp-action="Filter" method="post" id="searchForm">
+
+
+
+
+                <div>
+                    Html.TextBoxFor(x => x.FilterMinPrice);
+                    <input type="text" placeholder="от" /> - <input type="text" placeholder="до" />
                 </div>
-                <div class="padding">
-                    <input class="serch-by-location" type="text" name="searchWithLocation" value="" placeholder="Например: Киев" />
+
+
+
+                <div class="label__body">
+
+                    { foreach (var c in Model.ProductColorsFilterItems)
+                        {
+
+
+                            Html.CheckBox(c.Key, c.Value)
+
+
+
+                        }
+                    }
                 </div>
-                <div class="padding">
-                    <button class="btn btn-success btn-main-search">Найти!</button>
-                </div>
-            </div>
-            <div class="col-lg-2"></div>
+
+                <button class="btn btn-success btn-main-search">Найти!</button>
+
+            </form>
         </div>
-    </div>
-</form>
+    </div>*@
+
 
 <h2>Топ-объявления</h2>
 
 
-<div class="ad-list">
+<div class="ad-list col-sm-push-10">
 
 
-    @{ foreach (var item in Model)
+    @{ foreach (var item in Model.AdDTO)
         {
 
             string imgSrc = "";
@@ -44,7 +64,7 @@
                     <div class="ad-in">
 
                         <div class="ad-photo pull-left">
-                            <a target="_blank" href="#">
+                            <a target="_blank" href="~/Ad/AdDetails/@item.AdId">
                                 @if (!String.IsNullOrEmpty(imgSrc))
                                 {
                                     <img style='width:170px; height:130px;' src="@imgSrc" />
@@ -55,7 +75,7 @@
                         <div class="ad-description">
                             <div class="location-and-last-modifaied">
                                 <span>
-                                    <a class="ad-title-text" target="_blank" href="#">@item.Title</a>
+                                    <a class="ad-title-text" target="_blank" href="~/Ad/AdDetails/?id=@item.AdId">@item.Title</a>
                                 </span>
                                 <span class="ad-price-text">
                                     <b>@item.Price  .грн</b>

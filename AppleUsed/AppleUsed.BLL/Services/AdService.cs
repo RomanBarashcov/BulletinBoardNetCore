@@ -21,16 +21,17 @@ namespace AppleUsed.BLL.Services
     {
         private AppDbContext _db;
         private IDataService _dataService;
+        private IImageCompressorService _imageCompressorService;
 
-        public AdService(AppDbContext context, IDataService dataService)
+        public AdService(AppDbContext context, IDataService dataService, IImageCompressorService imageCompressorService)
         {
             _db = context;
             _dataService = dataService;
+            _imageCompressorService = imageCompressorService;
         }
 
-        public async Task<List<AdDTO>> GetAds()
+        public async Task<List<AdDTO>> GetAds(string titleFilter, string cityFilter)
         {
-
             List<AdDTO> ads = new List<AdDTO>();
 
             ads = await (from ad in _db.Ads
@@ -66,6 +67,11 @@ namespace AppleUsed.BLL.Services
 
                          }).ToListAsync();
 
+
+            if(!string.IsNullOrEmpty(titleFilter))
+            {
+                ads = ads.Where(x => x.Title.ToLower().Contains(titleFilter.ToLower())).ToList();
+            }
             //List<AdDTO> ads = new List<AdDTO>();
             //List<AdPhotos> photos = new List<AdPhotos>();
 
@@ -146,10 +152,12 @@ namespace AppleUsed.BLL.Services
             return ads;
         }
 
-        public async Task<AdDTO> GetDataForCreatingAd()
+
+        public async Task<AdDTO> GetDataForCreatingAdOrDataForFilter()
         {
 
             AdDTO adDto = new AdDTO();
+
             adDto.CityAreasList = await _db.CityAreas.ToListAsync();
             adDto.ProductTypesList = await (from t in _db.ProductTypes
                                             select new ProductTypes
@@ -204,7 +212,7 @@ namespace AppleUsed.BLL.Services
                         operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
                     }
 
-                    if (productPhotos.Count > 0)
+                    if (productPhotos != null)
                     {
                         var binaryPhotoList = GetBinaryPhotoList(productPhotos);
                         binaryPhotoList.ForEach(x => x.Ad = newAd);
@@ -233,9 +241,43 @@ namespace AppleUsed.BLL.Services
             throw new NotImplementedException();
         }
 
-        public Task<OperationDetails<Ad>> GetAdById(int id)
+        public async Task<AdDTO> GetAdById(int id)
         {
-            throw new NotImplementedException();
+            var adById = await(from ad in _db.Ads
+                            //join c in _db.Cities on ad.City.CityId equals c.CityId
+                            //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
+                            //join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
+                        join ap in _db.AdPhotos on ad.AdId equals ap.Ad.AdId into aPhotos
+                        join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
+                        join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
+                        join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
+                        join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
+                        join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
+                        join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
+                        join u in _db.Users on ad.ApplicationUser.Id equals u.Id
+                        select new AdDTO
+                        {
+                            AdId = ad.AdId,
+                            Title = ad.Title,
+                            Description = ad.Description,
+                            Price = ad.Price,
+                            DateCreated = ad.DateCreated,
+                            DateUpdated = ad.DateUpdated,
+                            //SelectedCityArea 
+                            //SelectedCity 
+                            PhotosList = aPhotos.ToList(),
+                            //AdViews = av.SumViews,
+                            SelectedProductType = pt.Name,
+                            SelectedProductModel = pm.Name,
+                            SelectedProductMemory = prm.Name,
+                            SelectedProductColor = pc.Name,
+                            SelectedProductStates = prs.Name,
+                            User = u
+
+                        }).Where(x=>x.AdId == id).FirstOrDefaultAsync();
+
+
+            return adById;
         }
 
         public Task<OperationDetails<int>> UpdateAd(int id, Ad ad)
@@ -254,7 +296,7 @@ namespace AppleUsed.BLL.Services
                     photosList.Add(
                         new AdPhotos
                         {
-                            Photo = binaryReader.ReadBytes((int)uploadedFile.Length),
+                            Photo = _imageCompressorService.CompresingImage(binaryReader.ReadBytes((int)uploadedFile.Length)),
                             AdPhotoName = uploadedFile.FileName,
                         });
                 }
