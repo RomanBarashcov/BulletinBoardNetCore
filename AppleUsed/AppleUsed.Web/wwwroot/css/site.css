@@ -194,13 +194,45 @@
     background-size: 130px;
 }
 
+.form-label-body{
 
-        /*Ad list start*/
-        .ad-list {
-            margin-bottom: 20px;
-            padding-top: 1px;
-            width: 100%;
-        }
+}
+
+.form-label-body-text {
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+.scrollbox {
+    overflow-y: scroll;
+}
+
+.scrollbox-models {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+.scrollbox-memmories {
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+
+.ad-filter-area{
+    float:left;
+}
+
+.form-label-body-chekbox-list {
+    font-size:12px;
+    list-style: none;
+}
+
+/*Ad list start*/
+.ad-list {
+    margin-bottom: 20px;
+    padding-top: 1px;
+    float: right;
+}
 
     .ad-list li .ad-in {
         height: 140px;

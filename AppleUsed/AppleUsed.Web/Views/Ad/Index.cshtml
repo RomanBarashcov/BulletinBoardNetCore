@@ -7,50 +7,94 @@
 @await Html.PartialAsync("_SearchBarPartial")
 
 
-@*<div class="ad-filter-area col-sm-pull-2">
+<div class="ad-filter-area col-sm-3">
 
         <div class="form-group-sm">
 
             <form asp-area="" asp-controller="Ad" asp-action="Filter" method="post" id="searchForm">
 
+                <input type="hidden" asp-for="@Model.AdList" />
 
-
-
-                <div>
-                    Html.TextBoxFor(x => x.FilterMinPrice);
-                    <input type="text" placeholder="от" /> - <input type="text" placeholder="до" />
+                <div class="form-group-sm">
+                    <input type="text" placeholder="от" name="PriceFilterFrom" class="form-control" />
+                    <input type="text" placeholder="до" name="PriceFilterTo" class="form-control" />
                 </div>
 
 
 
-                <div class="label__body">
+                <div class="form-label-body">
+                    <p class="form-label-body-text">
+                        Модели
+                    </p>
 
-                    { foreach (var c in Model.ProductColorsFilterItems)
-                        {
+                    <div class="scrollbox-models">
+                        <ul class="form-label-body-chekbox-list list-group-item">
+
+                            @for (var i = 0; i < Model.Filter.ProductsModelFilters.Count(); i++)
+                            {
+                                <li>
+                                    <input type="checkbox" asp-for="@Model.Filter.ProductsModelFilters[i].Selected" />
+                                    <label asp-for="@Model.Filter.ProductsModelFilters[i].Selected">@Model.Filter.ProductsModelFilters[i].Name</label>
+                                    <input type="hidden" asp-for="@Model.Filter.ProductsModelFilters[i].Id" />
+                                    <input type="hidden" asp-for="@Model.Filter.ProductsModelFilters[i].Name" />
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <p class="form-label-body-text">
+                        Память
+                    </p>
+
+                    <div class="scrollbox-memmories">
+                        <ul class="form-label-body-chekbox-list list-group-item">
+
+                            @for (var i = 0; i < Model.Filter.ProductMemmories.Count(); i++)
+                            {
+                                <li>
+                                    <input type="checkbox" asp-for="@Model.Filter.ProductMemmories[i].Selected" />
+                                    <label asp-for="@Model.Filter.ProductMemmories[i].Selected">@Model.Filter.ProductMemmories[i].Name</label>
+                                    <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Id" />
+                                    <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Name" />
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <p class="form-label-body-text">
+                        Цвета
+                    </p>
+
+                    <div>
+                        <ul class="form-label-body-chekbox-list list-group-item">
+
+                            @for (var i = 0; i < Model.Filter.ProductsColors.Count(); i++)
+                            {
+                                <li>
+                                    <input type="checkbox" asp-for="@Model.Filter.ProductsColors[i].Selected" />
+                                    <label asp-for="@Model.Filter.ProductsColors[i].Selected">@Model.Filter.ProductsColors[i].Name</label>
+                                    <input type="hidden" asp-for="@Model.Filter.ProductsColors[i].Id" />
+                                    <input type="hidden" asp-for="@Model.Filter.ProductsColors[i].Name" />
+                                </li>
+                            }
+                        </ul>
+                    </div>
 
 
-                            Html.CheckBox(c.Key, c.Value)
-
-
-
-                        }
-                    }
                 </div>
 
-                <button class="btn btn-success btn-main-search">Найти!</button>
+                <button class="btn btn-success btn-main-search btn-block">Найти!</button>
 
             </form>
         </div>
-    </div>*@
+    </div>
 
 
-<h2>Топ-объявления</h2>
+<div class="ad-list col-sm-9">
+    <h2>Топ-объявления</h2>
 
 
-<div class="ad-list col-sm-push-10">
-
-
-    @{ foreach (var item in Model.AdDTO)
+    @{ foreach (var item in Model.AdList)
         {
 
             string imgSrc = "";
@@ -83,7 +127,15 @@
                                 <span class="location">г. Киев</span>
                                 <span class="last-modifaed">@item.DateUpdated</span>
                             </div>
-                            <span class="ad-description">Продам iPhone 6 на 16 Gb. В идеальном состоянии. В подарок два чехла и стоит защитное стекло.</span>
+
+                            @if (item.Description.Length < 100)
+                            {
+                                <span class="ad-description">@item.Description.Substring(0, item.Description.Length) ..</span>
+                            }
+                            else
+                            {
+                                <span class="ad-description">@item.Description.Substring(0, 100) ..</span>
+                            }
 
                         </div>
                     </div>

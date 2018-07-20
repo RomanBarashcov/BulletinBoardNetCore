@@ -39,10 +39,12 @@ namespace AppleUsed.BLL.DTO
         public List<ProductTypes> ProductTypesList { get; set; }
         [Required]
         public string SelectedProductType { get; set; }
+        public int SelectedProductTypeId { get; set; }
 
         public List<ProductModels> ProductModelsList { get; set; }
         [Required]
         public string SelectedProductModel { get; set; }
+        public int SelectedProductModelId { get; set; }
 
         public List<ProductMemories> ProductMemoriesList { get; set; }
         [Required]

@@ -4,6 +4,7 @@ using AppleUsed.DAL.Entities;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace AppleUsed.BLL.Interfaces
 {
     public interface IAdService
     {
-        Task<List<AdDTO>> GetAds(string titleFilter, string cityFilter);
+        Task<IQueryable<AdDTO>> GetAds();
         Task<AdDTO> GetAdById(int id);
         Task<AdDTO> GetDataForCreatingAdOrDataForFilter();
         Task<OperationDetails<int>> SaveAdAsync(string userName, AdDTO ad, IFormFileCollection productPhotos);

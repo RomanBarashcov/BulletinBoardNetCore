@@ -30,11 +30,11 @@ namespace AppleUsed.BLL.Services
             _imageCompressorService = imageCompressorService;
         }
 
-        public async Task<List<AdDTO>> GetAds(string titleFilter, string cityFilter)
+        public async Task<IQueryable<AdDTO>> GetAds()
         {
-            List<AdDTO> ads = new List<AdDTO>();
 
-            ads = await (from ad in _db.Ads
+
+            var ads =  (from ad in _db.Ads
                              //join c in _db.Cities on ad.City.CityId equals c.CityId
                              //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
                              //join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
@@ -59,19 +59,21 @@ namespace AppleUsed.BLL.Services
                              PhotosList = aPhotos.ToList(),
                              //AdViews = av.SumViews,
                              SelectedProductType = pt.Name,
+                             SelectedProductTypeId = pt.ProductTypesId,
                              SelectedProductModel = pm.Name,
+                             SelectedProductModelId = pm.ProductModelsId,
                              SelectedProductMemory = prm.Name,
                              SelectedProductColor = pc.Name,
                              SelectedProductStates = prs.Name,
                              User = u
 
-                         }).ToListAsync();
+                         });
 
 
-            if(!string.IsNullOrEmpty(titleFilter))
-            {
-                ads = ads.Where(x => x.Title.ToLower().Contains(titleFilter.ToLower())).ToList();
-            }
+            //if(!string.IsNullOrEmpty(titleFilter))
+            //{
+            //    ads = ads.Where(x => x.Title.ToLower().Contains(titleFilter.ToLower())).ToList();
+            //}
             //List<AdDTO> ads = new List<AdDTO>();
             //List<AdPhotos> photos = new List<AdPhotos>();
 

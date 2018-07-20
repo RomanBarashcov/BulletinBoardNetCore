@@ -10,13 +10,11 @@ namespace AppleUsed.Web.Models.ViewModels.AdViewModels
 {
     public class AdIndexViewModel
     {
-        public List<AdDTO> AdDTO { get; set; } 
+        public List<AdDTO> AdList { get; set; }
 
-        public string PriceFilterFrom { get; set; }
-        public string PriceFilterTo { get; set; }
-        public Dictionary<string, bool> ProductModelsFilterItems { get; set; }
-        public Dictionary<string, bool> ProductMemmorieFilterItems { get; set; }
-        public Dictionary<string, bool> ProductColorsFilterItems { get; set; }
+        public FilterViewModel Filter { get; set; }
+
+        public PageViewModel PageViewModel { get; set; }
 
     }
 }
