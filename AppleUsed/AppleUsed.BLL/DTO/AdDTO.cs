@@ -49,10 +49,12 @@ namespace AppleUsed.BLL.DTO
         public List<ProductMemories> ProductMemoriesList { get; set; }
         [Required]
         public string SelectedProductMemory { get; set; }
+        public int SelectedPoductMemoryId { get; set; }
 
         public List<ProductColors> ProductColorsList { get; set; }
         [Required]
         public string SelectedProductColor { get; set; }
+        public int SelectedProductColorId { get; set; }
 
         public List<ProductStates> ProductStatesList { get; set; }
         [Required]

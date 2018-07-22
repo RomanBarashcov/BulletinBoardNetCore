@@ -51,15 +51,40 @@ namespace AppleUsed.Web.Controllers
                 var selectedByMemories = model.Filter.ProductMemmories.Where(x => x.Selected).ToList();
                 var selectedByColors = model.Filter.ProductsColors.Where(x => x.Selected).ToList();
 
-
                 AdList = await _adService.GetAds();
                 var ads = new List<AdDTO>();
 
-                for(int i = 0; i <= selectedByModels.Count() - 1; i++)
+                if (selectedByModels.Count() > 0)
                 {
-                    var r = AdList.Where(s => s.SelectedProductModelId == selectedByModels[i].Id).ToList();
-                    ads.AddRange(r);
+                    for (int i = 0; i <= selectedByModels.Count() - 1; i++)
+                    {
+                        var result = AdList.Where(s => s.SelectedProductModelId == selectedByModels[i].Id).ToList();
+                        ads.AddRange(result);
+                    }
                 }
+
+                if(selectedByMemories.Count > 0)
+                {
+                    for (int i = 0; i <= selectedByMemories.Count() - 1; i++)
+                    {
+                        var result = AdList.Where(s => s.SelectedPoductMemoryId == selectedByMemories[i].Id).ToList();
+                        ads.AddRange(result);
+                    }
+                }
+
+                if(selectedByColors.Count > 0)
+                {
+                    for (int i = 0; i <= selectedByColors.Count() - 1; i++)
+                    {
+                        var result = AdList.Where(s => s.SelectedProductColorId == selectedByColors[i].Id).ToList();
+                        ads.AddRange(result);
+                    }
+                }
+
+                var uniqueListResult = (from obj in ads select obj).GroupBy(x => x.AdId).Select(a => a.FirstOrDefault()).ToList();
+
+                ads = new List<AdDTO>();
+                ads.AddRange(uniqueListResult);
 
                 model = await PrepearingDataForAdIndex(ads.AsQueryable(), "iPhone");
 

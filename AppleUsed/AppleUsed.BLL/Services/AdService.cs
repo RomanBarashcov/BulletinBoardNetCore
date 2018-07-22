@@ -63,7 +63,9 @@ namespace AppleUsed.BLL.Services
                              SelectedProductModel = pm.Name,
                              SelectedProductModelId = pm.ProductModelsId,
                              SelectedProductMemory = prm.Name,
+                             SelectedPoductMemoryId = pm.ProductModelsId,
                              SelectedProductColor = pc.Name,
+                             SelectedProductColorId = pc.ProductColorsId,
                              SelectedProductStates = prs.Name,
                              User = u
 
