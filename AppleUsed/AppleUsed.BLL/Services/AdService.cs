@@ -34,6 +34,7 @@ namespace AppleUsed.BLL.Services
         {
 
 
+
             var ads =  (from ad in _db.Ads
                              //join c in _db.Cities on ad.City.CityId equals c.CityId
                              //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
@@ -63,7 +64,7 @@ namespace AppleUsed.BLL.Services
                              SelectedProductModel = pm.Name,
                              SelectedProductModelId = pm.ProductModelsId,
                              SelectedProductMemory = prm.Name,
-                             SelectedPoductMemoryId = pm.ProductModelsId,
+                             SelectedPoductMemoryId = prm.ProductMemoriesId,
                              SelectedProductColor = pc.Name,
                              SelectedProductColorId = pc.ProductColorsId,
                              SelectedProductStates = prs.Name,
@@ -155,7 +156,6 @@ namespace AppleUsed.BLL.Services
 
             return ads;
         }
-
 
         public async Task<AdDTO> GetDataForCreatingAdOrDataForFilter()
         {

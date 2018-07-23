@@ -4,12 +4,6 @@
     <UserSecretsId>aspnet-AppleUsed.Web-727D117F-8A93-4C18-BEAC-B62DEA978353</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Helpers\**" />
-    <Content Remove="Helpers\**" />
-    <EmbeddedResource Remove="Helpers\**" />
-    <None Remove="Helpers\**" />
-  </ItemGroup>
-  <ItemGroup>
     <None Update="app.db" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
@@ -24,6 +18,7 @@
 
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="OwaspHeaders.Core" version="3.3.2" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.11" />
   
   </ItemGroup>
   
