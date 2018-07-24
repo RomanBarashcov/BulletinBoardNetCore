@@ -13,7 +13,11 @@
 
         <form asp-area="" asp-controller="Ad" asp-action="Filter" method="post" id="searchForm">
 
-            <input type="hidden" asp-for="@Model.AdList" />
+            <p class="form-label-body-text">
+                Цена
+            </p>
+
+            <input type="hidden" asp-for="@Model.Filter.SelectedProductType" />
 
             <div class="form-group-sm">
                 <input type="text" placeholder="от" asp-for="Filter.PriceFilterFrom" class="form-control" />
@@ -32,7 +36,7 @@
 
                         @for (var i = 0; i < Model.Filter.ProductsModelFilters.Count(); i++)
                         {
-                            <li>
+                            <li style="display:inline-block;margin:1px; width:104px">
                                 <input type="checkbox" asp-for="@Model.Filter.ProductsModelFilters[i].Selected" />
                                 <label asp-for="@Model.Filter.ProductsModelFilters[i].Selected">@Model.Filter.ProductsModelFilters[i].Name</label>
                                 <input type="hidden" asp-for="@Model.Filter.ProductsModelFilters[i].Id" />
@@ -51,7 +55,7 @@
 
                         @for (var i = 0; i < Model.Filter.ProductMemmories.Count(); i++)
                         {
-                            <li>
+                            <li style="display:inline-block;margin:1px; width:104px">
                                 <input type="checkbox" asp-for="@Model.Filter.ProductMemmories[i].Selected" />
                                 <label asp-for="@Model.Filter.ProductMemmories[i].Selected">@Model.Filter.ProductMemmories[i].Name</label>
                                 <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Id" />
@@ -70,7 +74,7 @@
 
                         @for (var i = 0; i < Model.Filter.ProductsColors.Count(); i++)
                         {
-                            <li>
+                            <li style="display:inline-block;margin:1px; width:104px">
                                 <input type="checkbox" asp-for="@Model.Filter.ProductsColors[i].Selected" />
                                 <label asp-for="@Model.Filter.ProductsColors[i].Selected">@Model.Filter.ProductsColors[i].Name</label>
                                 <input type="hidden" asp-for="@Model.Filter.ProductsColors[i].Id" />
@@ -91,7 +95,37 @@
 
 
 <div class="ad-list col-sm-9">
-    <h2>Топ-объявления</h2>
+
+
+        <h3>Новые объявления</h3>
+
+    <div class="row">
+
+        <div class="col-lg-3">
+            <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-default">Все</button>
+                <button type="button" class="btn btn-default">Б/У</button>
+                <button type="button" class="btn btn-default">Новые</button>
+            </div>
+        </div>
+        <div class="col-lg-6"></div>
+        <div class="col-lg-3">
+            <select class="form-control">
+
+                <option disabled="disabled" value="datePublishStart,desc" selected="selected">Сортировка</option>
+                <option value="datePublishStart,desc">По дате (новые - старые)</option>
+                <option value="datePublishStart,asc">По дате (старые - новые)</option>
+                <option value="price.amount,asc">По цене (дешевле - дороже)</option>
+                <option value="price.amount,desc">По цене (дороже - дешевле)</option>
+                <option value="counter,desc">По популярности</option>
+
+            </select>
+        </div>
+
+    </div>
+
+    <hr />
+
 
 
     @{ foreach (var item in Model.AdList)
@@ -146,23 +180,28 @@
         }
 
     }
-</div>
-@if (Model.PageViewModel != null && Model.PageViewModel.HasPreviousPage)
-{
 
-    <a asp-action="Index"
-       asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-       class="btn btn-default btn">
-        <i class="glyphicon glyphicon-chevron-left"></i>
-        Назад
-    </a>
-}
-@if (Model.PageViewModel != null && Model.PageViewModel.HasNextPage)
-{
-    <a asp-action="Index"
-       asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-       class="btn btn-default btn">
-        Вперед
-        <i class="glyphicon glyphicon-chevron-right"></i>
-    </a>
-}
+    @if (Model.PageViewModel != null && Model.PageViewModel.HasPreviousPage)
+    {
+
+        <a asp-action="Index"
+           asp-route-titleFilter="@(Model.Filter.SelectedProductType)"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           class="btn btn-default btn">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Назад
+        </a>
+    }
+    @if (Model.PageViewModel != null && Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           asp-route-titleFilter="@(Model.Filter.SelectedProductType)"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           class="btn btn-default btn">
+            Вперед
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+    }
+
+
+</div>

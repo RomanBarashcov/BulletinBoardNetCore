@@ -2,21 +2,27 @@
 using Microsoft.AspNetCore.Mvc;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Models.ViewModels;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace AppleUsed.Web.Controllers.Home
 {
     public class HomeController : Controller
     {
         private readonly ISeedService _seedService;
+        private IAdService _adService;
 
-        public HomeController(ISeedService seedService)
+        public HomeController(ISeedService seedService, IAdService adService)
         {
             _seedService = seedService;
+            _adService = adService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var ads = await _adService.GetAds();
+            var modelList = ads.OrderByDescending(x=>x.AdId).Take(5).ToList();
+            return View(modelList);
         }
 
         public IActionResult About()

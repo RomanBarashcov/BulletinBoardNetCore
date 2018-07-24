@@ -99,10 +99,6 @@
     margin-left: 1px;
 }
 
-.padding {
-    padding: 4px;
-    display: inline-block;
-}
 
 .search-by-prod-name, .serch-by-location {
     border: 1px solid silver;
@@ -143,16 +139,15 @@
     background-position: center 15px;
     background-repeat: no-repeat;
     text-align: center;
-    margin-right: 10px;
-    box-shadow: 0 8px 10px 1px rgba(92, 184, 92, 0.22);
+    /*margin-right: 10px;*/
     border-radius: 6px;
-    border: 2px solid #5cb85c;
+    border: 1px solid #5cb85c;
     background-color: #fff;
     margin-left: 7%;
 }
 
     .nav_menu ul li:hover {
-        -webkit-transform: scale(1.1);
+        box-shadow: 0 8px 10px 1px rgba(92, 184, 92, 0.22);
     }
 
 
@@ -194,27 +189,24 @@
     background-size: 130px;
 }
 
-.form-label-body{
-
-}
 
 .form-label-body-text {
     font-size: 20px;
     padding-top: 10px;
 }
 
-.scrollbox {
+/*.scrollbox {
     overflow-y: scroll;
-}
+}*/
 
 .scrollbox-models {
     max-height: 300px;
-    overflow-y: scroll;
+    /*overflow-y: scroll;*/
 }
 
 .scrollbox-memmories {
     max-height: 200px;
-    overflow-y: scroll;
+    /*overflow-y: scroll;*/
 }
 
 
@@ -380,4 +372,11 @@
     width: 92%;
     padding: 7px;
     font-size: 17px;
+}
+
+.form-control:active {
+    border-color: #5cb85c;
+}
+.form-control:focus {
+    border-color: #5cb85c;
 }

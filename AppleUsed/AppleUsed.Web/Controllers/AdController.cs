@@ -20,7 +20,6 @@ namespace AppleUsed.Web.Controllers
     public class AdController : Controller
     {
         private IAdService _adService;
-        private  IQueryable<AdDTO> AdList;
 
         public AdController(IAdService adService)
         {
@@ -30,29 +29,23 @@ namespace AppleUsed.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string titleFilter, string cityFilter, int page = 1)
         {
-
-            int pageSize = 4;
+            int pageSize = 5;
           
-            if (AdList == null || AdList.Count() == 0)
-                AdList = await _adService.GetAds();
+            var adList = await _adService.GetAds();
 
             if (!string.IsNullOrEmpty(titleFilter))
             {
-                AdList = AdList.Where(x => x.Title.ToLower().Contains(titleFilter.ToLower())).AsQueryable();
+                adList = adList.Where(x => x.Title.ToLower().Contains(titleFilter.ToLower()));
             }
 
-            string selectedProductType = AdList.Select(a => a.SelectedProductType).FirstOrDefault();
+            string selectedProductType = adList.Select(a => a.SelectedProductType).FirstOrDefault();
 
-            var model = await PrepearingDataForAdIndex(AdList, selectedProductType);
+            var model = await PrepearingDataForAdIndex(adList, selectedProductType);
+            model.Filter.SelectedProductType = selectedProductType;
 
-
-            int count = AdList.Count();
-
+            int count = adList.Count();
             PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
             model.PageViewModel = pageViewModel;
-
-            var source = model.AdList;
-
             model.AdList = model.AdList.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             return View(model);
@@ -63,119 +56,68 @@ namespace AppleUsed.Web.Controllers
         {
             if (model.Filter != null)
             {
+                var adList = await _adService.GetAds();
+                var ads = new List<AdDTO>();
+
                 if (String.IsNullOrEmpty(model.Filter.PriceFilterFrom))
                     model.Filter.PriceFilterFrom = "0";
 
-                if(String.IsNullOrEmpty(model.Filter.PriceFilterTo))
-                    model.Filter.PriceFilterTo = "1000000";
+                if (String.IsNullOrEmpty(model.Filter.PriceFilterTo))
+                    model.Filter.PriceFilterTo = adList.Max(x => x.Price).ToString();
 
                 var selectedByModels = model.Filter.ProductsModelFilters.Where(x => x.Selected).AsQueryable();
                 var selectedByMemories = model.Filter.ProductMemmories.Where(x => x.Selected).AsQueryable();
                 var selectedByColors = model.Filter.ProductsColors.Where(x => x.Selected).AsQueryable();
 
-                AdList = await _adService.GetAds();
-
-                var ads = new List<AdDTO>();
-
-                if (selectedByModels.Count() > 0 && selectedByMemories.Count() > 0 && selectedByColors.Count() > 0)
+                if (selectedByModels.Count() > 0)
                 {
-                    var adsResult = (from ad in AdList
-                                     join smo in selectedByModels on ad.SelectedProductModelId equals smo.Id
-                                     join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
-                                     join sc in selectedByColors on ad.SelectedProductColorId equals sc.Id
-                                     select ad).ToList();
+                    var byModels = (from ad in adList
+                                    join smo in selectedByModels on ad.SelectedProductModelId equals smo.Id
+                                    select ad).ToList();
 
-                    ads.AddRange(adsResult);
+                    ads.AddRange(byModels);
                 }
-                else if (selectedByModels.Count() > 0 && selectedByMemories.Count() == 0 && selectedByColors.Count() == 0)
+                
+                if(selectedByMemories.Count() > 0)
                 {
+                    var byMemories = (from ad in adList
+                                      join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
+                                      select ad).ToList();
 
-                    var adsResult = (from ad in AdList
-                                     join smo in selectedByModels on ad.SelectedProductModelId equals smo.Id
-                                     select ad).ToList();
-
-                    ads.AddRange(adsResult);
-
-                }
-                else if (selectedByModels.Count() > 0 && selectedByMemories.Count() > 0 && selectedByColors.Count() == 0)
-                {
-
-                    var adsResult = (from ad in AdList
-                                     join smo in selectedByModels on ad.SelectedProductModelId equals smo.Id
-                                     join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
-                                     select ad).ToList();
-
-                    ads.AddRange(adsResult);
-
-                }
-                else if (selectedByModels.Count() == 0 && selectedByMemories.Count() == 0 && selectedByColors.Count() > 0)
-                {
-
-                    var adsResult = (from ad in AdList
-                                     join sc in selectedByColors on ad.SelectedProductColorId equals sc.Id
-                                     select ad).ToList();
-
-                    ads.AddRange(adsResult);
-
-                }
-                else if (selectedByModels.Count() == 0 && selectedByMemories.Count() > 0 && selectedByColors.Count() > 0)
-                {
-                    var adsResult = (from ad in AdList
-                                     join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
-                                     join sc in selectedByColors on ad.SelectedProductColorId equals sc.Id
-                                     select ad).ToList();
-
-                    ads.AddRange(adsResult);
-                }
-                else if (selectedByModels.Count() == 0 && selectedByMemories.Count() > 0 && selectedByColors.Count() == 0)
-                {
-                    var adsResult = (from ad in AdList
-                                     join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
-                                     select ad).ToList();
-
-                    ads.AddRange(adsResult);
-                }
-                else if (selectedByModels.Count() == 0 && selectedByMemories.Count() > 0 && selectedByColors.Count() == 0)
-                {
-                    var adsResult = (from ad in AdList
-                                     join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
-                                     select ad).ToList();
-
-                    ads.AddRange(adsResult);
-                }
-                else if (selectedByModels.Count() > 0 && selectedByMemories.Count() == 0 && selectedByColors.Count() > 0)
-                {
-                    var adsResult = (from ad in AdList
-                                     join smo in selectedByModels on ad.SelectedProductModelId equals smo.Id
-                                     join sc in selectedByColors on ad.SelectedProductColorId equals sc.Id
-                                     select ad).ToList();
-
-                    ads.AddRange(adsResult);
-                }
-                else if (selectedByModels.Count() == 0 && selectedByMemories.Count() == 0 && selectedByColors.Count() == 0)
-                {
-                    ads.AddRange(AdList);
+                    if(selectedByModels.Count() > 0)
+                        ads.Union(byMemories).Distinct();
+                    else
+                        ads.Except(byMemories);
                 }
 
-                var uniqueListResult = (from obj in ads select obj).GroupBy(x => x.AdId).Select(a => a.FirstOrDefault()).ToList();
 
+                if (selectedByColors.Count() > 0)
+                {
+                    var byColors = (from ad in adList
+                                    join sc in selectedByColors on ad.SelectedProductColorId equals sc.Id
+                                    where ad.SelectedProductType == model.Filter.SelectedProductType
+                                    select ad).ToList();
 
-                var filteringWithPrice = uniqueListResult.Where(x => x.Price > decimal.Parse(model.Filter.PriceFilterFrom)
+                    if (selectedByMemories.Count() > 0)
+                        ads.Union(byColors).Distinct();
+                    else
+                        ads.Except(byColors);
+                }
+
+                if(selectedByModels.Count() == 0 && selectedByColors.Count() == 0 && selectedByMemories.Count() == 0)
+                {
+                    ads = await adList.Where(x => x.SelectedProductType == model.Filter.SelectedProductType).ToListAsync();
+                }
+
+                var filteringWithPrice = ads.Where(x => x.Price > decimal.Parse(model.Filter.PriceFilterFrom)
                     && x.Price < decimal.Parse(model.Filter.PriceFilterTo)).ToList();
                 
                 ads = new List<AdDTO>();
                 ads.AddRange(filteringWithPrice);
 
-
-                string selectedProductType = AdList.Select(a => a.SelectedProductType).FirstOrDefault();
-                model = await PrepearingDataForAdIndex(ads.AsQueryable(), selectedProductType);
-
-
-               
-
+                model = await PrepearingDataForAdIndex(ads.AsQueryable(), model.Filter.SelectedProductType);
 
             }
-
                 return View("Index", model);
         }
 

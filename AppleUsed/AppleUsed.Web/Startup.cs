@@ -34,6 +34,7 @@ namespace AppleUsed.Web
             services.AddTransientServices();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+            services.AddSignalR();
             services.AddFeatureFolders();
         }
 
@@ -55,6 +56,12 @@ namespace AppleUsed.Web
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseCookiePolicy();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<Chat>("/chat");
+            });
+
 
             app.UseMvc(routes =>
             {
