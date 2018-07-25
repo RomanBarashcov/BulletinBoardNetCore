@@ -1,4 +1,5 @@
 ﻿using AppleUsed.BLL.DTO;
+using AppleUsed.Web.Models.ViewModels.AccountViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections;
@@ -11,6 +12,8 @@ namespace AppleUsed.Web.Models.ViewModels.AdViewModels
     public class AdIndexViewModel
     {
         public List<AdDTO> AdList { get; set; }
+
+        public SearchFilterViewModel SearchFilter { get; set; }
 
         public FilterViewModel Filter { get; set; }
 

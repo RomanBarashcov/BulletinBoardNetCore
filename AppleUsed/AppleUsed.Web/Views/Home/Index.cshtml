@@ -61,7 +61,7 @@
                     <div class="ad-in">
 
                         <div class="ad-photo pull-left">
-                            <a target="_blank" href="~/Ad/AdDetails/@item.AdId">
+                            <a href="~/Ad/AdDetails/@item.AdId">
                                 @if (!String.IsNullOrEmpty(imgSrc))
                                 {
                                     <img style='width:170px; height:130px;' src="@imgSrc" />
@@ -72,7 +72,7 @@
                         <div class="ad-description">
                             <div class="location-and-last-modifaied">
                                 <span>
-                                    <a class="ad-title-text" target="_blank" href="~/Ad/AdDetails/?id=@item.AdId">@item.Title</a>
+                                    @Html.ActionLink(item.Title, "AdDetails", "Ad", new { id = @item.AdId }, new { @class = "ad-title-text" })
                                 </span>
                                 <span class="ad-price-text">
                                     <b>@item.Price  .грн</b>

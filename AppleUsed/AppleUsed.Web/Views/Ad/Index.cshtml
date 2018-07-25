@@ -1,4 +1,6 @@
-﻿@model AppleUsed.Web.Models.ViewModels.AdViewModels.AdIndexViewModel
+﻿
+
+@model AppleUsed.Web.Models.ViewModels.AdViewModels.AdIndexViewModel
 @{
     ViewData["Title"] = "View";
 }
@@ -7,201 +9,281 @@
 @await Html.PartialAsync("_SearchBarPartial")
 
 
-<div class="ad-filter-area col-sm-3">
 
-    <div class="form-group-sm">
+    <div class="ad-filter-area col-sm-3">
 
-        <form asp-area="" asp-controller="Ad" asp-action="Filter" method="post" id="searchForm">
+        <div class="form-group-sm">
 
-            <p class="form-label-body-text">
-                Цена
-            </p>
-
-            <input type="hidden" asp-for="@Model.Filter.SelectedProductType" />
-
-            <div class="form-group-sm">
-                <input type="text" placeholder="от" asp-for="Filter.PriceFilterFrom" class="form-control" />
-                <input type="text" placeholder="до" asp-for="Filter.PriceFilterTo" class="form-control" />
-            </div>
-
-
-
-            <div class="form-label-body">
-                <p class="form-label-body-text">
-                    Модели
-                </p>
-
-                <div class="scrollbox-models">
-                    <ul class="form-label-body-chekbox-list list-group-item">
-
-                        @for (var i = 0; i < Model.Filter.ProductsModelFilters.Count(); i++)
-                        {
-                            <li style="display:inline-block;margin:1px; width:104px">
-                                <input type="checkbox" asp-for="@Model.Filter.ProductsModelFilters[i].Selected" />
-                                <label asp-for="@Model.Filter.ProductsModelFilters[i].Selected">@Model.Filter.ProductsModelFilters[i].Name</label>
-                                <input type="hidden" asp-for="@Model.Filter.ProductsModelFilters[i].Id" />
-                                <input type="hidden" asp-for="@Model.Filter.ProductsModelFilters[i].Name" />
-                            </li>
-                        }
-                    </ul>
-                </div>
+            <form asp-controller="Ad" asp-action="Index" method="get" id="FilterForm">
 
                 <p class="form-label-body-text">
-                    Память
+                    Цена
                 </p>
 
-                <div class="scrollbox-memmories">
-                    <ul class="form-label-body-chekbox-list list-group-item">
+                <input type="hidden" asp-for="@Model.Filter.SelectedProductType" />
 
-                        @for (var i = 0; i < Model.Filter.ProductMemmories.Count(); i++)
-                        {
-                            <li style="display:inline-block;margin:1px; width:104px">
-                                <input type="checkbox" asp-for="@Model.Filter.ProductMemmories[i].Selected" />
-                                <label asp-for="@Model.Filter.ProductMemmories[i].Selected">@Model.Filter.ProductMemmories[i].Name</label>
-                                <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Id" />
-                                <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Name" />
-                            </li>
-                        }
-                    </ul>
-                </div>
-
-                <p class="form-label-body-text">
-                    Цвета
-                </p>
-
-                <div>
-                    <ul class="form-label-body-chekbox-list list-group-item">
-
-                        @for (var i = 0; i < Model.Filter.ProductsColors.Count(); i++)
-                        {
-                            <li style="display:inline-block;margin:1px; width:104px">
-                                <input type="checkbox" asp-for="@Model.Filter.ProductsColors[i].Selected" />
-                                <label asp-for="@Model.Filter.ProductsColors[i].Selected">@Model.Filter.ProductsColors[i].Name</label>
-                                <input type="hidden" asp-for="@Model.Filter.ProductsColors[i].Id" />
-                                <input type="hidden" asp-for="@Model.Filter.ProductsColors[i].Name" />
-                            </li>
-                        }
-                    </ul>
+                <div class="form-group-sm">
+                    <input type="text" placeholder="от" asp-for="Filter.PriceFilterFrom" class="form-control" />
+                    &nbsp;
+                    <input type="text" placeholder="до" asp-for="Filter.PriceFilterTo" class="form-control" />
                 </div>
 
 
-            </div>
 
-            <button class="btn btn-success btn-main-search btn-block">Найти!</button>
+                <div class="form-label-body">
+                    <p class="form-label-body-text">
+                        Модели
+                    </p>
 
-        </form>
+                    <div class="scrollbox-models">
+                        <ul class="form-label-body-chekbox-list list-group-item">
+
+                            @for (var i = 0; i < Model.Filter.ProductsModelFilters.Count(); i++)
+                            {
+                                <li style="display:inline-block;margin:1px; width:104px">
+                                    <input type="checkbox" asp-for="@Model.Filter.ProductsModelFilters[i].Selected" />
+                                    <label asp-for="@Model.Filter.ProductsModelFilters[i].Selected">@Model.Filter.ProductsModelFilters[i].Name</label>
+                                    <input type="hidden" asp-for="@Model.Filter.ProductsModelFilters[i].Id" />
+                                    <input type="hidden" asp-for="@Model.Filter.ProductsModelFilters[i].Name" />
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <p class="form-label-body-text">
+                        Память
+                    </p>
+
+                    <div class="scrollbox-memmories">
+                        <ul class="form-label-body-chekbox-list list-group-item">
+
+                            @for (var i = 0; i < Model.Filter.ProductMemmories.Count(); i++)
+                            {
+                                <li style="display:inline-block;margin:1px; width:104px">
+                                    <input type="checkbox" asp-for="@Model.Filter.ProductMemmories[i].Selected" />
+                                    <label asp-for="@Model.Filter.ProductMemmories[i].Selected">@Model.Filter.ProductMemmories[i].Name</label>
+                                    <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Id" />
+                                    <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Name" />
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+                    <p class="form-label-body-text">
+                        Цвета
+                    </p>
+
+                    <div>
+                        <ul class="form-label-body-chekbox-list list-group-item">
+
+                            @for (var i = 0; i < Model.Filter.ProductsColors.Count(); i++)
+                            {
+                                <li style="display:inline-block;margin:1px; width:104px">
+                                    <input type="checkbox" asp-for="@Model.Filter.ProductsColors[i].Selected" />
+                                    <label asp-for="@Model.Filter.ProductsColors[i].Selected">@Model.Filter.ProductsColors[i].Name</label>
+                                    <input type="hidden" asp-for="@Model.Filter.ProductsColors[i].Id" />
+                                    <input type="hidden" asp-for="@Model.Filter.ProductsColors[i].Name" />
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
+
+                </div>
+
+                <button class="btn btn-success btn-main-search btn-block">Найти!</button>
+
+            </form>
+        </div>
     </div>
-</div>
 
 
-<div class="ad-list col-sm-9">
+    <div class="ad-list col-sm-9">
 
 
         <h3>Новые объявления</h3>
 
-    <div class="row">
+        <div class="row">
 
-        <div class="col-lg-3">
-            <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-default">Все</button>
-                <button type="button" class="btn btn-default">Б/У</button>
-                <button type="button" class="btn btn-default">Новые</button>
+            <div class="col-lg-3">
+                <div class="btn-group" role="group" aria-label="...">
+                    <button type="button" class="btn btn-default">Все</button>
+                    <button type="button" class="btn btn-default">Б/У</button>
+                    <button type="button" class="btn btn-default">Новые</button>
+                </div>
             </div>
+            <div class="col-lg-6"></div>
+            <div class="col-lg-3">
+                <select class="form-control">
+
+                    <option disabled="disabled" value="datePublishStart,desc" selected="selected">Сортировка</option>
+                    <option value="datePublishStart,desc">По дате (новые - старые)</option>
+                    <option value="datePublishStart,asc">По дате (старые - новые)</option>
+                    <option value="price.amount,asc">По цене (дешевле - дороже)</option>
+                    <option value="price.amount,desc">По цене (дороже - дешевле)</option>
+                    <option value="counter,desc">По популярности</option>
+
+                </select>
+            </div>
+
         </div>
-        <div class="col-lg-6"></div>
-        <div class="col-lg-3">
-            <select class="form-control">
 
-                <option disabled="disabled" value="datePublishStart,desc" selected="selected">Сортировка</option>
-                <option value="datePublishStart,desc">По дате (новые - старые)</option>
-                <option value="datePublishStart,asc">По дате (старые - новые)</option>
-                <option value="price.amount,asc">По цене (дешевле - дороже)</option>
-                <option value="price.amount,desc">По цене (дороже - дешевле)</option>
-                <option value="counter,desc">По популярности</option>
-
-            </select>
-        </div>
-
-    </div>
-
-    <hr />
+        <hr />
 
 
 
-    @{ foreach (var item in Model.AdList)
-        {
-
-            string imgSrc = "";
-            if (item.PhotosList.FirstOrDefault() != null)
+        @{ foreach (var item in Model.AdList)
             {
-                var base64 = Convert.ToBase64String(item.PhotosList.FirstOrDefault().Photo);
-                imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-            }
-            <ul>
-                <li>
-                    <div class="ad-in">
 
-                        <div class="ad-photo pull-left">
-                            <a target="_blank" href="~/Ad/AdDetails/@item.AdId">
-                                @if (!String.IsNullOrEmpty(imgSrc))
-                                {
-                                    <img style='width:170px; height:130px;' src="@imgSrc" />
-                                }
-                            </a>
-                        </div>
+                string imgSrc = "";
+                if (item.PhotosList.FirstOrDefault() != null)
+                {
+                    var base64 = Convert.ToBase64String(item.PhotosList.FirstOrDefault().Photo);
+                    imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                }
 
-                        <div class="ad-description">
-                            <div class="location-and-last-modifaied">
-                                <span>
-                                    <a class="ad-title-text" target="_blank" href="~/Ad/AdDetails/?id=@item.AdId">@item.Title</a>
-                                </span>
-                                <span class="ad-price-text">
-                                    <b>@item.Price  .грн</b>
-                                </span>
-                                <span class="location">г. Киев</span>
-                                <span class="last-modifaed">@item.DateUpdated</span>
+
+                <ul>
+                    <li>
+                        <div class="ad-in">
+
+                            <div class="ad-photo pull-left">
+                                <a href="~/Ad/AdDetails/@item.AdId">
+                                    @if (!String.IsNullOrEmpty(imgSrc))
+                                    {
+                                        <img style='width:170px; height:130px;' src="@imgSrc" />
+                                    }
+                                </a>
                             </div>
 
-                            @if (item.Description.Length < 100)
-                            {
-                                <span class="ad-description">@item.Description.Substring(0, item.Description.Length) ..</span>
-                            }
-                            else
-                            {
-                                <span class="ad-description">@item.Description.Substring(0, 100) ..</span>
-                            }
+                            <div class="ad-description">
+                                <div class="location-and-last-modifaied">
+                                    <span>
+                                        @Html.ActionLink(item.Title, "AdDetails", "Ad", new { id = @item.AdId }, new { @class = "ad-title-text" })
+                                    </span>
+                                    <span class="ad-price-text">
+                                        <b>@item.Price  .грн</b>
+                                    </span>
+                                    <span class="location">г. Киев</span>
+                                    <span class="last-modifaed">@item.DateUpdated</span>
+                                </div>
 
+                                @if (item.Description.Length < 100)
+                                {
+                                    <span class="ad-description">@item.Description.Substring(0, item.Description.Length) ..</span>
+                                }
+                                else
+                                {
+                                    <span class="ad-description">@item.Description.Substring(0, 100) ..</span>
+                                }
+
+                            </div>
                         </div>
-                    </div>
-                </li>
-            </ul>
-            <hr />
+                    </li>
+                </ul>
+                <hr />
+
+            }
 
         }
 
+
+        <form asp-controller="Ad" asp-action="Index" method="get" id="paginationForm">
+
+
+            @if (Model.PageViewModel != null && Model.PageViewModel.HasPreviousPage)
+            {
+
+                <a asp-action="Index"
+                   asp-route-titleFilter="@(Model.Filter.SelectedProductType)"
+                   asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+                   class="btn btn-default btn">
+                    <i class="glyphicon glyphicon-chevron-left"></i>
+                    Назад
+                </a>
+
+            }
+            @if (Model.PageViewModel != null && Model.PageViewModel.HasNextPage)
+            {
+                <a asp-action="Index"
+                   asp-route-titleFilter="@(Model.Filter.SelectedProductType)"
+                   asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+                   asp-route-model="@(Model)"
+                   class="btn btn-default btn">
+                    Вперед
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </a>
+            }
+
+        </form>
+    </div>
+
+
+<script type="text/javascript">
+
+
+    function nextPageHandler() {
+
+        var page = parseInt($("#currentPage").val());
+
+        page = page + 1;
+
+        $("#currentPage").val(page);
+
+        sendData();
+    };
+
+     function sendData() {
+
+         //var data = GetDataForSendController();
+         var data = JSON.stringify($('#FilterForm').serialize());
+
+         getFormDataAsJSON($('#FilterForm'));
+
+         console.log(data);
+
+         $.ajax({
+             type: "POST",
+             url: "@Url.Action("Filter")",
+             data: data ,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+       
+                //var items = '';
+                //$('#ProductModelItems').empty();
+
+                //$.each(data, function (i, selectedModel) {
+                //    items += "<option value='" + selectedModel.value + "'>" + selectedModel.text + "</option>";
+                //});
+
+                //$('#ProductModelItems').html(items);
+
+                //console.log(items);
+
+                //$('#ProductModel').show();
+                //data.empty;
+            },
+            failure: function (errMsg) {
+                alert(errMsg);
+            }
+        });
+    };
+
+
+    function GetDataForSendController(selectedValue) {
+
+        var data = '@Html.Raw(Json.Serialize(Model.Filter))';
+        console.log(data);
+
+        var parseData = $.parseJSON(data);
+        //parseData.pageViewModel.pageNumber = parseData.pageViewModel.pageNumber + 1;
+        data = JSON.stringify(parseData);
+
+        //console.log(parseData.pageViewModel.pageNumber);
+
+        return data;
     }
+    
 
-    @if (Model.PageViewModel != null && Model.PageViewModel.HasPreviousPage)
-    {
-
-        <a asp-action="Index"
-           asp-route-titleFilter="@(Model.Filter.SelectedProductType)"
-           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-           class="btn btn-default btn">
-            <i class="glyphicon glyphicon-chevron-left"></i>
-            Назад
-        </a>
-    }
-    @if (Model.PageViewModel != null && Model.PageViewModel.HasNextPage)
-    {
-        <a asp-action="Index"
-           asp-route-titleFilter="@(Model.Filter.SelectedProductType)"
-           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-           class="btn btn-default btn">
-            Вперед
-            <i class="glyphicon glyphicon-chevron-right"></i>
-        </a>
-    }
-
-
-</div>
+</script>

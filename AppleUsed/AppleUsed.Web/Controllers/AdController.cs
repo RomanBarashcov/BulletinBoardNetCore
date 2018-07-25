@@ -20,18 +20,20 @@ namespace AppleUsed.Web.Controllers
     public class AdController : Controller
     {
         private IAdService _adService;
-
+        
         public AdController(IAdService adService)
         {
             _adService = adService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string titleFilter, string cityFilter, int page = 1)
+        public async Task<IActionResult> Index(string titleFilter, string cityFilter, AdIndexViewModel model, int page = 1)
         {
             int pageSize = 5;
-          
-            var adList = await _adService.GetAds();
+
+            IQueryable<AdDTO> adList;
+
+            adList = await GetFilteredData(model);
 
             if (!string.IsNullOrEmpty(titleFilter))
             {
@@ -40,7 +42,7 @@ namespace AppleUsed.Web.Controllers
 
             string selectedProductType = adList.Select(a => a.SelectedProductType).FirstOrDefault();
 
-            var model = await PrepearingDataForAdIndex(adList, selectedProductType);
+            model = await PrepearingDataForAdIndex(adList, selectedProductType);
             model.Filter.SelectedProductType = selectedProductType;
 
             int count = adList.Count();
@@ -51,12 +53,13 @@ namespace AppleUsed.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Filter(AdIndexViewModel model)
+        public async Task<IQueryable<AdDTO>> GetFilteredData(AdIndexViewModel model)
         {
+
+            var adList = await _adService.GetAds();
+
             if (model.Filter != null)
             {
-                var adList = await _adService.GetAds();
                 var ads = new List<AdDTO>();
 
                 if (String.IsNullOrEmpty(model.Filter.PriceFilterFrom))
@@ -77,14 +80,14 @@ namespace AppleUsed.Web.Controllers
 
                     ads.AddRange(byModels);
                 }
-                
-                if(selectedByMemories.Count() > 0)
+
+                if (selectedByMemories.Count() > 0)
                 {
                     var byMemories = (from ad in adList
                                       join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
                                       select ad).ToList();
 
-                    if(selectedByModels.Count() > 0)
+                    if (selectedByModels.Count() > 0)
                         ads.Union(byMemories).Distinct();
                     else
                         ads.Except(byMemories);
@@ -104,21 +107,23 @@ namespace AppleUsed.Web.Controllers
                         ads.Except(byColors);
                 }
 
-                if(selectedByModels.Count() == 0 && selectedByColors.Count() == 0 && selectedByMemories.Count() == 0)
+                if (selectedByModels.Count() == 0 && selectedByColors.Count() == 0 && selectedByMemories.Count() == 0)
                 {
                     ads = await adList.Where(x => x.SelectedProductType == model.Filter.SelectedProductType).ToListAsync();
                 }
 
                 var filteringWithPrice = ads.Where(x => x.Price > decimal.Parse(model.Filter.PriceFilterFrom)
                     && x.Price < decimal.Parse(model.Filter.PriceFilterTo)).ToList();
-                
+
                 ads = new List<AdDTO>();
                 ads.AddRange(filteringWithPrice);
 
-                model = await PrepearingDataForAdIndex(ads.AsQueryable(), model.Filter.SelectedProductType);
+                return ads.AsQueryable();
 
             }
-                return View("Index", model);
+
+
+            return adList;
         }
 
 

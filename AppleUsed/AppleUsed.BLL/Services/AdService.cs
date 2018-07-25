@@ -68,91 +68,9 @@ namespace AppleUsed.BLL.Services
                              SelectedProductColor = pc.Name,
                              SelectedProductColorId = pc.ProductColorsId,
                              SelectedProductStates = prs.Name,
-                             User = u
+                             User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
 
                          });
-
-
-            //if(!string.IsNullOrEmpty(titleFilter))
-            //{
-            //    ads = ads.Where(x => x.Title.ToLower().Contains(titleFilter.ToLower())).ToList();
-            //}
-            //List<AdDTO> ads = new List<AdDTO>();
-            //List<AdPhotos> photos = new List<AdPhotos>();
-
-            ////List<AdPhotos> photos = await (from p in _db.AdPhotos
-            ////                               join ad in _db.Ads on p.Ad.AdId equals ad.AdId
-            ////                               select new AdPhotos
-            ////                               {
-            ////                                   Ad = ad,
-            ////                                   AdPhotosId = p.AdPhotosId,
-            ////                                   AdPhotoName = p.AdPhotoName,
-            ////                                   Photo = p.Photo
-
-            ////                               }).ToListAsync();
-
-            //ProcedureService procedureService = new ProcedureService();
-            //SqlDataReader photosReader = procedureService.GetResultFromStoredProcedure("dbo.GetAllPhotos");
-
-            //if (photosReader.HasRows)
-            //{
-            //    while (photosReader.Read())
-            //    {
-
-            //            int adPhotosId = Int32.Parse(photosReader["AdPhotosId"].ToString());
-            //            string adPhotoName = photosReader["AdPhotoName"].ToString();
-            //            byte[] photo = Encoding.ASCII.GetBytes(photosReader["Photo"].ToString());
-            //            int adId = Int32.Parse(photosReader["AdId"].ToString());
-
-
-            //            photos.Add(new AdPhotos
-            //            {
-            //                AdPhotosId = adPhotosId,
-            //                AdPhotoName = adPhotoName,
-            //                Photo = photo,
-            //                Ad = _db.Ads.Where(x => x.AdId == adId).FirstOrDefault()
-            //            });
-            //    }
-            //}
-
-            //photosReader.Close();
-
-            //SqlDataReader reader = procedureService.GetResultFromStoredProcedure("dbo.GetAllAds");
-
-            //if (reader.HasRows)
-            //{
-            //    while (reader.Read())
-            //    {
-            //        ApplicationUser user = await _db.Users.Where(x => x.Id == reader["UserId"].ToString()).FirstOrDefaultAsync();
-
-            //        ads.Add(new AdDTO
-            //        {
-            //            AdId = Int32.Parse(reader["AdId"].ToString()),
-            //            Title = reader["Title"].ToString(),
-            //            Description = reader["Description"].ToString(),
-            //            Price = Decimal.Parse(reader["Price"].ToString()),
-            //            DateCreated = DateTime.Parse(reader["DateCreated"].ToString()),
-            //            DateUpdated = DateTime.Parse(reader["DateUpdated"].ToString()),
-            //            PhotosList = photos.Where(x => x.Ad.AdId == Int32.Parse(reader["AdId"].ToString())).ToList(),
-            //            SelectedProductType = reader["ProductType"].ToString(),
-            //            SelectedProductModel = reader["ProductModel"].ToString(),
-            //            SelectedProductMemory = reader["ProductMemory"].ToString(),
-            //            SelectedProductColor = reader["ProductColor"].ToString(),
-            //            SelectedProductStates = reader["ProductState"].ToString(),
-            //            User = user
-
-            //        });
-            //    }
-            //}
-            //else
-            //{
-            //    Console.WriteLine("No rows found.");
-            //}
-
-
-
-            //reader.Close();
-            
 
             return ads;
         }
