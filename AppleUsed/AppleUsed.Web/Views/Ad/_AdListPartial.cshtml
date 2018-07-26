@@ -1,0 +1,95 @@
+﻿@model AppleUsed.Web.Models.ViewModels.AdViewModels.AdIndexViewModel
+
+
+
+<div class="ad-list col-sm-9">
+
+    @{ foreach (var item in Model.AdList)
+        {
+
+            string imgSrc = "";
+            if (item.PhotosList.FirstOrDefault() != null)
+            {
+                var base64 = Convert.ToBase64String(item.PhotosList.FirstOrDefault().Photo);
+                imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+            }
+
+
+            <ul>
+                <li>
+                    <div class="ad-in">
+
+                        <div class="ad-photo pull-left">
+                            <a href="~/Ad/AdDetails/@item.AdId">
+                                @if (!String.IsNullOrEmpty(imgSrc))
+                                {
+                                    <img style='width:170px; height:130px;' src="@imgSrc" />
+                                }
+                            </a>
+                        </div>
+
+                        <div class="ad-description">
+                            <div class="location-and-last-modifaied">
+                                <span>
+                                    @Html.ActionLink(item.Title, "AdDetails", "Ad", new { id = @item.AdId }, new { @class = "ad-title-text" })
+                                </span>
+                                <span class="ad-price-text">
+                                    <b>@item.Price  .грн</b>
+                                </span>
+                                <span class="location">г. Киев</span>
+                                <span class="last-modifaed">@item.DateUpdated</span>
+                            </div>
+
+                            @if (item.Description.Length < 100)
+                            {
+                                <span class="ad-description">@item.Description.Substring(0, item.Description.Length) ..</span>
+                            }
+                            else
+                            {
+                                <span class="ad-description">@item.Description.Substring(0, 100) ..</span>
+                            }
+
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <hr />
+
+        }
+
+    }
+</div>
+
+<div class="ad-list col-sm-9">
+    <div class="row">
+
+        @if (Model.PageViewModel != null && Model.PageViewModel.HasPreviousPage)
+        {
+            @using (Html.BeginForm("Index", "Ad", FormMethod.Get, new { @id = "BackPage" }))
+            {
+                <div class="col-sm-2">
+                    <input type="hidden" name="page" id="page" value="@(Model.PageViewModel.PageNumber - 1)" />
+                    <input type="hidden" name="titleFilter" value="@(Model.Filter.SelectedProductType)" />
+                    <input type="submit" class="btn btn-default btn" value="< Назад" />
+                </div>
+
+            }
+        }
+
+        @if (Model.PageViewModel != null && Model.PageViewModel.HasNextPage)
+        {
+
+            @using (Html.BeginForm("Index", "Ad", FormMethod.Get, new { @id = "NextPage" }))
+            {
+
+                <div class="col-sm-2">
+                    <input type="hidden" name="titleFilter" value="@(Model.Filter.SelectedProductType)" />
+                    <input type="hidden" name="page" id="page" value="@(Model.PageViewModel.PageNumber + 1)" />
+                    <input type="submit" class="btn btn-default btn" value="Вперед >" />
+                </div>
+            }
+        }
+
+    </div>
+</div>

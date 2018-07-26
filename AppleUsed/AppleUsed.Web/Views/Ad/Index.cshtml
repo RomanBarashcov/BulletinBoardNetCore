@@ -9,91 +9,87 @@
 @await Html.PartialAsync("_SearchBarPartial")
 
 
+<form asp-controller="Ad" asp-action="Index" method="get" id="Filtering">
 
     <div class="ad-filter-area col-sm-3">
 
         <div class="form-group-sm">
 
-            <form asp-controller="Ad" asp-action="Index" method="get" id="FilterForm">
+            <p class="form-label-body-text">
+                Цена
+            </p>
 
+            <input type="hidden" asp-for="@Model.Filter.SelectedProductType" />
+
+            <div class="form-group-sm">
+                <input type="text" placeholder="от" asp-for="Filter.PriceFilterFrom" class="form-control" />
+                &nbsp;
+                <input type="text" placeholder="до" asp-for="Filter.PriceFilterTo" class="form-control" />
+            </div>
+
+            <div class="form-label-body">
                 <p class="form-label-body-text">
-                    Цена
+                    Модели
                 </p>
 
-                <input type="hidden" asp-for="@Model.Filter.SelectedProductType" />
+                <div class="scrollbox-models">
+                    <ul class="form-label-body-chekbox-list list-group-item">
 
-                <div class="form-group-sm">
-                    <input type="text" placeholder="от" asp-for="Filter.PriceFilterFrom" class="form-control" />
-                    &nbsp;
-                    <input type="text" placeholder="до" asp-for="Filter.PriceFilterTo" class="form-control" />
+                        @for (var i = 0; i < Model.Filter.ProductsModelFilters.Count(); i++)
+                        {
+                            <li style="display:inline-block;margin:1px; width:104px">
+                                <input type="checkbox" asp-for="@Model.Filter.ProductsModelFilters[i].Selected" />
+                                <label asp-for="@Model.Filter.ProductsModelFilters[i].Selected">@Model.Filter.ProductsModelFilters[i].Name</label>
+                                <input type="hidden" asp-for="@Model.Filter.ProductsModelFilters[i].Id" />
+                                <input type="hidden" asp-for="@Model.Filter.ProductsModelFilters[i].Name" />
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <p class="form-label-body-text">
+                    Память
+                </p>
+
+                <div class="scrollbox-memmories">
+                    <ul class="form-label-body-chekbox-list list-group-item">
+
+                        @for (var i = 0; i < Model.Filter.ProductMemmories.Count(); i++)
+                        {
+                            <li style="display:inline-block;margin:1px; width:104px">
+                                <input type="checkbox" asp-for="@Model.Filter.ProductMemmories[i].Selected" />
+                                <label asp-for="@Model.Filter.ProductMemmories[i].Selected">@Model.Filter.ProductMemmories[i].Name</label>
+                                <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Id" />
+                                <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Name" />
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+                <p class="form-label-body-text">
+                    Цвета
+                </p>
+
+                <div>
+                    <ul class="form-label-body-chekbox-list list-group-item">
+
+                        @for (var i = 0; i < Model.Filter.ProductsColors.Count(); i++)
+                        {
+                            <li style="display:inline-block;margin:1px; width:104px">
+                                <input type="checkbox" asp-for="@Model.Filter.ProductsColors[i].Selected" />
+                                <label asp-for="@Model.Filter.ProductsColors[i].Selected">@Model.Filter.ProductsColors[i].Name</label>
+                                <input type="hidden" asp-for="@Model.Filter.ProductsColors[i].Id" />
+                                <input type="hidden" asp-for="@Model.Filter.ProductsColors[i].Name" />
+                            </li>
+                        }
+                    </ul>
                 </div>
 
 
+            </div>
 
-                <div class="form-label-body">
-                    <p class="form-label-body-text">
-                        Модели
-                    </p>
+            <input type="button" onclick="Filtering()" class="btn btn-success btn-main-search btn-block" value="Найти!"/>
 
-                    <div class="scrollbox-models">
-                        <ul class="form-label-body-chekbox-list list-group-item">
-
-                            @for (var i = 0; i < Model.Filter.ProductsModelFilters.Count(); i++)
-                            {
-                                <li style="display:inline-block;margin:1px; width:104px">
-                                    <input type="checkbox" asp-for="@Model.Filter.ProductsModelFilters[i].Selected" />
-                                    <label asp-for="@Model.Filter.ProductsModelFilters[i].Selected">@Model.Filter.ProductsModelFilters[i].Name</label>
-                                    <input type="hidden" asp-for="@Model.Filter.ProductsModelFilters[i].Id" />
-                                    <input type="hidden" asp-for="@Model.Filter.ProductsModelFilters[i].Name" />
-                                </li>
-                            }
-                        </ul>
-                    </div>
-
-                    <p class="form-label-body-text">
-                        Память
-                    </p>
-
-                    <div class="scrollbox-memmories">
-                        <ul class="form-label-body-chekbox-list list-group-item">
-
-                            @for (var i = 0; i < Model.Filter.ProductMemmories.Count(); i++)
-                            {
-                                <li style="display:inline-block;margin:1px; width:104px">
-                                    <input type="checkbox" asp-for="@Model.Filter.ProductMemmories[i].Selected" />
-                                    <label asp-for="@Model.Filter.ProductMemmories[i].Selected">@Model.Filter.ProductMemmories[i].Name</label>
-                                    <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Id" />
-                                    <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Name" />
-                                </li>
-                            }
-                        </ul>
-                    </div>
-
-                    <p class="form-label-body-text">
-                        Цвета
-                    </p>
-
-                    <div>
-                        <ul class="form-label-body-chekbox-list list-group-item">
-
-                            @for (var i = 0; i < Model.Filter.ProductsColors.Count(); i++)
-                            {
-                                <li style="display:inline-block;margin:1px; width:104px">
-                                    <input type="checkbox" asp-for="@Model.Filter.ProductsColors[i].Selected" />
-                                    <label asp-for="@Model.Filter.ProductsColors[i].Selected">@Model.Filter.ProductsColors[i].Name</label>
-                                    <input type="hidden" asp-for="@Model.Filter.ProductsColors[i].Id" />
-                                    <input type="hidden" asp-for="@Model.Filter.ProductsColors[i].Name" />
-                                </li>
-                            }
-                        </ul>
-                    </div>
-
-
-                </div>
-
-                <button class="btn btn-success btn-main-search btn-block">Найти!</button>
-
-            </form>
         </div>
     </div>
 
@@ -102,7 +98,7 @@
 
 
         <h3>Новые объявления</h3>
-
+        
         <div class="row">
 
             <div class="col-lg-3">
@@ -129,161 +125,23 @@
         </div>
 
         <hr />
-
-
-
-        @{ foreach (var item in Model.AdList)
-            {
-
-                string imgSrc = "";
-                if (item.PhotosList.FirstOrDefault() != null)
-                {
-                    var base64 = Convert.ToBase64String(item.PhotosList.FirstOrDefault().Photo);
-                    imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                }
-
-
-                <ul>
-                    <li>
-                        <div class="ad-in">
-
-                            <div class="ad-photo pull-left">
-                                <a href="~/Ad/AdDetails/@item.AdId">
-                                    @if (!String.IsNullOrEmpty(imgSrc))
-                                    {
-                                        <img style='width:170px; height:130px;' src="@imgSrc" />
-                                    }
-                                </a>
-                            </div>
-
-                            <div class="ad-description">
-                                <div class="location-and-last-modifaied">
-                                    <span>
-                                        @Html.ActionLink(item.Title, "AdDetails", "Ad", new { id = @item.AdId }, new { @class = "ad-title-text" })
-                                    </span>
-                                    <span class="ad-price-text">
-                                        <b>@item.Price  .грн</b>
-                                    </span>
-                                    <span class="location">г. Киев</span>
-                                    <span class="last-modifaed">@item.DateUpdated</span>
-                                </div>
-
-                                @if (item.Description.Length < 100)
-                                {
-                                    <span class="ad-description">@item.Description.Substring(0, item.Description.Length) ..</span>
-                                }
-                                else
-                                {
-                                    <span class="ad-description">@item.Description.Substring(0, 100) ..</span>
-                                }
-
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <hr />
-
-            }
-
-        }
-
-
-        <form asp-controller="Ad" asp-action="Index" method="get" id="paginationForm">
-
-
-            @if (Model.PageViewModel != null && Model.PageViewModel.HasPreviousPage)
-            {
-
-                <a asp-action="Index"
-                   asp-route-titleFilter="@(Model.Filter.SelectedProductType)"
-                   asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-                   class="btn btn-default btn">
-                    <i class="glyphicon glyphicon-chevron-left"></i>
-                    Назад
-                </a>
-
-            }
-            @if (Model.PageViewModel != null && Model.PageViewModel.HasNextPage)
-            {
-                <a asp-action="Index"
-                   asp-route-titleFilter="@(Model.Filter.SelectedProductType)"
-                   asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-                   asp-route-model="@(Model)"
-                   class="btn btn-default btn">
-                    Вперед
-                    <i class="glyphicon glyphicon-chevron-right"></i>
-                </a>
-            }
-
-        </form>
     </div>
 
+
+    @await Html.PartialAsync("_AdListPartial", Model)
+
+</form>
 
 <script type="text/javascript">
 
 
-    function nextPageHandler() {
 
-        var page = parseInt($("#currentPage").val());
+        function Filtering() {
 
-        page = page + 1;
+            $('#page').val("");
+            $('#Filtering').submit();
 
-        $("#currentPage").val(page);
+        }
 
-        sendData();
-    };
-
-     function sendData() {
-
-         //var data = GetDataForSendController();
-         var data = JSON.stringify($('#FilterForm').serialize());
-
-         getFormDataAsJSON($('#FilterForm'));
-
-         console.log(data);
-
-         $.ajax({
-             type: "POST",
-             url: "@Url.Action("Filter")",
-             data: data ,
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-       
-                //var items = '';
-                //$('#ProductModelItems').empty();
-
-                //$.each(data, function (i, selectedModel) {
-                //    items += "<option value='" + selectedModel.value + "'>" + selectedModel.text + "</option>";
-                //});
-
-                //$('#ProductModelItems').html(items);
-
-                //console.log(items);
-
-                //$('#ProductModel').show();
-                //data.empty;
-            },
-            failure: function (errMsg) {
-                alert(errMsg);
-            }
-        });
-    };
-
-
-    function GetDataForSendController(selectedValue) {
-
-        var data = '@Html.Raw(Json.Serialize(Model.Filter))';
-        console.log(data);
-
-        var parseData = $.parseJSON(data);
-        //parseData.pageViewModel.pageNumber = parseData.pageViewModel.pageNumber + 1;
-        data = JSON.stringify(parseData);
-
-        //console.log(parseData.pageViewModel.pageNumber);
-
-        return data;
-    }
-    
 
 </script>

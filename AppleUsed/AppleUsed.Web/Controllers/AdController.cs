@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AppleUsed.BLL.DTO;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Extensions;
+using AppleUsed.Web.Filters;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,34 +18,40 @@ using Newtonsoft.Json;
 
 namespace AppleUsed.Web.Controllers
 {
-    public class AdController : Controller
+    public class AdController : Controller, IDisposable
     {
         private IAdService _adService;
-        
+
         public AdController(IAdService adService)
         {
             _adService = adService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string titleFilter, string cityFilter, AdIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(string titleFilter, string cityFilter, string adType, AdIndexViewModel model, int page = 1)
         {
             int pageSize = 5;
 
-            IQueryable<AdDTO> adList;
+            IQueryable<AdDTO> adList = await _adService.GetAds();
 
-            adList = await GetFilteredData(model);
+            adList = await new CheckBoxFilter(model, adList).GetAdsByFilteringData();
 
             if (!string.IsNullOrEmpty(titleFilter))
             {
                 adList = adList.Where(x => x.Title.ToLower().Contains(titleFilter.ToLower()));
             }
 
-            string selectedProductType = adList.Select(a => a.SelectedProductType).FirstOrDefault();
-
-            model = await PrepearingDataForAdIndex(adList, selectedProductType);
-            model.Filter.SelectedProductType = selectedProductType;
-
+            if(model.Filter == null)
+            {
+                string selectedProductType = adList.Select(a => a.SelectedProductType).FirstOrDefault();
+                model = await PrepearingDataForAdIndex(adList, selectedProductType);
+                model.Filter.SelectedProductType = selectedProductType;
+            }
+            else
+            {
+                model.AdList = adList.ToList();
+            }
+           
             int count = adList.Count();
             PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
             model.PageViewModel = pageViewModel;
@@ -52,81 +59,6 @@ namespace AppleUsed.Web.Controllers
 
             return View(model);
         }
-
-        public async Task<IQueryable<AdDTO>> GetFilteredData(AdIndexViewModel model)
-        {
-
-            var adList = await _adService.GetAds();
-
-            if (model.Filter != null)
-            {
-                var ads = new List<AdDTO>();
-
-                if (String.IsNullOrEmpty(model.Filter.PriceFilterFrom))
-                    model.Filter.PriceFilterFrom = "0";
-
-                if (String.IsNullOrEmpty(model.Filter.PriceFilterTo))
-                    model.Filter.PriceFilterTo = adList.Max(x => x.Price).ToString();
-
-                var selectedByModels = model.Filter.ProductsModelFilters.Where(x => x.Selected).AsQueryable();
-                var selectedByMemories = model.Filter.ProductMemmories.Where(x => x.Selected).AsQueryable();
-                var selectedByColors = model.Filter.ProductsColors.Where(x => x.Selected).AsQueryable();
-
-                if (selectedByModels.Count() > 0)
-                {
-                    var byModels = (from ad in adList
-                                    join smo in selectedByModels on ad.SelectedProductModelId equals smo.Id
-                                    select ad).ToList();
-
-                    ads.AddRange(byModels);
-                }
-
-                if (selectedByMemories.Count() > 0)
-                {
-                    var byMemories = (from ad in adList
-                                      join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
-                                      select ad).ToList();
-
-                    if (selectedByModels.Count() > 0)
-                        ads.Union(byMemories).Distinct();
-                    else
-                        ads.Except(byMemories);
-                }
-
-
-                if (selectedByColors.Count() > 0)
-                {
-                    var byColors = (from ad in adList
-                                    join sc in selectedByColors on ad.SelectedProductColorId equals sc.Id
-                                    where ad.SelectedProductType == model.Filter.SelectedProductType
-                                    select ad).ToList();
-
-                    if (selectedByMemories.Count() > 0)
-                        ads.Union(byColors).Distinct();
-                    else
-                        ads.Except(byColors);
-                }
-
-                if (selectedByModels.Count() == 0 && selectedByColors.Count() == 0 && selectedByMemories.Count() == 0)
-                {
-                    ads = await adList.Where(x => x.SelectedProductType == model.Filter.SelectedProductType).ToListAsync();
-                }
-
-                var filteringWithPrice = ads.Where(x => x.Price > decimal.Parse(model.Filter.PriceFilterFrom)
-                    && x.Price < decimal.Parse(model.Filter.PriceFilterTo)).ToList();
-
-                ads = new List<AdDTO>();
-                ads.AddRange(filteringWithPrice);
-
-                return ads.AsQueryable();
-
-            }
-
-
-            return adList;
-        }
-
-
        
         [HttpGet]
         public async Task<IActionResult> CreateAd()
@@ -210,8 +142,6 @@ namespace AppleUsed.Web.Controllers
             adIndexViewModel.Filter.ProductMemmories = new List<ProductMemmoriesFilter>();
             adIndexViewModel.Filter.ProductsColors = new List<ProductsColorFilter>();
 
-
-
             var productModelsList = dataForFilter.ProductModelsList.Where(p => p.ProductTypes.Name == selectedProductType).OrderByDescending(x => x.Name).ToList();
 
             for (int i = 0; i <= productModelsList.Count - 1; i++)
@@ -250,5 +180,7 @@ namespace AppleUsed.Web.Controllers
 
             return adIndexViewModel;
         }
+
+
     }
 }
