@@ -32,9 +32,6 @@ namespace AppleUsed.BLL.Services
 
         public async Task<IQueryable<AdDTO>> GetAds()
         {
-
-
-
             var ads =  (from ad in _db.Ads
                              //join c in _db.Cities on ad.City.CityId equals c.CityId
                              //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
@@ -233,7 +230,6 @@ namespace AppleUsed.BLL.Services
         public void Dispose()
         {
             Dispose(true);
-            // подавляем финализацию
             GC.SuppressFinalize(this);
         }
 
@@ -241,13 +237,9 @@ namespace AppleUsed.BLL.Services
         {
             if (!disposed)
             {
-                if (disposing)
-                {
-                    
-                }
-                // освобождаем неуправляемые объекты
-
                 _db = null;
+                _dataService = null;
+                _imageCompressorService = null;
                 disposed = true;
             }
         }

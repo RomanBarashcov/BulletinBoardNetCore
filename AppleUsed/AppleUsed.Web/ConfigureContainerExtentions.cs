@@ -51,6 +51,10 @@ namespace AppleUsed.Web
                 s => new AdService(new AppDbContext(optionsBuilder.Options),
                 new DataService(new AppDbContext(optionsBuilder.Options)), 
                 new ImageCompressorService()));
+
+            serviceCollection.AddTransient<IConversationService>(
+                s => new ConversationService(new AppDbContext(optionsBuilder.Options)));
+
         }
 
         /// <summary>

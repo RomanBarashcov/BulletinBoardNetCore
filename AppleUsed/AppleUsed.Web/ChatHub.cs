@@ -8,9 +8,9 @@ namespace AppleUsed.Web
 {
     public class Chat : Hub
     {
-        public async Task Send(string message)
+        public async Task Send(string message, string userName)
         {
-            await Clients.All.SendAsync("Send", message);
+            await Clients.All.SendAsync("Send", message, userName);
         }
     }
 }

@@ -4,6 +4,7 @@ using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Models.ViewModels;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 namespace AppleUsed.Web.Controllers.Home
 {
@@ -42,6 +43,23 @@ namespace AppleUsed.Web.Controllers.Home
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                _adService = null;
+                disposed = true;
+            }
         }
     }
 }

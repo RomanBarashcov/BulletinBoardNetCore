@@ -72,6 +72,7 @@ namespace AppleUsed.Web
                 routes.MapRoute(
                    name: "Ad",
                    template: "{controller=Ad}/{action=Index}/{titleFilter}/{cityFilter}");
+
             });
         }
     }

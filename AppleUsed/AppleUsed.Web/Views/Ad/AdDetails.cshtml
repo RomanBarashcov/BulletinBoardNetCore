@@ -4,20 +4,12 @@
     ViewData["Title"] = "AdDetails";
 }
 
-<script>
-    function continueToChat() {
-        $('#spn-nick').text($('#nick').val());
-        $('#entrance').hide();
-        $('#chat').show();
-    }
-</script>
-
 <br />
 
 <div>
     <span>
         <a asp-action="Index"> Назад</a>
-    </span>    
+    </span>
 </div>
 
 <br />
@@ -36,32 +28,11 @@
         <div class="btn-block">
             <p>
                 <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
-                <button class="btn btn-lg btn-success btn-block" onclick="continueToChat()">Написать владельцу</button>
+                <a href="~/Chat/ConversationWithContactById?contactId=@Model.User.Id" class="btn btn-lg btn-success btn-block">Написать владельцу</a>
             </p>
         </div>
-        <div class="chat-bolck">
-            <div class="form-group">
-                &nbsp;
-            </div>
+      
 
-            <div id="chat" style="display: none" class="form-group">
-                <h3 id="spn-nick"></h3>
-                <form id="frm-send-message">
-                    <label for="message">Быстроее сообщение</label>
-                    &nbsp;
-                    <input type="text" id="message" class="form-control" />
-                    &nbsp;
-                    <p>
-                        <input type="submit" id="send" value="Send" class="btn btn-default" />
-                    </p>
-
-                </form>
-                <div class="clear">
-                </div>
-                <ul id="messages"></ul>
-            </div>
-        </div>
-        
 
     </div>
 
@@ -91,7 +62,7 @@
                         <td>Киевская</td>
                     </tr>
                 </thead>
-             </table>
+            </table>
         </div>
         <hr />
         <div class="ad-base-info">
@@ -155,43 +126,5 @@
 
 </div>
 
-<script src="lib/signalr/signalr.min.js"></script>
-
-<script type="text/javascript">
-
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/chat")
-        .build();
-
-    connection.start().catch(err => console.error(err.toString()));
-
-    connection.on('Send', (message) => {
-        appendLine(message);
-    });
-
-    document.getElementById('frm-send-message').addEventListener('submit', event => {
-        let message = $('#message').val();
-        let nick = $('#spn-nick').text();
-
-        $('#message').val('');
-
-        connection.invoke('Send', message);
-        event.preventDefault();
-    });
-
-    function appendLine(message) {
-        let nameElement = document.createElement('strong');
-
-        let msgElement = document.createElement('em');
-        msgElement.innerText = ` ${message}`;
-
-        let li = document.createElement('li');
-        li.appendChild(nameElement);
-        li.appendChild(msgElement);
-
-        $('#messages').append(li);
-    };
-
-</script>
 
 
