@@ -48,7 +48,7 @@ namespace AppleUsed.Web
                 s => new SeedService(new AppDbContext(optionsBuilder.Options)));
 
             serviceCollection.AddTransient<IAdService>(
-                s => new AdService(new AppDbContext(optionsBuilder.Options),
+                s => new GetAdsByAuthorId(new AppDbContext(optionsBuilder.Options),
                 new DataService(new AppDbContext(optionsBuilder.Options)), 
                 new ImageCompressorService()));
 

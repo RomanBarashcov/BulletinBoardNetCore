@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AppleUsed.BLL.DTO;
@@ -127,7 +126,12 @@ namespace AppleUsed.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> AdDetails(int? id)
         {
-            var model = await _adService.GetAdById(id??0);
+            AdDetailsViewModel model = new AdDetailsViewModel();
+            model.AddDetails = await _adService.GetAdById(id??0);
+            var similarAds = await _adService.GetAdsByProductTypeId(model.AddDetails.SelectedProductTypeId);
+            model.SimilarAds = await similarAds.Take(4).ToListAsync();
+            var otherAdsByAuthor = await _adService.GetAdsByUserId(model.AddDetails.User.Id);
+            model.OtherAdsByAuthor = await otherAdsByAuthor.Take(5).ToListAsync();
             return View(model);
         }
 

@@ -13,6 +13,8 @@ namespace AppleUsed.BLL.Interfaces
     public interface IAdService
     {
         Task<IQueryable<AdDTO>> GetAds();
+        Task<IQueryable<AdDTO>> GetAdsByProductTypeId(int productTypeId);
+        Task<IQueryable<AdDTO>> GetAdsByUserId(string userId);
         Task<AdDTO> GetAdById(int id);
         Task<AdDTO> GetDataForCreatingAdOrDataForFilter();
         Task<OperationDetails<int>> SaveAdAsync(string userName, AdDTO ad, IFormFileCollection productPhotos);
