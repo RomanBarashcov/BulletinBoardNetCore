@@ -136,13 +136,17 @@
                     @if (ad.Title.Length > 25)
                     {
                         <div>
-                            <a class="ad-title-text"  style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 25)</a>
+                            <b>
+                                <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 25)</a>
+                            </b>
                         </div>
                     }
                     else
                     {
                         <div>
-                             <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a>
+                            <b>
+                                <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a>
+                                </b>
                         </div>
                     }
 

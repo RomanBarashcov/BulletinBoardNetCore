@@ -20,107 +20,151 @@ namespace AppleUsed.BLL.Services
             _db = context;
         }
 
-        public async Task<List<ConversationDTO>> GetAllConversationByUserId(string userId)
+        public async Task<List<ConversationDTO>> GetAllConversationByAdId(int adId)
         {
             List<ConversationDTO> conversations = new List<ConversationDTO>();
-            var user = _db.Users.Where(x => x.Id == userId).FirstOrDefault();
 
-            if (user != null)
+            if (adId > 0)
             {
-                conversations = await _db.Conversations.Where(x => x.SenderId == user.Id).Select(x => new ConversationDTO
-                {
-                    ConversationId = x.ConversationId,
-                    SenderId = x.SenderId,
-                    ReceiverId = x.ReceiverId,
-                    Message = x.Message,
-                    Status = x.Status,
-                    CreatedAt = x.CreatedAt
-
-                }).ToListAsync();
-            }
-
-            return conversations;
-        }
-
-        public async Task<List<ConversationDTO>> GetConversationByContact(string userId, string contactId)
-        {
-            List <ConversationDTO> conversations = new List<ConversationDTO>();
-
-            var user = _db.Users.Where(x => x.Id == userId).FirstOrDefault();
-
-            conversations = await _db.Conversations.
-                                 Where(c => (c.ReceiverId == user.Id && c.SenderId == contactId) || 
-                                 (c.ReceiverId == contactId && c.SenderId == user.Id))
-                                 .OrderBy(c => c.CreatedAt)
-                                 .Select(x => new ConversationDTO
+                conversations = await (from c in _db.Conversations where c.AdId == adId
+                                 join m in _db.ConversationMessages on
+                                 c.ConversationId equals m.ConversationId
+                                 select new ConversationDTO
                                  {
-                                    ConversationId = x.ConversationId,
-                                    SenderId = x.SenderId,
-                                    ReceiverId = x.ReceiverId,
-                                    Message = x.Message,
-                                    Status = x.Status,
-                                    CreatedAt = x.CreatedAt
+                                     ConversationId = c.ConversationId,
+                                     AdId = c.AdId,
+                                     Messages = c.Messages
 
                                  }).ToListAsync();
+            }
 
             return conversations;
         }
 
-
-        public async Task<ConversationDTO> SaveMessageToConversation(string message, string userId, string contactId)
+        public async Task<ConversationDTO> GetConversationByAdIdAndSenderId(int adId, string userId)
         {
-            Conversation conversation = new Conversation();
-            ConversationDTO conversationForReturn = new ConversationDTO();
+            ConversationDTO conversation = new ConversationDTO();
 
-            if (!String.IsNullOrEmpty(message))
+            if (adId > 0)
             {
-                var user = _db.Users.Where(x => x.Id == userId).FirstOrDefault();
+                conversation = await (from c in _db.Conversations
+                                       where c.AdId == adId
+                                       join m in _db.ConversationMessages on
+                                       c.ConversationId equals m.ConversationId
+                                       where m.SenderId == userId
+                                       select new ConversationDTO
+                                       {
+                                           ConversationId = c.ConversationId,
+                                           AdId = c.AdId,
+                                           Messages = c.Messages
 
-                conversation.SenderId = user.Id;
-                conversation.Message = message;
-                conversation.ReceiverId = contactId;
-                conversation.CreatedAt = DateTime.Now.Date;
-
-                await _db.AddAsync(conversation);
-                await _db.SaveChangesAsync();
-
-                conversationForReturn.ConversationId = conversation.ConversationId;
-                conversationForReturn.SenderId = conversation.SenderId;
-                conversationForReturn.Message = conversation.Message;
-                conversationForReturn.ReceiverId = conversation.ReceiverId;
-                conversationForReturn.Status = conversation.Status;
-                conversationForReturn.CreatedAt = conversation.CreatedAt;
+                                       }).FirstOrDefaultAsync();
             }
-            
-            return conversationForReturn;
+
+            return conversation;
         }
 
-        public async Task<ConversationDTO> ChangingMessageStatusToDelivered(int conversationId)
+        public async Task<ConversationDTO> GetConversationById(int conversationId)
         {
-            ConversationDTO conversationForReturn = new ConversationDTO();
+            ConversationDTO conversation = new ConversationDTO();
 
-            if (conversationId > 0)
+            if(conversationId > 0)
             {
-                var conv = _db.Conversations.FirstOrDefault(c => c.ConversationId == conversationId);
-                if (conv != null)
+                conversation =  await (from c in _db.Conversations
+                                where c.ConversationId == conversationId
+                                join m in _db.ConversationMessages on
+                                c.ConversationId equals m.ConversationId
+                                select new ConversationDTO
+                                {
+                                    ConversationId = c.ConversationId,
+                                    AdId = c.AdId,
+                                    Messages = c.Messages
+
+                                }).FirstOrDefaultAsync();
+            }
+           
+            return conversation;
+
+
+            //List <ConversationDTO> conversations = new List<ConversationDTO>();
+
+            //var user = _db.Users.Where(x => x.Id == userId).FirstOrDefault();
+
+            //conversations = await _db.Conversations.
+            //                     Where(c => (c.ReceiverId == user.Id && c.SenderId == contactId) || 
+            //                     (c.ReceiverId == contactId && c.SenderId == user.Id))
+            //                     .OrderBy(c => c.CreatedAt)
+            //                     .Select(x => new ConversationDTO
+            //                     {
+            //                        ConversationId = x.ConversationId,
+            //                        SenderId = x.SenderId,
+            //                        ReceiverId = x.ReceiverId,
+            //                        Message = x.Message,
+            //                        Status = x.Status,
+            //                        CreatedAt = x.CreatedAt
+
+            //                     }).ToListAsync();
+
+            //return conversations;
+
+        }
+
+
+        public async Task<ConversationMessageDTO> SaveMessageToConversation(int conversationId, int adId, string message, string userId, string contactId)
+        {
+            Conversation conversation = new Conversation();
+            ConversationMessages conversationMessages = new ConversationMessages();
+            ConversationMessageDTO conversationMessageForReturn = new ConversationMessageDTO();
+
+            if(conversationId == 0)
+            {
+                conversation.AdId = adId;
+
+                await _db.Conversations.AddAsync(conversation);
+                await _db.SaveChangesAsync();
+            }
+
+            conversationMessages =
+            new ConversationMessages
+            {
+                ConversationId = conversation.ConversationId,
+                SenderId = userId,
+                ReceiverId = contactId,
+                Message = message,
+                CreatedAt = DateTime.Now
+            };
+
+            await _db.ConversationMessages.AddAsync(conversationMessages);
+            await _db.SaveChangesAsync();
+            
+            return conversationMessageForReturn;
+        }
+
+        public async Task<ConversationMessageDTO> ChangingMessageStatusToDelivered(int conversationMessageId)
+        {
+            ConversationMessageDTO conversationMessagesForReturn = new ConversationMessageDTO();
+
+            if (conversationMessageId > 0)
+            {
+                var convMessage = await _db.ConversationMessages.Where(x => x.ConversationMessagesId == conversationMessageId).FirstOrDefaultAsync();
+
+                if (convMessage != null)
                 {
-                    conversationForReturn.Status = Conversation.messageStatus.Delivered;
-                    _db.Entry(conv).State = EntityState.Modified;
+                    convMessage.Status = ConversationMessages.messageStatus.Delivered;
+                    _db.Entry(convMessage).State = EntityState.Modified;
                     await _db.SaveChangesAsync();
 
-                    conversationForReturn.ConversationId = conv.ConversationId;
-                    conversationForReturn.SenderId = conv.SenderId;
-                    conversationForReturn.Message = conv.Message;
-                    conversationForReturn.ReceiverId = conv.ReceiverId;
-                    conversationForReturn.Status = conv.Status;
-                    conversationForReturn.CreatedAt = conv.CreatedAt;
+                    conversationMessagesForReturn.ConversationId = convMessage.ConversationId;
+                    conversationMessagesForReturn.SenderId = convMessage.SenderId;
+                    conversationMessagesForReturn.Message = convMessage.Message;
+                    conversationMessagesForReturn.ReceiverId = convMessage.ReceiverId;
+                    conversationMessagesForReturn.Status = convMessage.Status;
+                    conversationMessagesForReturn.CreatedAt = convMessage.CreatedAt;
                 }
             }
 
-            return conversationForReturn;
+            return conversationMessagesForReturn;
         }
-
-
 
         private bool disposed = false;
 

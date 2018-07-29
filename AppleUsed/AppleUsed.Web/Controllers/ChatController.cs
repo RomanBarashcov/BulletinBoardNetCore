@@ -25,33 +25,32 @@ namespace AppleUsed.Web.Controllers
         public ActionResult Index()
         {
             string userId = _userManager.GetUserId(User);
-            var conv = _conversationService.GetAllConversationByUserId(userId);
+            //var conv = _conversationService.get(userId);
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> ConversationWithContactById(string contactId)
+        public IActionResult ConversationByAdId(int adId)
         {
             string userId = _userManager.GetUserId(User);
             ViewBag.СurrentUserId = userId;
-            ViewBag.RecivedId = contactId;
+            ViewBag.AdId = adId;
             return View();
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetAllConversationWithContact(string contact)
+        public async Task<JsonResult> GetAllConversationsWithContactByAdId(int adId)
         {
-
             string userId = _userManager.GetUserId(User);
-            var conversations = await _conversationService.GetConversationByContact(userId, contact);
+            var conversations = await _conversationService.GetAllConversationByAdId(adId);
             return Json(new { status = "success", data = conversations });
         }
 
         [HttpPost]
-        public async Task<JsonResult> SendMessage(string message, string contact)
+        public async Task<JsonResult> SendMessage(int convsationId, int adId, string message, string contact)
         {
             string userId = _userManager.GetUserId(User);
-            var conversation = await _conversationService.SaveMessageToConversation(message, userId, contact);
+            var conversation = await _conversationService.SaveMessageToConversation(convsationId, adId ,message, userId, contact);
             return Json(conversation);
         }
 

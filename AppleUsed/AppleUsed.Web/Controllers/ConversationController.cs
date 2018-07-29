@@ -21,10 +21,10 @@ namespace AppleUsed.Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult WithContact(string contactId)
+        public JsonResult ByAdId(int adId, string contactId)
         {
             string userId = _userManager.GetUserId(User);
-            var conversations = _conversationService.GetConversationByContact(userId, contactId);
+            var conversations = _conversationService.GetConversationByAdIdAndSenderId(adId, contactId);
             return Json(new { status = "success", data = conversations });
         }
 
