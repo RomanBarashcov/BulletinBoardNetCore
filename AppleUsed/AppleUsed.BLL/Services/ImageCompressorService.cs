@@ -22,7 +22,7 @@ namespace AppleUsed.BLL.Services
 
             using (var image = new MagickImage(inputImage))
             {
-                image.Resize(size, height);
+                image.AdaptiveResize(size, height);
                 image.Strip();
                 image.Quality = quality;
                 outputImage = image.ToByteArray();

@@ -69,29 +69,29 @@ namespace AppleUsed.BLL.Services
 
         public async Task<ConversationDTO> SaveMessageToConversation(string message, string userId, string contactId)
         {
-            var user = _db.Users.Where(x => x.Id == userId).FirstOrDefault();
+            Conversation conversation = new Conversation();
+            ConversationDTO conversationForReturn = new ConversationDTO();
 
-            Conversation conversation = new Conversation()
+            if (!String.IsNullOrEmpty(message))
             {
-                SenderId = user.Id,
-                Message = message,
-                ReceiverId = contactId,
-                CreatedAt = DateTime.Now.Date
-            };
+                var user = _db.Users.Where(x => x.Id == userId).FirstOrDefault();
 
-            await _db.AddAsync(conversation);
-            await _db.SaveChangesAsync();
+                conversation.SenderId = user.Id;
+                conversation.Message = message;
+                conversation.ReceiverId = contactId;
+                conversation.CreatedAt = DateTime.Now.Date;
 
-            ConversationDTO conversationForReturn = new ConversationDTO()
-            {
-                ConversationId = conversation.ConversationId,
-                SenderId = conversation.SenderId,
-                Message = conversation.Message,
-                ReceiverId = conversation.ReceiverId,
-                Status = conversation.Status,
-                CreatedAt = conversation.CreatedAt
-            };
+                await _db.AddAsync(conversation);
+                await _db.SaveChangesAsync();
 
+                conversationForReturn.ConversationId = conversation.ConversationId;
+                conversationForReturn.SenderId = conversation.SenderId;
+                conversationForReturn.Message = conversation.Message;
+                conversationForReturn.ReceiverId = conversation.ReceiverId;
+                conversationForReturn.Status = conversation.Status;
+                conversationForReturn.CreatedAt = conversation.CreatedAt;
+            }
+            
             return conversationForReturn;
         }
 

@@ -120,7 +120,8 @@ namespace AppleUsed.Web.Controllers
                 return View(model);
             }
 
-            return View("Index");
+
+            return RedirectToActionPermanent("Index");
         }
 
         [HttpGet]

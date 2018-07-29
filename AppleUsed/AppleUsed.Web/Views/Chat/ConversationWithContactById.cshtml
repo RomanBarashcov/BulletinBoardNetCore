@@ -132,11 +132,11 @@
         template = template.replace("{{body}}", msg_body);
         template = $(template);
 
-        if (message_obj.sender_id == currentUserId) {
-            template.find('.__chat__').addClass('from__chat');
+        if (message_obj.senderId == currentUserId) {
+            template.find('.__chat__').addClass('receive__chat');
         }
         else {
-            template.find('.__chat__').addClass('receive__chat');
+            template.find('.__chat__').addClass('from__chat');
         }
 
         if (message_obj.status == 1) {
