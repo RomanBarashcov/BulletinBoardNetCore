@@ -19,7 +19,7 @@ namespace AppleUsed.Web.Filters
             _adList = adList;
         }
 
-        public async Task<IQueryable<AdDTO>> GetAdsByFilteringData()
+        public async Task<IQueryable<AdDTO>> GetFilteredAdsData()
         {
             if (_model.Filter != null)
             {
@@ -61,28 +61,47 @@ namespace AppleUsed.Web.Filters
 
             if (selectedByMemories.Count() > 0)
             {
-                var byMemories = (from ad in _adList
-                                  join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
-                                  select ad).ToList();
+                List<AdDTO> byMemories;
 
                 if (selectedByModels.Count() > 0)
-                    ads.Union(byMemories).Distinct();
+                {
+                    byMemories = (from ad in ads
+                                      join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
+                                      select ad).ToList();
+
+                    ads = byMemories;
+                }
                 else
-                    ads.Except(byMemories);
+                {
+                    byMemories = (from ad in _adList
+                                      join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
+                                      select ad).ToList();
+
+                    ads.AddRange(byMemories);
+                }
             }
 
 
             if (selectedByColors.Count() > 0)
             {
-                var byColors = (from ad in _adList
+                List<AdDTO> byColors;
+
+                if (selectedByModels.Count() > 0 || selectedByMemories.Count() > 0)
+                {
+                    byColors = (from ad in ads
+                                    join sc in selectedByColors on ad.SelectedProductColorId equals sc.Id
+                                    select ad).ToList();
+
+                    ads = byColors;
+                }
+                else
+                {
+                    byColors = (from ad in _adList
                                 join sc in selectedByColors on ad.SelectedProductColorId equals sc.Id
-                                where ad.SelectedProductType == _model.Filter.SelectedProductType
                                 select ad).ToList();
 
-                if (selectedByMemories.Count() > 0)
-                    ads.Union(byColors).Distinct();
-                else
-                    ads.Except(byColors);
+                    ads.AddRange(byColors);
+                }   
             }
 
             if (selectedByModels.Count() == 0 && selectedByColors.Count() == 0 && selectedByMemories.Count() == 0)
@@ -118,7 +137,7 @@ namespace AppleUsed.Web.Filters
                 {
 
                 }
-                // освобождаем неуправляемые объекты
+
 
                 _model = null;
                 _adList = null;
