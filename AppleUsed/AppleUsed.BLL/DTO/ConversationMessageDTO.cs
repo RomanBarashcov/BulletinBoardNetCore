@@ -14,7 +14,7 @@ namespace AppleUsed.BLL.DTO
         public string SenderId { get; set; }
         public string ReceiverId { get; set; }
         public string Message { get; set; }
-        public ConversationMessages.messageStatus Status { get; set; }
+        public ConversationMessage.messageStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

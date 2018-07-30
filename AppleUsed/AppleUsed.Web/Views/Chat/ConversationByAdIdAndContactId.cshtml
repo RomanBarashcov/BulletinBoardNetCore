@@ -30,34 +30,31 @@
 
 <script src="~/lib/signalr/signalr.min.js"></script>
 
-<script>
+<script type="text/javascript">
+
+    var lastMsgId;
 
     $(document).ready(function ()
     {
-            var senderId = '@ViewBag.SenderId';
-            var recivedId = '@ViewBag.RecivedId';
-            var adId = '@ViewBag.AdId';
-            
-            $.ajax({
-            type: "GET",
-                url: "GetConversationByAdIdAndSenderId?adId=" + adId + "?contactId=" + recivedId,
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
+        var senderId = '@ViewBag.SenderId';
+        var recivedId = '@ViewBag.RecivedId';
+        var adId = '@ViewBag.AdId';
 
-                let chat_data = data.data;
-                loadChat(chat_data);
+        var url = "GetConversation";
 
-            },
-            failure: function (errMsg) {
-                alert(errMsg);
-            }
+        $.get(url, {
+            adId: adId,
+            contactId: recivedId,
+        }).done(function (data) {
+            let chat_data = data.data;
+            loadChat(chat_data);
         });
+
     });
 
 
     function loadChat(chat_data) {
-        chat_data.forEach(function (data) {
+        chat_data.messages.forEach(function (data) {
             displayMessage(data);
         });
 
@@ -88,9 +85,28 @@
     let userName = '@User.Identity.Name';
 
     // получение сообщения от сервера
-    hubConnection.on('Send', function (message, userName) {
+    hubConnection.on('Send', function (message, senderId) {
 
-        SendMessageToServer();
+        var currentUserId = '@ViewBag.SenderId';
+        lastMsgId = lastMsgId + 1;
+
+        let template = $(newMessageTpl).html();
+        template = template.replace("{{id}}", lastMsgId);
+        template = template.replace("{{body}}", message);
+        template = $(template);
+
+        if (senderId == currentUserId) {
+            template.find('.__chat__').addClass('receive__chat');
+        }
+        else {
+            template.find('.__chat__').addClass('from__chat');
+        }
+
+        //if (message_obj.status == 1) {
+        //    template.find('.delivery-status').show();
+        //}
+
+        $('.chat__main').append(template);
 
     });
 
@@ -108,7 +124,7 @@
             message: $('#message').val(),
             contactId: recivedId,
         }).done(function (data) {
-            displayMessage(data);
+            //displayMessage(data);
             $('#message').val('');
         });
 
@@ -125,6 +141,8 @@
         template = template.replace("{{id}}", msg_id);
         template = template.replace("{{body}}", msg_body);
         template = $(template);
+
+        lastMsgId = msg_id;
 
         if (message_obj.senderId == currentUserId) {
             template.find('.__chat__').addClass('receive__chat');
@@ -143,8 +161,12 @@
 
     // отправка сообщения на сервер
     document.getElementById("sendBtn").addEventListener("click", function (e) {
-        let message = document.getElementById("message").value;
-        hubConnection.invoke('Send', message, userName);
+        let message = $("#message").val();
+        var senderId = '@ViewBag.SenderId';
+
+        hubConnection.invoke('Send', message, senderId);
+        SendMessageToServer();
+
     });
 
     hubConnection.start();

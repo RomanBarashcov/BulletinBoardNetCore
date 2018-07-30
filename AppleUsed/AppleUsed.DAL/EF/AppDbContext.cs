@@ -43,7 +43,7 @@ namespace AppleUsed.DAL.Identity
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<Services> Services { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
-        public DbSet<ConversationMessages> ConversationMessages { get; set; }
+        public DbSet<ConversationMessage> ConversationMessages { get; set; }
 
     }
 }

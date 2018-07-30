@@ -11,6 +11,6 @@ namespace AppleUsed.BLL.DTO
     {
         public int ConversationId { get; set; }
         public int AdId { get; set; }
-        public List<ConversationMessages> Messages { get; set; }
+        public List<ConversationMessage> Messages { get; set; }
     }
 }

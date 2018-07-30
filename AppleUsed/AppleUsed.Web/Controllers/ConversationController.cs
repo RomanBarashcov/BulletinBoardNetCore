@@ -24,7 +24,7 @@ namespace AppleUsed.Web.Controllers
         public JsonResult ByAdId(int adId, string contactId)
         {
             string userId = _userManager.GetUserId(User);
-            var conversations = _conversationService.GetConversationByAdIdAndSenderId(adId, contactId);
+            var conversations = _conversationService.GetConversationByAdIdAndSenderIdAndContactId(adId, userId, contactId);
             return Json(new { status = "success", data = conversations });
         }
 

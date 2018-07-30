@@ -4,9 +4,9 @@ using System.Text;
 
 namespace AppleUsed.DAL.Entities
 {
-    public class ConversationMessages
+    public class ConversationMessage
     {
-        public ConversationMessages()
+        public ConversationMessage()
         {
             Status = messageStatus.Sent;
         }
@@ -17,7 +17,7 @@ namespace AppleUsed.DAL.Entities
             Delivered
         }
 
-        public int ConversationMessagesId { get; set; }
+        public int ConversationMessageId { get; set; }
         public int ConversationId { get; set; }
         public string SenderId { get; set; }
         public string ReceiverId { get; set; }

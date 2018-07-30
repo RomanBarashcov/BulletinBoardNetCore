@@ -161,6 +161,21 @@ namespace AppleUsed.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AdId");
+
+                    b.HasKey("ConversationId");
+
+                    b.ToTable("Conversations");
+                });
+
+            modelBuilder.Entity("AppleUsed.DAL.Entities.ConversationMessage", b =>
+                {
+                    b.Property<int>("ConversationMessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ConversationId");
+
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("Message");
@@ -171,9 +186,11 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<int>("Status");
 
-                    b.HasKey("ConversationId");
+                    b.HasKey("ConversationMessageId");
 
-                    b.ToTable("Conversations");
+                    b.HasIndex("ConversationId");
+
+                    b.ToTable("ConversationMessages");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.ProductColors", b =>
@@ -503,6 +520,14 @@ namespace AppleUsed.DAL.Migrations
                     b.HasOne("AppleUsed.DAL.Entities.CityArea", "CityArea")
                         .WithMany("Cities")
                         .HasForeignKey("CityAreaId");
+                });
+
+            modelBuilder.Entity("AppleUsed.DAL.Entities.ConversationMessage", b =>
+                {
+                    b.HasOne("AppleUsed.DAL.Entities.Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.ProductModels", b =>

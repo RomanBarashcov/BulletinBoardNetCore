@@ -39,7 +39,8 @@ namespace AppleUsed.Web.Controllers
             return View();
         }
 
-        public async Task<JsonResult> GetConversationByAdIdAndSenderId(int adId, string contactId)
+        [HttpGet]
+        public async Task<JsonResult> GetConversation(int adId, string contactId)
         {
             string senderId = _userManager.GetUserId(User);
             var conversation = await _conversationService.GetConversationByAdIdAndSenderIdAndContactId(adId, senderId, contactId);
