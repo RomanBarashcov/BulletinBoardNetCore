@@ -21,7 +21,7 @@
     <div class="chat__type__body">
         <div class="chat__type">
             <textarea id="message" placeholder="Type your message"></textarea>
-            <button class="btn btn-primary" id="sendBtn">Send</button>
+            <button class="btn btn-primary" id="sendBtn">Отправить</button>
         </div>
     </div>
 
@@ -34,12 +34,13 @@
 
     $(document).ready(function ()
     {
-
+            var senderId = '@ViewBag.SenderId';
             var recivedId = '@ViewBag.RecivedId';
-
+            var adId = '@ViewBag.AdId';
+            
             $.ajax({
             type: "GET",
-            url: "GetAllConversationWithContact?contact=" + recivedId,
+                url: "GetConversationByAdIdAndSenderId?adId=" + adId + "?contactId=" + recivedId,
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (data) {
@@ -95,11 +96,17 @@
 
     function SendMessageToServer() {
 
-        var contactId = '@ViewBag.RecivedId';
+        var conversationId = '@ViewBag.ConversationId';
+        var senderId = '@ViewBag.SenderId';
+        var recivedId = '@ViewBag.RecivedId';
+        var adId = '@ViewBag.AdId';
+
         var url = "/Chat/SendMessage";
         $.post(url, {
+            convsationId: conversationId,
+            adId: adId,
             message: $('#message').val(),
-            contact: contactId,
+            contactId: recivedId,
         }).done(function (data) {
             displayMessage(data);
             $('#message').val('');
@@ -109,7 +116,7 @@
 
     function displayMessage(message_obj) {
 
-        var currentUserId = '@ViewBag.СurrentUserId';
+        var currentUserId = '@ViewBag.SenderId';
 
         const msg_id = message_obj.conversationId;
         const msg_body = message_obj.message;

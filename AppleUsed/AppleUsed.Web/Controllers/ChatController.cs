@@ -30,27 +30,37 @@ namespace AppleUsed.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult ConversationByAdId(int adId)
+        public IActionResult ConversationByAdIdAndContactId(int adId, string contactId)
         {
             string userId = _userManager.GetUserId(User);
-            ViewBag.СurrentUserId = userId;
+            ViewBag.SenderId = userId;
+            ViewBag.RecivedId = contactId;
             ViewBag.AdId = adId;
             return View();
         }
 
-        [HttpGet]
-        public async Task<JsonResult> GetAllConversationsWithContactByAdId(int adId)
+        public async Task<JsonResult> GetConversationByAdIdAndSenderId(int adId, string contactId)
         {
-            string userId = _userManager.GetUserId(User);
-            var conversations = await _conversationService.GetAllConversationByAdId(adId);
-            return Json(new { status = "success", data = conversations });
+            string senderId = _userManager.GetUserId(User);
+            var conversation = await _conversationService.GetConversationByAdIdAndSenderIdAndContactId(adId, senderId, contactId);
+            ViewBag.ConversationId = conversation.ConversationId;
+            return Json(new { status = "success", data = conversation });
         }
 
+        //[HttpGet]
+        //public async Task<JsonResult> GetAllConversationsWithByAdId(int adId, string contactId)
+        //{
+        //    string userId = _userManager.GetUserId(User);
+        //    var conversations = await _conversationService.GetAllConversationByAdId(adId, contactId);
+        //    return Json(new { status = "success", data = conversations });
+        //}
+
         [HttpPost]
-        public async Task<JsonResult> SendMessage(int convsationId, int adId, string message, string contact)
+        public async Task<JsonResult> SendMessage(int convsationId, int adId, string message, string contactId)
         {
             string userId = _userManager.GetUserId(User);
-            var conversation = await _conversationService.SaveMessageToConversation(convsationId, adId ,message, userId, contact);
+            var conversation = await _conversationService.SaveMessageToConversation(convsationId, adId , message, userId, contactId);
+            ViewBag.ConversationId = conversation.ConversationId;
             return Json(conversation);
         }
 

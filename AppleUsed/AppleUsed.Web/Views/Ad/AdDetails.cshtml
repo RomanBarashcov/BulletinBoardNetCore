@@ -28,7 +28,7 @@
         <div class="btn-block">
             <p>
                 <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
-                <a href="~/Chat/ConversationWithContactById?contactId=@Model.AddDetails.User.Id" class="btn btn-lg btn-success btn-block">Написать владельцу</a>
+                @Html.ActionLink("Написать владельцу", "ConversationByAdIdAndContactId", "Chat", new { adId = Model.AddDetails.AdId, contactId = Model.AddDetails.User.Id }, new { @class = "btn btn-lg btn-success btn-block" })
             </p>
         </div>
       
