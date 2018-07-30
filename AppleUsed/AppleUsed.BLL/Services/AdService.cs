@@ -3,6 +3,7 @@ using AppleUsed.BLL.Infrastructure;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
+using ImageMagick;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +55,7 @@ namespace AppleUsed.BLL.Services
                              DateUpdated = ad.DateUpdated,
                              //SelectedCityArea 
                              //SelectedCity 
-                             PhotosList = aPhotos.ToList(),
+                             PhotosList = CreatingImageSrc(aPhotos.ToList()),
                              //AdViews = av.SumViews,
                              SelectedProductType = pt.Name,
                              SelectedProductTypeId = pt.ProductTypesId,
@@ -70,6 +71,26 @@ namespace AppleUsed.BLL.Services
                          }).OrderByDescending(x=>x.DateUpdated);
 
             return ads;
+        }
+
+        private List<string> CreatingImageSrc(List<AdPhotos> photoList)
+        {
+            List<string> imageSrcList = new List<string>();
+
+            foreach(var item in photoList)
+            {
+                if (item.Photo != null)
+                {
+                    using(MagickImage image = new MagickImage(item.Photo))
+                    {
+                        var base64 = image.ToBase64();
+                        imageSrcList.Add(String.Format("data:image/jpg;base64,{0}", base64));
+                    }
+
+                }
+            }
+           
+            return imageSrcList;
         }
 
         public async Task<IQueryable<AdDTO>> GetAdsByProductTypeId(int productTypeId)
@@ -97,7 +118,7 @@ namespace AppleUsed.BLL.Services
                            DateUpdated = ad.DateUpdated,
                            //SelectedCityArea 
                            //SelectedCity 
-                           PhotosList = aPhotos.ToList(),
+                           PhotosList = CreatingImageSrc(aPhotos.ToList()),
                            //AdViews = av.SumViews,
                            SelectedProductType = pt.Name,
                            SelectedProductTypeId = pt.ProductTypesId,
@@ -140,7 +161,7 @@ namespace AppleUsed.BLL.Services
                                  DateUpdated = ad.DateUpdated,
                                  //SelectedCityArea 
                                  //SelectedCity 
-                                 PhotosList = aPhotos.ToList(),
+                                 PhotosList = CreatingImageSrc(aPhotos.ToList()),
                                  //AdViews = av.SumViews,
                                  SelectedProductType = pt.Name,
                                  SelectedProductTypeId = pt.ProductTypesId,
@@ -270,7 +291,7 @@ namespace AppleUsed.BLL.Services
                             DateUpdated = ad.DateUpdated,
                             //SelectedCityArea 
                             //SelectedCity 
-                            PhotosList = aPhotos.ToList(),
+                            PhotosList = CreatingImageSrc(aPhotos.ToList()),
                             //AdViews = av.SumViews,
                             SelectedProductType = pt.Name,
                             SelectedProductTypeId = pt.ProductTypesId,

@@ -39,16 +39,7 @@
     <div class="ad-Content col-lg-8">
 
         <div class="photo">
-            @{
-                string imgSrc = "";
-                if (Model.AddDetails.PhotosList.FirstOrDefault() != null)
-                {
-                    var base64 = Convert.ToBase64String(Model.AddDetails.PhotosList.FirstOrDefault().Photo);
-                    imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
-                }
-
-                <img style='width:640px; height:480px;' src="@imgSrc" />
-            }
+                <img style='width:640px; height:480px;' src="@Model.AddDetails.PhotosList.FirstOrDefault()" />
         </div>
         <div class="ad-simple-info">
             <table>
@@ -108,19 +99,12 @@
         <hr />
 
         <div class="Ad-Photos">
-            @{
-                foreach (var item in Model.AddDetails.PhotosList)
-                {
-                    var imgSrc2 = "";
-                    if (item.Photo != null)
-                    {
-                        var base64 = Convert.ToBase64String(item.Photo);
-                        imgSrc2 = String.Format("data:image/jpg;base64,{0}", base64);
-                    }
 
-                    <img style='width:640px; height:480px;' src="@imgSrc2" />
+                @foreach (var photo in Model.AddDetails.PhotosList)
+                {
+                    <img style='width:640px; height:480px;' src="@photo" />
                 }
-            }
+
         </div>
     </div>
 
@@ -152,20 +136,10 @@
 
                     <div>
 
-                        @{
-                            var imgSrc3 = "";
-                            if (ad.PhotosList != null)
-                            {
-                                var base64 = Convert.ToBase64String(ad.PhotosList.Select(x => x.Photo).FirstOrDefault());
-                                imgSrc3 = String.Format("data:image/jpg;base64,{0}", base64);
-                            }
-                        }
-
                         <a href="~/Ad/AdDetails/@ad.AdId">
-                            @if (!String.IsNullOrEmpty(imgSrc3))
-                            {
-                                <img style='width:170px; height:130px;' src="@imgSrc3" />
-                            }
+
+                                <img style='width:170px; height:130px;' src="@ad.PhotosList.FirstOrDefault()" />
+
                         </a>
 
                     </div>

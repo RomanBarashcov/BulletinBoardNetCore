@@ -32,7 +32,7 @@ namespace AppleUsed.BLL.DTO
         public List<City> CityesList { get; set; }
         public string SelectedCity { get; set; }
 
-        public List<AdPhotos> PhotosList { get; set; }
+        public List<string> PhotosList { get; set; }
 
         public int AdViews { get; set; }
 

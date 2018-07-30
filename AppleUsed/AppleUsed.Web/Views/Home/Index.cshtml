@@ -14,6 +14,7 @@
                 </span>
             </a>
         </li>
+
         <li class="nav_menu_item ipad">
             <a href="~/Ad/Index/?titleFilter=ipad">
                 <span class="inner_block">
@@ -21,6 +22,7 @@
                 </span>
             </a>
         </li>
+
         <li class="nav_menu_item imac_macbook">
             <a href="~/Ad/Index/?titleFilter=mac">
                 <span class="inner_block">
@@ -50,22 +52,15 @@
     @{ foreach (var item in Model)
         {
 
-            string imgSrc = "";
-            if (item.PhotosList.FirstOrDefault() != null)
-            {
-                var base64 = Convert.ToBase64String(item.PhotosList.FirstOrDefault().Photo);
-                imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
-            }
             <ul>
                 <li>
                     <div class="ad-in">
 
                         <div class="ad-photo pull-left">
                             <a href="~/Ad/AdDetails/@item.AdId">
-                                @if (!String.IsNullOrEmpty(imgSrc))
-                                {
-                                    <img style='width:170px; height:130px;' src="@imgSrc" />
-                                }
+
+                                    <img style='width:170px; height:130px;' src="@item.PhotosList.FirstOrDefault()" />
+
                             </a>
                         </div>
 

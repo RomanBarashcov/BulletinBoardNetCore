@@ -21,12 +21,20 @@ namespace AppleUsed.Web.Controllers
             _userManager = userManager;
         }
 
+        //[HttpGet]
+        //public ActionResult Index()
+        //{
+        //    string userId = _userManager.GetUserId(User);
+        //    var conv = _conversationService.get(userId);
+        //    return View();
+        //}
+
         [HttpGet]
-        public ActionResult Index()
+        public async Task<IActionResult> GetAllConversationsByAdId(int adId)
         {
             string userId = _userManager.GetUserId(User);
-            //var conv = _conversationService.get(userId);
-            return View();
+            var conversations = await _conversationService.GetAllConversationByAdId(adId);
+            return View(conversations);
         }
 
         [HttpGet]
@@ -47,14 +55,6 @@ namespace AppleUsed.Web.Controllers
             ViewBag.ConversationId = conversation.ConversationId;
             return Json(new { status = "success", data = conversation });
         }
-
-        //[HttpGet]
-        //public async Task<JsonResult> GetAllConversationsWithByAdId(int adId, string contactId)
-        //{
-        //    string userId = _userManager.GetUserId(User);
-        //    var conversations = await _conversationService.GetAllConversationByAdId(adId, contactId);
-        //    return Json(new { status = "success", data = conversations });
-        //}
 
         [HttpPost]
         public async Task<JsonResult> SendMessage(int convsationId, int adId, string message, string contactId)
