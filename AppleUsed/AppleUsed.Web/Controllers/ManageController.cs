@@ -12,6 +12,7 @@ using AppleUsed.DAL.Identity;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Extensions;
 using AppleUsed.Web.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppleUsed.Web.Controllers.Manage
 {
@@ -24,6 +25,7 @@ namespace AppleUsed.Web.Controllers.Manage
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
+        private readonly IAdService _adService;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -32,13 +34,15 @@ namespace AppleUsed.Web.Controllers.Manage
           SignInManager<ApplicationUser> signInManager,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
-          UrlEncoder urlEncoder)
+          UrlEncoder urlEncoder,
+          IAdService adService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _urlEncoder = urlEncoder;
+            _adService = adService;
         }
 
         [TempData]
@@ -102,6 +106,14 @@ namespace AppleUsed.Web.Controllers.Manage
 
             StatusMessage = "Your profile has been updated";
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ManageAdsByUser()
+        {
+            string userName = User.Identity.Name;
+            var ads = await _adService.GetAdsByUser(userName);
+            return View(await ads.ToListAsync());
         }
 
         [HttpPost]

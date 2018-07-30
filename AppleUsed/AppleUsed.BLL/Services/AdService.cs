@@ -136,8 +136,10 @@ namespace AppleUsed.BLL.Services
             return ads;
         }
 
-        public async Task<IQueryable<AdDTO>> GetAdsByUserId(string userId)
+        public async Task<IQueryable<AdDTO>> GetAdsByUser(string userName)
         {
+            var user = await _db.Users.Where(x => x.UserName == userName).FirstOrDefaultAsync();
+
             var ads = (from ad in _db.Ads
                                  //join c in _db.Cities on ad.City.CityId equals c.CityId
                                  //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
@@ -150,7 +152,7 @@ namespace AppleUsed.BLL.Services
                              join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
                              join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
                              join u in _db.Users on ad.ApplicationUser.Id equals u.Id 
-                             where u.Id == userId
+                             where u.Id == user.Id
                              select new AdDTO
                              {
                                  AdId = ad.AdId,
@@ -175,6 +177,49 @@ namespace AppleUsed.BLL.Services
                                  User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
 
                              }).OrderByDescending(x => x.DateUpdated);
+
+            return ads;
+        }
+
+        public async Task<IQueryable<AdDTO>> GetAdsByUserId(string userId)
+        {
+            var ads = (from ad in _db.Ads
+                           //join c in _db.Cities on ad.City.CityId equals c.CityId
+                           //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
+                           //join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
+                       join ap in _db.AdPhotos on ad.AdId equals ap.Ad.AdId into aPhotos
+                       join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
+                       join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
+                       join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
+                       join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
+                       join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
+                       join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
+                       join u in _db.Users on ad.ApplicationUser.Id equals u.Id
+                       where u.Id == userId
+                       select new AdDTO
+                       {
+                           AdId = ad.AdId,
+                           Title = ad.Title,
+                           Description = ad.Description,
+                           Price = ad.Price,
+                           DateCreated = ad.DateCreated,
+                           DateUpdated = ad.DateUpdated,
+                           //SelectedCityArea 
+                           //SelectedCity 
+                           PhotosList = CreatingImageSrc(aPhotos.ToList()),
+                           //AdViews = av.SumViews,
+                           SelectedProductType = pt.Name,
+                           SelectedProductTypeId = pt.ProductTypesId,
+                           SelectedProductModel = pm.Name,
+                           SelectedProductModelId = pm.ProductModelsId,
+                           SelectedProductMemory = prm.Name,
+                           SelectedPoductMemoryId = prm.ProductMemoriesId,
+                           SelectedProductColor = pc.Name,
+                           SelectedProductColorId = pc.ProductColorsId,
+                           SelectedProductStates = prs.Name,
+                           User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
+
+                       }).OrderByDescending(x => x.DateUpdated);
 
             return ads;
         }

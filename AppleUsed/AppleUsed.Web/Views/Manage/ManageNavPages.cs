@@ -8,6 +8,8 @@ namespace AppleUsed.Web.Views.Manage
     {
         public static string ActivePageKey => "ActivePage";
 
+        public static string MyAds => "Мои объявления";
+
         public static string Index => "Index";
 
         public static string ChangePassword => "ChangePassword";
@@ -15,6 +17,8 @@ namespace AppleUsed.Web.Views.Manage
         public static string ExternalLogins => "ExternalLogins";
 
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
+
+        public static string MenageMyAds(ViewContext viewContext) => PageNavClass(viewContext, MyAds);
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 

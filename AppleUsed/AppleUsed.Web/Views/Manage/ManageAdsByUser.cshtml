@@ -1,0 +1,66 @@
+﻿@using AppleUsed.Web.Views.Manage
+@model List<AppleUsed.BLL.DTO.AdDTO>
+@{
+    ViewData["Title"] = "Мои объявления";
+    ViewData.AddActivePage(ManageNavPages.MyAds);
+}
+
+<h4>@ViewData["Title"]</h4>
+
+<div class="ad-list col-lg-12">
+
+
+    @{ foreach (var item in Model)
+        {
+
+            <ul>
+                <li>
+                    <div class="ad-in">
+
+                        <div class="ad-photo pull-left">
+                            <a href="~/Ad/AdDetails/@item.AdId">
+
+                                <img style='width:170px; height:130px;' src="@item.PhotosList.FirstOrDefault()" />
+
+                            </a>
+                        </div>
+
+                        <div class="ad-description">
+                            <div class="location-and-last-modifaied">
+                                <span>
+                                    @Html.ActionLink(item.Title, "AdDetails", "Ad", new { id = @item.AdId }, new { @class = "ad-title-text" })
+                                </span>
+                                <span class="ad-price-text">
+                                    <b>@item.Price  .грн</b>
+                                </span>
+                                <span class="location">г. Киев</span>
+                                <span class="last-modifaed">@item.DateUpdated</span>
+                            </div>
+
+                            @if (item.Description.Length < 100)
+                            {
+                                <span class="ad-description">@item.Description.Substring(0, item.Description.Length) ..</span>
+                            }
+                            else
+                            {
+                                <span class="ad-description">@item.Description.Substring(0, 100) ..</span>
+                            }
+
+                                <div class="btn-block">
+                                    <button class="btn btn-success" type="button">
+                                        Сообщения <span class="badge">1</span>
+                                    </button>
+                                    <a class="btn btn-default">Редактировать</a>
+                                    <a class="btn btn-danger">Деактивировать</a>
+                                </div>
+
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <hr />
+
+        }
+    }
+
+</div>

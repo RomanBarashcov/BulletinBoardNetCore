@@ -58,7 +58,7 @@ namespace AppleUsed.Web.Controllers
 
             return View(model);
         }
-       
+
         [HttpGet]
         public async Task<IActionResult> CreateAd()
         {
