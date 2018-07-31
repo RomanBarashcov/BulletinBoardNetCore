@@ -14,145 +14,146 @@
 
 <br />
 
-<div class="ad-title-details col-md-8">
-    <strong> @Model.AddDetails.Title</strong>
-</div>
+    <div class="row">
 
-<div class="Content col-lg-12">
+        <div class="col-lg-4 col-lg-push-8">
+            <div class="ad-price">
+                <strong> @Model.AddDetails.Price .грн</strong>
+            </div>
+            <hr />
+            <div class="btn-block">
+                <p>
+                    <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
+                    @Html.ActionLink("Написать владельцу", "ConversationByAdIdAndContactId", "Chat", new { adId = Model.AddDetails.AdId, contactId = Model.AddDetails.User.Id }, new { @class = "btn btn-lg btn-success btn-block" })
+                </p>
+            </div>
 
-    <div class="Contact-Bar col-lg-4">
-        <div class="ad-price">
-            <strong> @Model.AddDetails.Price .грн</strong>
         </div>
-        <hr />
-        <div class="btn-block">
-            <p>
-                <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
-                @Html.ActionLink("Написать владельцу", "ConversationByAdIdAndContactId", "Chat", new { adId = Model.AddDetails.AdId, contactId = Model.AddDetails.User.Id }, new { @class = "btn btn-lg btn-success btn-block" })
-            </p>
-        </div>
-      
 
+        <div class="col-lg-8 col-lg-pull-4">
 
-    </div>
+            <div class="ad-title-details">
+                <strong> @Model.AddDetails.Title</strong>
+            </div>
 
-    <div class="ad-Content col-lg-8">
-
-        <div class="photo">
+            <div class="photo">
                 <img style='width:640px; height:480px;' src="@Model.AddDetails.PhotosList.FirstOrDefault()" />
-        </div>
-        <div class="ad-simple-info">
-            <table>
-                <thead>
-                    <tr>
-                        <th> Добавлено : </th>
-                        <td>@Model.AddDetails.DateUpdated</td>
-                        <th> Город : </th>
-                        <td>Киев</td>
-                        <th>Область : </th>
-                        <td>Киевская</td>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-        <hr />
-        <div class="ad-base-info">
-            <table>
-                <thead>
-                    <tr>
-                        <th> Тип : </th>
-                        <td>@Model.AddDetails.SelectedProductType</td>
-                        <th>
-                            Память :
-                        </th>
-                        <td>
-                            @Model.AddDetails.SelectedProductMemory
-                        </td>
-                    </tr>
-                    <tr>
-                        <th> Модель : </th>
-                        <td>@Model.AddDetails.SelectedProductModel</td>
-                        <th>
-                            Цвет :
-                        </th>
-                        <td>
-                            @Model.AddDetails.SelectedProductColor
-                        </td>
-                    </tr>
-                    <tr>
-                        <th> Состояние :</th>
-                        <td>@Model.AddDetails.SelectedProductStates</td>
-                    </tr>
+            </div>
 
-                </thead>
-            </table>
-        </div>
+            <div class="ad-simple-info">
+                <table>
+                    <thead>
+                        <tr>
+                            <th> Добавлено : </th>
+                            <td>@Model.AddDetails.DateUpdated</td>
+                            <th> Город : </th>
+                            <td>Киев</td>
+                            <th>Область : </th>
+                            <td>Киевская</td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
 
-        <hr />
+            <hr />
 
-        <div class="ad-full-description">
-            <p> <b>Описание</b>  </p>
-            <p> @Model.AddDetails.Description </p>
+            <div class="ad-base-info">
+                <table>
+                    <thead>
+                        <tr>
+                            <th> Тип : </th>
+                            <td>@Model.AddDetails.SelectedProductType</td>
+                            <th>
+                                Память :
+                            </th>
+                            <td>
+                                @Model.AddDetails.SelectedProductMemory
+                            </td>
+                        </tr>
+                        <tr>
+                            <th> Модель : </th>
+                            <td>@Model.AddDetails.SelectedProductModel</td>
+                            <th>
+                                Цвет :
+                            </th>
+                            <td>
+                                @Model.AddDetails.SelectedProductColor
+                            </td>
+                        </tr>
+                        <tr>
+                            <th> Состояние :</th>
+                            <td>@Model.AddDetails.SelectedProductStates</td>
+                        </tr>
 
-        </div>
+                    </thead>
+                </table>
+            </div>
 
-        <hr />
+            <hr />
 
-        <div class="Ad-Photos">
+            <div class="ad-full-description">
+                <p> <b>Описание</b>  </p>
+                <p> @Model.AddDetails.Description </p>
+
+            </div>
+
+            <hr />
+
+            <div class="Ad-Photos">
 
                 @foreach (var photo in Model.AddDetails.PhotosList)
                 {
                     <img style='width:640px; height:480px;' src="@photo" />
                 }
 
+            </div>
         </div>
-    </div>
 
-    <div class="col-lg-12 pull-left">
+        <div class="col-lg-12">
 
             <h3> Похожие объявления</h3>
-        <hr />
-        <div class="row">
-            @foreach (var ad in Model.SimilarAds)
-            {
-                <div class="col-lg-3 col-lg-offset-0">
+            <hr />
+            <div class="row">
+                @foreach (var ad in Model.SimilarAds)
+                {
+                    <div class="col-lg-3 col-lg-offset-0">
 
-                    @if (ad.Title.Length > 25)
-                    {
-                        <div>
-                            <b>
-                                <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 25)</a>
-                            </b>
-                        </div>
-                    }
-                    else
-                    {
-                        <div>
-                            <b>
-                                <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a>
+                        @if (ad.Title.Length > 25)
+                        {
+                            <div>
+                                <b>
+                                    <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 25)</a>
                                 </b>
-                        </div>
-                    }
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <b>
+                                    <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a>
+                                </b>
+                            </div>
+                        }
 
-                    <div>
+                        <div>
 
-                        <a href="~/Ad/AdDetails/@ad.AdId">
+                            <a href="~/Ad/AdDetails/@ad.AdId">
 
                                 <img style='width:170px; height:130px;' src="@ad.PhotosList.FirstOrDefault()" />
 
-                        </a>
+                            </a>
 
+                        </div>
+                        <div>
+                            <b>@ad.Price .грн</b>
+                        </div>
                     </div>
-                    <div>
-                        <b>@ad.Price .грн</b>
-                    </div>
-                </div>
 
-            }
+                }
+            </div>
         </div>
     </div>
 
-</div>
 
 
 
