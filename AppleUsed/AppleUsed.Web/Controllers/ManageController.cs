@@ -13,6 +13,7 @@ using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Extensions;
 using AppleUsed.Web.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using AppleUsed.Web.Models.ViewModels.AdViewModels;
 
 namespace AppleUsed.Web.Controllers.Manage
 {
@@ -114,6 +115,47 @@ namespace AppleUsed.Web.Controllers.Manage
             string userName = User.Identity.Name;
             var ads = await _adService.GetAdsByUser(userName);
             return View(await ads.ToListAsync());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditAd(int adId)
+        {
+            var ad = await _adService.GetAdById(adId);
+            return View(ad);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveAd(AdViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View("EditAd", model);
+
+            string userName = User.Identity.Name;
+
+            var result = await _adService.SaveAdAsync(userName, model.AdDTO, model.Photos);
+            if (!result.Succedeed)
+            {
+                ModelState.AddModelError("", result.Message);
+                return View(model);
+            }
+
+            return RedirectToActionPermanent("ManageAdsByUser");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeactivationAd(int? adId = 0)
+        {
+            int id = adId ?? 0;
+            if(id > 0)
+            {
+                var result = await _adService.DeleteAd(id);
+                if (!result.Succedeed)
+                {
+                    ModelState.AddModelError("", result.Message);
+                }
+            }
+
+            return RedirectToActionPermanent("ManageAdsByUser");
         }
 
         [HttpPost]

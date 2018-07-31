@@ -86,7 +86,6 @@ namespace AppleUsed.BLL.Services
                         var base64 = image.ToBase64();
                         imageSrcList.Add(String.Format("data:image/jpg;base64,{0}", base64));
                     }
-
                 }
             }
            
