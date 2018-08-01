@@ -2,58 +2,70 @@
 
 
 
-<div class="ad-list col-sm-9">
+<div class="ad-list col-lg-12">
 
-    @{ foreach (var item in Model.AdList)
-        {
+        @{ foreach (var item in Model.AdList)
+            {
 
-            <ul>
-                <li>
-                    <div class="ad-in">
+                <ul>
+                    <li>
+                        <div class="row">
 
-                        <div class="ad-photo pull-left">
-                            <a href="~/Ad/AdDetails/@item.AdId">
-                                @if (!String.IsNullOrEmpty(@item.PhotosList.FirstOrDefault()))
-                                {
+                            <div class="col-lg-3">
+
+                                <a href="~/Ad/AdDetails/@item.AdId">
+
                                     <img style='width:170px; height:130px;' src="@item.PhotosList.FirstOrDefault()" />
-                                }
-                            </a>
-                        </div>
 
-                        <div class="ad-description">
-                            <div class="location-and-last-modifaied">
-                                <span>
-                                    @Html.ActionLink(item.Title, "AdDetails", "Ad", new { id = @item.AdId }, new { @class = "ad-title-text" })
-                                </span>
-                                <span class="ad-price-text">
-                                    <b>@item.Price  .грн</b>
-                                </span>
-                                <span class="location">г. Киев</span>
-                                <span class="last-modifaed">@item.DateUpdated</span>
+                                </a>
+
                             </div>
 
-                            @if (item.Description.Length < 100)
-                            {
-                                <span class="ad-description">@item.Description.Substring(0, item.Description.Length) ..</span>
-                            }
-                            else
-                            {
-                                <span class="ad-description">@item.Description.Substring(0, 100) ..</span>
-                            }
+                            <div class="col-lg-9">
 
+                                <div>
+                                    <span>
+                                        @Html.ActionLink(item.Title, "AdDetails", "Ad", new { id = @item.AdId }, new { @class = "ad-title-text" })
+                                    </span>
+                                </div>
+
+                                <div class="ad-price-text">
+                                    <span>
+                                        <b>@item.Price  .грн</b>
+                                    </span>
+                                </div>
+
+                                <div class="location">
+                                    <span>г. Киев</span>
+                                </div>
+
+                                <div class="last-modifaed">
+                                    <span>@item.DateUpdated</span>
+                                </div>
+
+                                <div class="ad-description">
+                                    @if (item.Description.Length < 100)
+                                    {
+                                        <span>@item.Description.Substring(0, item.Description.Length) ..</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.Description.Substring(0, 100) ..</span>
+                                    }
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+                <hr />
 
-            <hr />
+            }
 
         }
 
-    }
 </div>
 
-<div class="ad-list col-sm-9">
+<div class="ad-list col-lg-12">
     <div class="row">
 
         @if (Model.PageViewModel != null && Model.PageViewModel.HasPreviousPage)

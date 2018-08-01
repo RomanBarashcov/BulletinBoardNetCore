@@ -11,7 +11,7 @@
 
 <form asp-controller="Ad" asp-action="Index" method="get" id="Filtering">
 
-    <div class="ad-filter-area col-sm-3">
+    <div class="ad-filter-area col-lg-3">
 
         <div class="form-group-sm">
 
@@ -96,42 +96,46 @@
     </div>
 
 
-    <div class="ad-list col-sm-9">
-
+    <div class="col-lg-9">
 
         <h3>Новые объявления</h3>
         
         <div class="row">
 
             <div class="col-lg-3">
+
+
                 <div class="btn-group" role="group" aria-label="...">
                     <button type="button" class="btn btn-default">Все</button>
                     <button type="button" class="btn btn-default">Б/У</button>
                     <button type="button" class="btn btn-default">Новые</button>
                 </div>
+
             </div>
 
-            <div class="col-lg-3 col-lg-offset-6">
-                <select class="form-control">
+               <div class="col-lg-3 col-lg-offset-6">
+                    <select class="form-control">
 
-                    <option disabled="disabled" value="datePublishStart,desc" selected="selected">Сортировка</option>
-                    <option value="datePublishStart,desc">По дате (новые - старые)</option>
-                    <option value="datePublishStart,asc">По дате (старые - новые)</option>
-                    <option value="price.amount,asc">По цене (дешевле - дороже)</option>
-                    <option value="price.amount,desc">По цене (дороже - дешевле)</option>
-                    <option value="counter,desc">По популярности</option>
+                        <option disabled="disabled" value="datePublishStart,desc" selected="selected">Сортировка</option>
+                        <option value="datePublishStart,desc">По дате (новые - старые)</option>
+                        <option value="datePublishStart,asc">По дате (старые - новые)</option>
+                        <option value="price.amount,asc">По цене (дешевле - дороже)</option>
+                        <option value="price.amount,desc">По цене (дороже - дешевле)</option>
+                        <option value="counter,desc">По популярности</option>
 
-                </select>
+                    </select>
             </div>
+  
 
-        </div>
+            </div>
 
         <hr />
-    </div>
+
 
 
     @await Html.PartialAsync("_AdListPartial", Model)
 
+</div>
 </form>
 
 <script type="text/javascript">
