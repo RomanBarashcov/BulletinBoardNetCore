@@ -66,7 +66,7 @@ namespace AppleUsed.Web.Filters
                 if (selectedByModels.Count() > 0)
                 {
                     byMemories = (from ad in ads
-                                      join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
+                                      join sm in selectedByMemories on ad.SelectedProductMemoryId equals sm.Id
                                       select ad).ToList();
 
                     ads = byMemories;
@@ -74,7 +74,7 @@ namespace AppleUsed.Web.Filters
                 else
                 {
                     byMemories = (from ad in _adList
-                                      join sm in selectedByMemories on ad.SelectedPoductMemoryId equals sm.Id
+                                      join sm in selectedByMemories on ad.SelectedProductMemoryId equals sm.Id
                                       select ad).ToList();
 
                     ads.AddRange(byMemories);

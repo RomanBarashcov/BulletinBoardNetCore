@@ -32,6 +32,7 @@ namespace AppleUsed.BLL.DTO
         public List<City> CityesList { get; set; }
         public string SelectedCity { get; set; }
 
+        public List<AdPhotos> PhotosForEdit { get; set; }
         public List<string> PhotosList { get; set; }
 
         public int AdViews { get; set; }
@@ -49,7 +50,7 @@ namespace AppleUsed.BLL.DTO
         public List<ProductMemories> ProductMemoriesList { get; set; }
         [Required]
         public string SelectedProductMemory { get; set; }
-        public int SelectedPoductMemoryId { get; set; }
+        public int SelectedProductMemoryId { get; set; }
 
         public List<ProductColors> ProductColorsList { get; set; }
         [Required]
@@ -59,7 +60,7 @@ namespace AppleUsed.BLL.DTO
         public List<ProductStates> ProductStatesList { get; set; }
         [Required]
         public string SelectedProductStates { get; set; }
-
+        public int SelectedProductStatesId { get; set; }
 
         public ApplicationUser User { get; set; }
     }

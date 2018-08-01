@@ -62,10 +62,11 @@ namespace AppleUsed.BLL.Services
                              SelectedProductModel = pm.Name,
                              SelectedProductModelId = pm.ProductModelsId,
                              SelectedProductMemory = prm.Name,
-                             SelectedPoductMemoryId = prm.ProductMemoriesId,
+                             SelectedProductMemoryId = prm.ProductMemoriesId,
                              SelectedProductColor = pc.Name,
                              SelectedProductColorId = pc.ProductColorsId,
                              SelectedProductStates = prs.Name,
+                             SelectedProductStatesId = prs.ProductStatesId,
                              User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
 
                          }).OrderByDescending(x=>x.DateUpdated);
@@ -124,10 +125,11 @@ namespace AppleUsed.BLL.Services
                            SelectedProductModel = pm.Name,
                            SelectedProductModelId = pm.ProductModelsId,
                            SelectedProductMemory = prm.Name,
-                           SelectedPoductMemoryId = prm.ProductMemoriesId,
+                           SelectedProductMemoryId = prm.ProductMemoriesId,
                            SelectedProductColor = pc.Name,
                            SelectedProductColorId = pc.ProductColorsId,
                            SelectedProductStates = prs.Name,
+                           SelectedProductStatesId = prs.ProductStatesId,
                            User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
 
                        }).OrderByDescending(x => x.DateUpdated);
@@ -169,10 +171,11 @@ namespace AppleUsed.BLL.Services
                                  SelectedProductModel = pm.Name,
                                  SelectedProductModelId = pm.ProductModelsId,
                                  SelectedProductMemory = prm.Name,
-                                 SelectedPoductMemoryId = prm.ProductMemoriesId,
+                                 SelectedProductMemoryId = prm.ProductMemoriesId,
                                  SelectedProductColor = pc.Name,
                                  SelectedProductColorId = pc.ProductColorsId,
                                  SelectedProductStates = prs.Name,
+                                 SelectedProductStatesId = prs.ProductStatesId,
                                  User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
 
                              }).OrderByDescending(x => x.DateUpdated);
@@ -212,10 +215,11 @@ namespace AppleUsed.BLL.Services
                            SelectedProductModel = pm.Name,
                            SelectedProductModelId = pm.ProductModelsId,
                            SelectedProductMemory = prm.Name,
-                           SelectedPoductMemoryId = prm.ProductMemoriesId,
+                           SelectedProductMemoryId = prm.ProductMemoriesId,
                            SelectedProductColor = pc.Name,
                            SelectedProductColorId = pc.ProductColorsId,
                            SelectedProductStates = prs.Name,
+                           SelectedProductStatesId = prs.ProductStatesId,
                            User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
 
                        }).OrderByDescending(x => x.DateUpdated);
@@ -313,7 +317,7 @@ namespace AppleUsed.BLL.Services
 
         public async Task<AdDTO> GetAdById(int id)
         {
-            var adById = await(from ad in _db.Ads
+            var adById = await(from ad in _db.Ads where ad.AdId == id
                             //join c in _db.Cities on ad.City.CityId equals c.CityId
                             //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
                             //join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
@@ -327,6 +331,7 @@ namespace AppleUsed.BLL.Services
                         join u in _db.Users on ad.ApplicationUser.Id equals u.Id
                         select new AdDTO
                         {
+
                             AdId = ad.AdId,
                             Title = ad.Title,
                             Description = ad.Description,
@@ -335,17 +340,21 @@ namespace AppleUsed.BLL.Services
                             DateUpdated = ad.DateUpdated,
                             //SelectedCityArea 
                             //SelectedCity 
-                            PhotosList = CreatingImageSrc(aPhotos.ToList()),
+                            PhotosForEdit = aPhotos.ToList(),
                             //AdViews = av.SumViews,
                             SelectedProductType = pt.Name,
                             SelectedProductTypeId = pt.ProductTypesId,
                             SelectedProductModel = pm.Name,
+                            SelectedProductModelId = pm.ProductModelsId,
                             SelectedProductMemory = prm.Name,
+                            SelectedProductMemoryId = prm.ProductMemoriesId,
                             SelectedProductColor = pc.Name,
+                            SelectedProductColorId = pc.ProductColorsId,
                             SelectedProductStates = prs.Name,
-                            User = u
+                            SelectedProductStatesId = prs.ProductStatesId,
+                            User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
 
-                        }).Where(x=>x.AdId == id).FirstOrDefaultAsync();
+                        }).FirstOrDefaultAsync();
 
 
             return adById;

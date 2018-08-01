@@ -14,6 +14,11 @@ using AppleUsed.Web.Extensions;
 using AppleUsed.Web.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
+using AppleUsed.Web.Helpers;
+using AppleUsed.BLL.DTO;
+using System.IO;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AppleUsed.Web.Controllers.Manage
 {
@@ -27,6 +32,7 @@ namespace AppleUsed.Web.Controllers.Manage
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
         private readonly IAdService _adService;
+        private readonly PrepearingModel _prepearingModel;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -44,6 +50,7 @@ namespace AppleUsed.Web.Controllers.Manage
             _logger = logger;
             _urlEncoder = urlEncoder;
             _adService = adService;
+            _prepearingModel = new PrepearingModel(_adService);
         }
 
         [TempData]
@@ -118,17 +125,27 @@ namespace AppleUsed.Web.Controllers.Manage
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditAd(int adId)
+        public async Task<IActionResult> EditAd(int id)
         {
-            var ad = await _adService.GetAdById(adId);
-            return View(ad);
+            var ad = await _adService.GetAdById(id);
+            var dataForSelectList = await _adService.GetDataForCreatingAdOrDataForFilter();
+            var model = _prepearingModel.PrepearingAdViewModel(dataForSelectList, ad);
+            ViewBag.AdId = id;
+            return View("EditAd", model);
         }
+
+        
+        public async Task<IActionResult> DeletePhoto(int photoId)
+        {
+            return Ok();
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> SaveAd(AdViewModel model)
         {
             if (!ModelState.IsValid)
-                return View("EditAd", model);
+                return View("CreateAd", model);
 
             string userName = User.Identity.Name;
 
@@ -136,10 +153,41 @@ namespace AppleUsed.Web.Controllers.Manage
             if (!result.Succedeed)
             {
                 ModelState.AddModelError("", result.Message);
-                return View(model);
+                return View("EditAd", model);
             }
 
-            return RedirectToActionPermanent("ManageAdsByUser");
+            return RedirectToAction("ManageAdsByUser");
+        }
+
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public JsonResult GetProductModelsSelectList()
+        {
+            AdDTO model = new AdDTO();
+
+            {
+                MemoryStream stream = new MemoryStream();
+                Request.Body.CopyTo(stream);
+                stream.Position = 0;
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    string requestBody = reader.ReadToEnd();
+                    if (requestBody.Length > 0)
+                    {
+
+                        var obj = JsonConvert.DeserializeObject<AdDTO>(requestBody);
+                        if (obj != null)
+                        {
+                            model = obj;
+                        }
+                    }
+                }
+            }
+
+            int selectedProductTypeId = Convert.ToInt32(model.SelectedProductType);
+
+            return Json(new SelectList(model.ProductModelsList.Where(x => x.ProductTypes.ProductTypesId == selectedProductTypeId), "ProductModelsId", "Name"));
         }
 
         [HttpGet]

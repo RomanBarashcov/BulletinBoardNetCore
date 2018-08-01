@@ -8,6 +8,7 @@ using AppleUsed.BLL.DTO;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Extensions;
 using AppleUsed.Web.Filters;
+using AppleUsed.Web.Helpers;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,10 +21,12 @@ namespace AppleUsed.Web.Controllers
     public class AdController : Controller, IDisposable
     {
         private IAdService _adService;
+        private readonly PrepearingModel _prepearingModel;
 
         public AdController(IAdService adService)
         {
             _adService = adService;
+            _prepearingModel = new PrepearingModel(_adService);
         }
 
         [HttpGet]
@@ -43,7 +46,7 @@ namespace AppleUsed.Web.Controllers
             if(model.Filter == null)
             {
                 string selectedProductType = adList.Select(a => a.SelectedProductType).FirstOrDefault();
-                model = await PrepearingDataForAdIndex(adList, selectedProductType);
+                model = await _prepearingModel.PrepearingAdIndexViewModel(adList, selectedProductType);
                 model.Filter.SelectedProductType = selectedProductType;
             }
             else
@@ -62,16 +65,8 @@ namespace AppleUsed.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateAd()
         {
-            var adDTO = await _adService.GetDataForCreatingAdOrDataForFilter();
-            AdViewModel model = new AdViewModel { AdDTO = adDTO };
-
-            //model.CityAreasSelectList = new SelectList(model.AdDTO.CityAreasList, "CityAreaId", "Name");
-            //model.CityesSelectList = new SelectList(model.AdDTO.CityesList, "CityId", "Name");
-            model.ProductTypesSelectList = new SelectList(model.AdDTO.ProductTypesList, "ProductTypesId", "Name");
-            model.ProductMemoriesSelectList = new SelectList(model.AdDTO.ProductMemoriesList, "ProductMemoriesId", "Name");
-            model.ProductColorsSelectList = new SelectList(model.AdDTO.ProductColorsList, "ProductColorsId", "Name");
-            model.ProductStatesSelectList = new SelectList(model.AdDTO.ProductStatesList, "ProductStatesId", "Name");
-
+            var dataForSelectList = await _adService.GetDataForCreatingAdOrDataForFilter();
+            var model = _prepearingModel.PrepearingAdViewModel(dataForSelectList, new AdDTO());
             return View(model);
         }
 
@@ -105,6 +100,7 @@ namespace AppleUsed.Web.Controllers
             return Json(new SelectList(model.ProductModelsList.Where(x => x.ProductTypes.ProductTypesId == selectedProductTypeId), "ProductModelsId", "Name"));
         }
 
+
         [HttpPost]
         public async Task<IActionResult> SaveAd(AdViewModel model)
         {
@@ -117,11 +113,10 @@ namespace AppleUsed.Web.Controllers
             if (!result.Succedeed)
             {
                 ModelState.AddModelError("", result.Message);
-                return View(model);
+                return View("CreateAd", model);
             }
-
-
-            return RedirectToActionPermanent("Index");
+  
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -134,56 +129,6 @@ namespace AppleUsed.Web.Controllers
             var otherAdsByAuthor = await _adService.GetAdsByUserId(model.AddDetails.User.Id);
             model.OtherAdsByAuthor = await otherAdsByAuthor.Take(5).ToListAsync();
             return View(model);
-        }
-
-        private async Task<AdIndexViewModel> PrepearingDataForAdIndex(IQueryable<AdDTO> ads, string selectedProductType)
-        {
-            AdIndexViewModel adIndexViewModel = new AdIndexViewModel { AdList = ads.ToList() };
-            AdDTO dataForFilter = await _adService.GetDataForCreatingAdOrDataForFilter();
-
-            adIndexViewModel.Filter = new FilterViewModel();
-
-            adIndexViewModel.Filter.ProductsModelFilters = new List<ProductsModelFilter>();
-            adIndexViewModel.Filter.ProductMemmories = new List<ProductMemmoriesFilter>();
-            adIndexViewModel.Filter.ProductsColors = new List<ProductsColorFilter>();
-
-            var productModelsList = dataForFilter.ProductModelsList.Where(p => p.ProductTypes.Name == selectedProductType).OrderByDescending(x => x.Name).ToList();
-
-            for (int i = 0; i <= productModelsList.Count - 1; i++)
-            {
-                adIndexViewModel.Filter.ProductsModelFilters.Add(
-                    new ProductsModelFilter
-                    {
-                        Id = productModelsList[i].ProductModelsId,
-                        Name = productModelsList[i].Name
-                    });
-            }
-
-            var productMemmoriesList = dataForFilter.ProductMemoriesList.OrderBy(x => x.ProductMemoriesId).ToList();
-
-            for (int i = 0; i <= productMemmoriesList.Count - 1; i++)
-            {
-                adIndexViewModel.Filter.ProductMemmories.Add(
-                    new ProductMemmoriesFilter
-                    {
-                        Id = productMemmoriesList[i].ProductMemoriesId,
-                        Name = productMemmoriesList[i].Name
-                    });
-            }
-
-            var productColorsList = dataForFilter.ProductColorsList.OrderBy(x => x.ProductColorsId).ToList();
-
-            for (int i = 0; i <= productColorsList.Count - 1; i++)
-            {
-                adIndexViewModel.Filter.ProductsColors.Add(
-                    new ProductsColorFilter
-                    {
-                        Id = productColorsList[i].ProductColorsId,
-                        Name = productColorsList[i].Name
-                    });
-            }
-
-            return adIndexViewModel;
         }
 
 
