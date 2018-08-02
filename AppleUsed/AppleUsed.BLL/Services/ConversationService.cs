@@ -210,6 +210,24 @@ namespace AppleUsed.BLL.Services
             return conversationMessageForReturn;
         }
 
+
+        public int GetCountNotDeliveredMessageByAdId(int adId)
+        {
+            var conversationById =  _db.Conversations.Where(x => x.AdId == adId);
+
+            int notDelivaredMessageCount = (from c in conversationById
+                                            join m in _db.ConversationMessages.Where(x=>x.Status == ConversationMessage.messageStatus.Sent) on c.ConversationId equals m.ConversationId into messageResult
+                                                            select new Conversation
+                                                            {
+                                                                ConversationId = c.ConversationId,
+                                                                AdId = c.AdId,
+                                                                Messages = messageResult.ToList()
+
+                                                            }).Select(x=>x.Messages).Count();
+
+            return notDelivaredMessageCount;
+        }
+
         public async Task<ConversationMessageDTO> ChangingMessageStatusToDelivered(int conversationMessageId)
         {
             ConversationMessageDTO conversationMessagesForReturn = new ConversationMessageDTO();

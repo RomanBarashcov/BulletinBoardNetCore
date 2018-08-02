@@ -33,6 +33,7 @@ namespace AppleUsed.Web.Controllers.Manage
         private readonly UrlEncoder _urlEncoder;
         private readonly IAdService _adService;
         private readonly PrepearingModel _prepearingModel;
+        private readonly IConversationService _conversationService;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -42,7 +43,8 @@ namespace AppleUsed.Web.Controllers.Manage
           IEmailSender emailSender,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder,
-          IAdService adService)
+          IAdService adService,
+          IConversationService conversationService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -51,6 +53,7 @@ namespace AppleUsed.Web.Controllers.Manage
             _urlEncoder = urlEncoder;
             _adService = adService;
             _prepearingModel = new PrepearingModel(_adService);
+            _conversationService = conversationService;
         }
 
         [TempData]
@@ -130,26 +133,26 @@ namespace AppleUsed.Web.Controllers.Manage
             var ad = await _adService.GetAdById(id);
             var dataForSelectList = await _adService.GetDataForCreatingAdOrDataForFilter();
             var model = _prepearingModel.PrepearingAdViewModel(dataForSelectList, ad);
+            
             ViewBag.AdId = id;
             return View("EditAd", model);
         }
 
-        
         public async Task<IActionResult> DeletePhoto(int photoId)
         {
             return Ok();
         }
 
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> SaveAd(AdViewModel model)
+        public async Task<IActionResult> UpdateAd(AdViewModel model)
         {
             if (!ModelState.IsValid)
-                return View("CreateAd", model);
+                return View("EditAd", model);
 
             string userName = User.Identity.Name;
 
-            var result = await _adService.SaveAdAsync(userName, model.AdDTO, model.Photos);
+            var result = await _adService.SaveAd(userName, model.AdDTO, model.Photos);
             if (!result.Succedeed)
             {
                 ModelState.AddModelError("", result.Message);
@@ -158,7 +161,6 @@ namespace AppleUsed.Web.Controllers.Manage
 
             return RedirectToAction("ManageAdsByUser");
         }
-
 
         [ValidateAntiForgeryToken]
         [HttpPost]

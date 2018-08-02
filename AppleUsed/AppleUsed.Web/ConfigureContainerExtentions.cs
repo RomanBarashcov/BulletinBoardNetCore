@@ -40,6 +40,8 @@ namespace AppleUsed.Web
 
             serviceCollection.AddTransient<IEmailSender, EmailSender>();
             serviceCollection.AddTransient<IImageCompressorService, ImageCompressorService>();
+            serviceCollection.AddTransient<IImageService>(
+                s => new ImageService(new ImageCompressorService()));
 
             serviceCollection.AddTransient<IDataService>(
                 s => new DataService(new AppDbContext(optionsBuilder.Options)));
@@ -50,7 +52,8 @@ namespace AppleUsed.Web
             serviceCollection.AddTransient<IAdService>(
                 s => new GetAdsByAuthorId(new AppDbContext(optionsBuilder.Options),
                 new DataService(new AppDbContext(optionsBuilder.Options)), 
-                new ImageCompressorService()));
+                new ImageService(new ImageCompressorService()), 
+                new ConversationService(new AppDbContext(optionsBuilder.Options))));
 
             serviceCollection.AddTransient<IConversationService>(
                 s => new ConversationService(new AppDbContext(optionsBuilder.Options)));

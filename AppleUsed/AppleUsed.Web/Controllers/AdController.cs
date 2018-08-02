@@ -109,7 +109,7 @@ namespace AppleUsed.Web.Controllers
 
             string userName = User.Identity.Name;
 
-            var result = await _adService.SaveAdAsync(userName, model.AdDTO, model.Photos);
+            var result = await _adService.SaveAd(userName, model.AdDTO, model.Photos);
             if (!result.Succedeed)
             {
                 ModelState.AddModelError("", result.Message);

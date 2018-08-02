@@ -37,6 +37,8 @@ namespace AppleUsed.BLL.DTO
 
         public int AdViews { get; set; }
 
+        public int NotDeliveredMessageCount { get; set; }
+
         public List<ProductTypes> ProductTypesList { get; set; }
         [Required]
         public string SelectedProductType { get; set; }

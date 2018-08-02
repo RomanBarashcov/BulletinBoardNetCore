@@ -56,11 +56,11 @@
                             </div>
 
                             <div class="btn-block">
-                                <button class="btn btn-success" type="button">
-                                    Сообщения <span class="badge">1</span>
-                                </button>
-                                @Html.ActionLink("Редактировать", "EditAd", "Manage", new { @id = item.AdId }, new { @class= "btn btn-defaul" })
-                                <a class="btn btn-danger">Деактивировать</a>
+                                <a class="btn btn-success" href="~/Chat/GetAllConversationsByAdId/@item.AdId">
+                                    Сообщения <span class="badge">@item.NotDeliveredMessageCount</span>
+                                </a>
+                                @Html.ActionLink("Редактировать", "EditAd", "Manage", new { @id = item.AdId }, new { @class = "btn btn-default" })
+                                @Html.ActionLink("Деактивировать", "DeactivationAd", "Manage", new { @id = item.AdId }, new { @class = "btn btn-danger" })
                             </div>
 
                         </div>

@@ -22,13 +22,15 @@ namespace AppleUsed.BLL.Services
     {
         private AppDbContext _db;
         private IDataService _dataService;
-        private IImageCompressorService _imageCompressorService;
+        private readonly IImageService _imageService;
+        private readonly IConversationService _conversationService;
 
-        public GetAdsByAuthorId(AppDbContext context, IDataService dataService, IImageCompressorService imageCompressorService)
+        public GetAdsByAuthorId(AppDbContext context, IDataService dataService, IImageService imageService, IConversationService conversationService)
         {
             _db = context;
             _dataService = dataService;
-            _imageCompressorService = imageCompressorService;
+            _imageService = imageService;
+            _conversationService = conversationService;
         }
 
         public async Task<IQueryable<AdDTO>> GetAds()
@@ -55,7 +57,7 @@ namespace AppleUsed.BLL.Services
                              DateUpdated = ad.DateUpdated,
                              //SelectedCityArea 
                              //SelectedCity 
-                             PhotosList = CreatingImageSrc(aPhotos.ToList()),
+                             PhotosList = _imageService.CreatingImageSrc(aPhotos.ToList()),
                              //AdViews = av.SumViews,
                              SelectedProductType = pt.Name,
                              SelectedProductTypeId = pt.ProductTypesId,
@@ -74,23 +76,51 @@ namespace AppleUsed.BLL.Services
             return ads;
         }
 
-        private List<string> CreatingImageSrc(List<AdPhotos> photoList)
+        public async Task<AdDTO> GetAdById(int id)
         {
-            List<string> imageSrcList = new List<string>();
+            var adById = await (from ad in _db.Ads
+                                where ad.AdId == id
+                                //join c in _db.Cities on ad.City.CityId equals c.CityId
+                                //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
+                                //join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
+                                join ap in _db.AdPhotos on ad.AdId equals ap.Ad.AdId into aPhotos
+                                join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
+                                join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
+                                join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
+                                join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
+                                join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
+                                join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
+                                join u in _db.Users on ad.ApplicationUser.Id equals u.Id
+                                select new AdDTO
+                                {
 
-            foreach(var item in photoList)
-            {
-                if (item.Photo != null)
-                {
-                    using(MagickImage image = new MagickImage(item.Photo))
-                    {
-                        var base64 = image.ToBase64();
-                        imageSrcList.Add(String.Format("data:image/jpg;base64,{0}", base64));
-                    }
-                }
-            }
-           
-            return imageSrcList;
+                                    AdId = ad.AdId,
+                                    Title = ad.Title,
+                                    Description = ad.Description,
+                                    Price = ad.Price,
+                                    DateCreated = ad.DateCreated,
+                                    DateUpdated = ad.DateUpdated,
+                                    //SelectedCityArea 
+                                    //SelectedCity 
+                                    PhotosForEdit = aPhotos.ToList(),
+                                    PhotosList = _imageService.CreatingImageSrc(aPhotos.ToList()),
+                                    //AdViews = av.SumViews,
+                                    SelectedProductType = pt.Name,
+                                    SelectedProductTypeId = pt.ProductTypesId,
+                                    SelectedProductModel = pm.Name,
+                                    SelectedProductModelId = pm.ProductModelsId,
+                                    SelectedProductMemory = prm.Name,
+                                    SelectedProductMemoryId = prm.ProductMemoriesId,
+                                    SelectedProductColor = pc.Name,
+                                    SelectedProductColorId = pc.ProductColorsId,
+                                    SelectedProductStates = prs.Name,
+                                    SelectedProductStatesId = prs.ProductStatesId,
+                                    User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
+
+                                }).FirstOrDefaultAsync();
+
+
+            return adById;
         }
 
         public async Task<IQueryable<AdDTO>> GetAdsByProductTypeId(int productTypeId)
@@ -118,7 +148,7 @@ namespace AppleUsed.BLL.Services
                            DateUpdated = ad.DateUpdated,
                            //SelectedCityArea 
                            //SelectedCity 
-                           PhotosList = CreatingImageSrc(aPhotos.ToList()),
+                           PhotosList = _imageService.CreatingImageSrc(aPhotos.ToList()),
                            //AdViews = av.SumViews,
                            SelectedProductType = pt.Name,
                            SelectedProductTypeId = pt.ProductTypesId,
@@ -162,9 +192,10 @@ namespace AppleUsed.BLL.Services
                                  Price = ad.Price,
                                  DateCreated = ad.DateCreated,
                                  DateUpdated = ad.DateUpdated,
+                                 NotDeliveredMessageCount = _conversationService.GetCountNotDeliveredMessageByAdId(ad.AdId),
                                  //SelectedCityArea 
                                  //SelectedCity 
-                                 PhotosList = CreatingImageSrc(aPhotos.ToList()),
+                                 PhotosList = _imageService.CreatingImageSrc(aPhotos.ToList()),
                                  //AdViews = av.SumViews,
                                  SelectedProductType = pt.Name,
                                  SelectedProductTypeId = pt.ProductTypesId,
@@ -208,7 +239,7 @@ namespace AppleUsed.BLL.Services
                            DateUpdated = ad.DateUpdated,
                            //SelectedCityArea 
                            //SelectedCity 
-                           PhotosList = CreatingImageSrc(aPhotos.ToList()),
+                           PhotosList = _imageService.CreatingImageSrc(aPhotos.ToList()),
                            //AdViews = av.SumViews,
                            SelectedProductType = pt.Name,
                            SelectedProductTypeId = pt.ProductTypesId,
@@ -258,7 +289,7 @@ namespace AppleUsed.BLL.Services
             return adDto;
         }
 
-        public async Task<OperationDetails<int>> SaveAdAsync(string userName, AdDTO ad, IFormFileCollection productPhotos)
+        public async Task<OperationDetails<int>> SaveAd(string userName, AdDTO ad, IFormFileCollection productPhotos)
         {
             OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
             ApplicationUser user = new ApplicationUser();
@@ -266,43 +297,112 @@ namespace AppleUsed.BLL.Services
             if(ad == null)
                 return new OperationDetails<int>(false, "new Ad can't be null or empty", 0);
 
-            if (!String.IsNullOrEmpty(userName))
-            {
-                user = await _db.Users.Where(x => x.UserName == userName).FirstOrDefaultAsync();
+            if (String.IsNullOrEmpty(userName))
+                return operationDetails;
 
-                if (user != null)
+            user = await _db.Users.Where(x => x.UserName == userName).FirstOrDefaultAsync();
+
+            if (user == null)
+                return operationDetails;
+
+            var newAd = _dataService.TransformingAdDTOToAdEntities(ad);
+            newAd.ApplicationUser = user;
+
+            if(newAd.AdId == 0)
+            {
+                operationDetails = await CreateAd(user, newAd, productPhotos);
+            }
+            else
+            {
+                operationDetails = await UpdateAd(user, newAd, productPhotos);
+            }
+
+            return operationDetails;
+        
+        }   
+
+        private async Task<OperationDetails<int>> CreateAd(ApplicationUser user,  Ad newAd, IFormFileCollection productPhotos)
+        {
+            OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
+
+            try
+            {
+                var addResult = await _db.Ads.AddAsync(newAd);
+                var saveChangesResult = await _db.SaveChangesAsync();
+                operationDetails = new OperationDetails<int>(true, "", newAd.AdId);
+            }
+            catch (Exception ex)
+            {
+                operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
+            }
+
+            if (productPhotos != null)
+            {
+                var binaryPhotoList = _imageService.GetBinaryPhotoList(productPhotos);
+                binaryPhotoList.ForEach(x => x.Ad = newAd);
+                newAd.Characteristics.Ad = newAd;
+
+                try
                 {
-                    var newAd = _dataService.TransformingAdDTOToAdEntities(ad);
-                    newAd.ApplicationUser = user;
+                    await _db.AdPhotos.AddRangeAsync(binaryPhotoList);
+                    newAd.Photos = binaryPhotoList;
+                    _db.Update(newAd);
+                    await _db.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
+                }
+            }
+
+            return operationDetails;
+        }
+
+        private async Task<OperationDetails<int>> UpdateAd(ApplicationUser user, Ad updatedAd, IFormFileCollection productPhotos)
+        {
+            OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
+
+            if(updatedAd.AdId > 0)
+            {
+                var oldAd = await _db.Ads.Where(x => x.AdId == updatedAd.AdId).FirstOrDefaultAsync();
+
+                oldAd.Title = updatedAd.Title;
+                oldAd.Description = updatedAd.Description;
+                oldAd.Price = updatedAd.Price;
+                oldAd.DateUpdated = DateTime.Now.Date;
+                oldAd.Characteristics.ProductTypesId = updatedAd.Characteristics.ProductTypesId;
+                oldAd.Characteristics.ProductModelsId = updatedAd.Characteristics.ProductModelsId;
+                oldAd.Characteristics.ProductMemoriesId = updatedAd.Characteristics.ProductMemoriesId;
+                oldAd.Characteristics.ProductColorsId = updatedAd.Characteristics.ProductColorsId;
+                oldAd.Characteristics.ProductStatesId = updatedAd.Characteristics.ProductStatesId;
+
+                if (productPhotos != null)
+                {
+                    var oldPhotos = await _db.AdPhotos.Where(x => x.Ad.AdId == oldAd.AdId).ToListAsync();
 
                     try
                     {
-                        var addResult = await _db.Ads.AddAsync(newAd);
-                        var saveChangesResult = await _db.SaveChangesAsync();
-                        operationDetails = new OperationDetails<int>(true, "", newAd.AdId);
+                        _db.RemoveRange(oldPhotos);
                     }
                     catch (Exception ex)
                     {
                         operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
                     }
 
-                    if (productPhotos != null)
-                    {
-                        var binaryPhotoList = GetBinaryPhotoList(productPhotos);
-                        binaryPhotoList.ForEach(x => x.Ad = newAd);
-                        newAd.Characteristics.Ad = newAd;
+                    var binaryPhotoList = _imageService.GetBinaryPhotoList(productPhotos);
+                    binaryPhotoList.ForEach(x => x.Ad = oldAd);
+                    oldAd.Characteristics.Ad = oldAd;
 
-                        try
-                        {
-                            await _db.AdPhotos.AddRangeAsync(binaryPhotoList);
-                            newAd.Photos = binaryPhotoList;
-                            _db.Update(newAd);
-                            await _db.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
-                        }
+                    try
+                    {
+                        await _db.AdPhotos.AddRangeAsync(binaryPhotoList);
+                        oldAd.Photos = binaryPhotoList;
+                        _db.Update(oldAd);
+                        await _db.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
                     }
                 }
             }
@@ -310,81 +410,25 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
-        public Task<OperationDetails<int>> DeleteAd(int id)
+        public async Task<OperationDetails<int>> DeleteAd(int id)
         {
-            throw new NotImplementedException();
-        }
+            OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
 
-        public async Task<AdDTO> GetAdById(int id)
-        {
-            var adById = await(from ad in _db.Ads where ad.AdId == id
-                            //join c in _db.Cities on ad.City.CityId equals c.CityId
-                            //join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
-                            //join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
-                        join ap in _db.AdPhotos on ad.AdId equals ap.Ad.AdId into aPhotos
-                        join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
-                        join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
-                        join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
-                        join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
-                        join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
-                        join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
-                        join u in _db.Users on ad.ApplicationUser.Id equals u.Id
-                        select new AdDTO
-                        {
-
-                            AdId = ad.AdId,
-                            Title = ad.Title,
-                            Description = ad.Description,
-                            Price = ad.Price,
-                            DateCreated = ad.DateCreated,
-                            DateUpdated = ad.DateUpdated,
-                            //SelectedCityArea 
-                            //SelectedCity 
-                            PhotosForEdit = aPhotos.ToList(),
-                            //AdViews = av.SumViews,
-                            SelectedProductType = pt.Name,
-                            SelectedProductTypeId = pt.ProductTypesId,
-                            SelectedProductModel = pm.Name,
-                            SelectedProductModelId = pm.ProductModelsId,
-                            SelectedProductMemory = prm.Name,
-                            SelectedProductMemoryId = prm.ProductMemoriesId,
-                            SelectedProductColor = pc.Name,
-                            SelectedProductColorId = pc.ProductColorsId,
-                            SelectedProductStates = prs.Name,
-                            SelectedProductStatesId = prs.ProductStatesId,
-                            User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
-
-                        }).FirstOrDefaultAsync();
-
-
-            return adById;
-        }
-
-        public Task<OperationDetails<int>> UpdateAd(int id, Ad ad)
-        {
-            throw new NotImplementedException();
-        }
-
-        private List<AdPhotos> GetBinaryPhotoList(IFormFileCollection productPhotos)
-        {
-            List<AdPhotos> photosList = new List<AdPhotos>();
-
-            foreach (var uploadedFile in productPhotos)
+            if (id > 0)
             {
-                using (var binaryReader = new BinaryReader(uploadedFile.OpenReadStream()))
+                var oldAd = await _db.Ads.Where(x => x.AdId == id).FirstOrDefaultAsync();
+                try
                 {
-                    photosList.Add(
-                        new AdPhotos
-                        {
-                            Photo = _imageCompressorService.CompresingImage(binaryReader.ReadBytes((int)uploadedFile.Length)),
-                            AdPhotoName = uploadedFile.FileName,
-                        });
+                    _db.Remove(oldAd);
+                }
+                catch (Exception ex)
+                {
+                    operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
                 }
             }
 
-            return photosList;
+            return operationDetails;
         }
-
 
         private bool disposed = false;
 
@@ -400,7 +444,6 @@ namespace AppleUsed.BLL.Services
             {
                 _db = null;
                 _dataService = null;
-                _imageCompressorService = null;
                 disposed = true;
             }
         }
