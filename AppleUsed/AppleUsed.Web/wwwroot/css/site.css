@@ -354,7 +354,9 @@
 }
 
 
-
+.photo{
+    text-align:center;
+}
 
 
 
@@ -371,7 +373,6 @@
     background-color: #f2f2f2;
     overflow: scroll;
     overflow-x: hidden;
-    
 }
 
 

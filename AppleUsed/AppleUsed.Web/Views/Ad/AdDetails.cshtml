@@ -37,7 +37,7 @@
             </div>
 
             <div class="photo">
-                <img style='width:640px; height:480px;' src="@Model.AddDetails.PhotosList.FirstOrDefault()" />
+                <img style='max-width:640px; max-height:480px;' src="@Model.AddDetails.PhotosList.FirstOrDefault()" />
             </div>
 
             <div class="ad-simple-info">
@@ -103,7 +103,7 @@
 
                 @foreach (var photo in Model.AddDetails.PhotosList)
                 {
-                    <img style='width:640px; height:480px;' src="@photo" />
+                    <img style='max-width:640px; max-height:480px;' src="@photo" />
                 }
 
             </div>
@@ -139,7 +139,7 @@
 
                             <a href="~/Ad/AdDetails/@ad.AdId">
 
-                                <img style='width:170px; height:130px;' src="@ad.PhotosList.FirstOrDefault()" />
+                                <img style='max-width:170px; max-height:130px;' src="@ad.PhotosList.FirstOrDefault()" />
 
                             </a>
 
