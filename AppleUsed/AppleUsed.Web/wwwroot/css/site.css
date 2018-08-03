@@ -354,11 +354,15 @@
 }
 
 
-.photo{
-    text-align:center;
+.photo {
+    text-align: center;
+    background-color: #eee;
 }
 
-
+.Ad-Photos {
+    text-align: center;
+    background-color: #eee;
+}
 
 
 
@@ -400,11 +404,11 @@
             background-color: #d9d9d9;
         }
 
-        .chat__body .chat__main .__chat__.receive__chat {
-            background-color: #4d9aff;
-            float: right;
-            color: #fff;
-        }
+.chat__body .chat__main .__chat__.receive__chat {
+    background-color: #5cb85cad;
+    float: right;
+    color: #fff;
+}
 
     .chat__body {
         /*position: absolute;*/
@@ -483,3 +487,14 @@
             color: #999999;
         }
 
+._last_message {
+    height: 30px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin-bottom: 0px;
+    color: white;
+    background-color: #5cb85cad;
+    padding: 5px;
+    border-radius: 5px;
+}

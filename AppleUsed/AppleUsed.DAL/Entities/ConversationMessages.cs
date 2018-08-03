@@ -19,6 +19,7 @@ namespace AppleUsed.DAL.Entities
 
         public int ConversationMessageId { get; set; }
         public int ConversationId { get; set; }
+        public int AdId { get; set; }
         public string SenderId { get; set; }
         public string ReceiverId { get; set; }
         public string Message { get; set; }

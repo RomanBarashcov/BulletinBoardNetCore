@@ -9,7 +9,7 @@ using System.Text;
 
 namespace AppleUsed.BLL.Services
 {
-    public class ImageService : IImageService
+    public class ImageService : IImageService, IDisposable
     {
         private readonly IImageCompressorService _imageCompressor;
 
@@ -55,6 +55,22 @@ namespace AppleUsed.BLL.Services
             }
 
             return imageSrcList;
+        }
+
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                disposed = true;
+            }
         }
     }
 }

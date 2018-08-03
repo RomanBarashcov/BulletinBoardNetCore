@@ -20,26 +20,85 @@ namespace AppleUsed.BLL.Services
             _db = context;
         }
 
+
         public async Task<List<ConversationDTO>> GetAllConversationByAdId(int adId)
         {
             List<ConversationDTO> conversations = new List<ConversationDTO>();
 
             if (adId > 0)
             {
-                conversations = await (from c in _db.Conversations where c.AdId == adId
-                                 join m in _db.ConversationMessages on
-                                 c.ConversationId equals m.ConversationId
-                                 select new ConversationDTO
-                                 {
+                conversations = await (from c in _db.Conversations 
+                                join m in _db.ConversationMessages on
+                                c.ConversationId equals m.ConversationId into messageResult
+                                where c.AdId == adId
+                                select new ConversationDTO
+                                {
                                      ConversationId = c.ConversationId,
                                      AdId = c.AdId,
-                                     Messages = c.Messages
+                                     Messages = messageResult.ToList()
 
-                                 }).ToListAsync();
+                                }).ToListAsync();
             }
 
             return conversations;
         }
+
+
+        public async Task<List<ConversationDTO>> GetAllConverastionBySenderId(string senderId)
+        {
+            List<ConversationDTO> conversations = new List<ConversationDTO>();
+            
+            if(!string.IsNullOrEmpty(senderId))
+            {
+                List<ConversationMessage> conMessages = new List<ConversationMessage>();
+
+                try
+                {
+                    conMessages = await _db.ConversationMessages.
+                                    Where(c => (c.SenderId == senderId || c.ReceiverId == senderId))
+                                    .OrderBy(c => c.CreatedAt)
+                                    .Select(x => new ConversationMessage
+                                    {
+                                        ConversationId = x.ConversationId,
+                                        ConversationMessageId = x.ConversationMessageId,
+                                        AdId = x.AdId,
+                                        SenderId = x.SenderId,
+                                        ReceiverId = x.ReceiverId,
+                                        Message = x.Message,
+                                        Status = x.Status,
+                                        CreatedAt = x.CreatedAt
+
+                                    }).ToListAsync();
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                try
+                {
+                    conversations = await (from c in _db.Conversations
+                                          join m in conMessages on c.ConversationId equals m.ConversationId into messageResult
+                                          select new ConversationDTO
+                                          {
+                                              ConversationId = c.ConversationId,
+                                              AdId = c.AdId,
+                                              Messages = messageResult.ToList()
+
+                                          }).ToListAsync();
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+            }
+
+            return conversations;
+        }
+        
 
         public async Task<ConversationDTO> GetConversationByAdIdAndSenderIdAndContactId(int adId, string senderId, string contactId)
         {
@@ -52,12 +111,14 @@ namespace AppleUsed.BLL.Services
                 try
                 {
                     conMessages = await _db.ConversationMessages.
-                                    Where(c => (c.ReceiverId == senderId && c.SenderId == contactId) ||
-                                    (c.ReceiverId == contactId && c.SenderId == senderId))
+                                    Where(c => (c.ReceiverId == senderId && c.SenderId == contactId && c.AdId == adId) ||
+                                    (c.ReceiverId == contactId && c.SenderId == senderId && c.AdId == adId))
                                     .OrderBy(c => c.CreatedAt)
                                     .Select(x => new ConversationMessage
                                     {
                                         ConversationId = x.ConversationId,
+                                        ConversationMessageId = x.ConversationMessageId,
+                                        AdId = x.AdId,
                                         SenderId = x.SenderId,
                                         ReceiverId = x.ReceiverId,
                                         Message = x.Message,
@@ -104,12 +165,12 @@ namespace AppleUsed.BLL.Services
                 conversation =  await (from c in _db.Conversations
                                 where c.ConversationId == conversationId
                                 join m in _db.ConversationMessages on
-                                c.ConversationId equals m.ConversationId
+                                c.ConversationId equals m.ConversationId into messageResult
                                 select new ConversationDTO
                                 {
                                     ConversationId = c.ConversationId,
                                     AdId = c.AdId,
-                                    Messages = c.Messages
+                                    Messages = messageResult.ToList()
 
                                 }).FirstOrDefaultAsync();
             }
@@ -135,12 +196,14 @@ namespace AppleUsed.BLL.Services
                 try
                 {
                     conMessages = await _db.ConversationMessages.
-                                    Where(c => (c.ReceiverId == userId && c.SenderId == contactId) ||
-                                    (c.ReceiverId == contactId && c.SenderId == userId))
+                                    Where(c => (c.ReceiverId == userId && c.SenderId == contactId && c.AdId == adId) ||
+                                    (c.ReceiverId == contactId && c.SenderId == userId && c.AdId == adId))
                                     .OrderBy(c => c.CreatedAt)
                                     .Select(x => new ConversationMessage
                                     {
                                         ConversationId = x.ConversationId,
+                                        ConversationMessageId = x.ConversationMessageId,
+                                        AdId = x.AdId,
                                         SenderId = x.SenderId,
                                         ReceiverId = x.ReceiverId,
                                         Message = x.Message,
@@ -173,7 +236,7 @@ namespace AppleUsed.BLL.Services
                     Console.WriteLine(ex.Message);
                 }
 
-                if (conversation == null || conversation.ConversationId == 0)
+                if (conversation == null || conMessages.Count == 0)
                 {
                     conversation = new Conversation();
                     conversation.AdId = adId;
@@ -187,6 +250,7 @@ namespace AppleUsed.BLL.Services
             new ConversationMessage
             {
                 ConversationId = conversation.ConversationId,
+                AdId = adId,
                 SenderId = userId,
                 ReceiverId = contactId,
                 Message = message,
@@ -201,6 +265,8 @@ namespace AppleUsed.BLL.Services
             new ConversationMessageDTO
             {
                 ConversationId = conversationMessage.ConversationId,
+                ConversationMessagesId = conversationMessage.ConversationMessageId,
+                AdId = conversationMessage.AdId,
                 SenderId = userId,
                 ReceiverId = contactId,
                 Message = message,
@@ -216,7 +282,7 @@ namespace AppleUsed.BLL.Services
             var conversationById =  _db.Conversations.Where(x => x.AdId == adId);
 
             int notDelivaredMessageCount = (from c in conversationById
-                                            join m in _db.ConversationMessages.Where(x=>x.Status == ConversationMessage.messageStatus.Sent) on c.ConversationId equals m.ConversationId into messageResult
+                                            join m in _db.ConversationMessages.Where(x => x.Status == ConversationMessage.messageStatus.Sent) on c.ConversationId equals m.ConversationId into messageResult
                                                             select new Conversation
                                                             {
                                                                 ConversationId = c.ConversationId,
@@ -244,6 +310,7 @@ namespace AppleUsed.BLL.Services
 
                     conversationMessagesForReturn.ConversationId = convMessage.ConversationId;
                     conversationMessagesForReturn.SenderId = convMessage.SenderId;
+                    conversationMessagesForReturn.AdId = convMessage.AdId;
                     conversationMessagesForReturn.Message = convMessage.Message;
                     conversationMessagesForReturn.ReceiverId = convMessage.ReceiverId;
                     conversationMessagesForReturn.Status = convMessage.Status;

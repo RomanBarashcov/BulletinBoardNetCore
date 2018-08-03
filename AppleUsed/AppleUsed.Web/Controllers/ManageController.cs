@@ -126,7 +126,7 @@ namespace AppleUsed.Web.Controllers.Manage
             var ads = await _adService.GetAdsByUser(userName);
             return View(await ads.ToListAsync());
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> EditAd(int id)
         {
@@ -142,6 +142,27 @@ namespace AppleUsed.Web.Controllers.Manage
         {
             return Ok();
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllMessages()
+        {
+            ConversationListViewModel model = new ConversationListViewModel();
+            var user = await _userManager.GetUserAsync(User);
+            model.Conversations = await _conversationService.GetAllConverastionBySenderId(user.Id);
+            model.UserId = user.Id;
+            return View("Conversations", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllConversationsByAdId(int id)
+        {
+            ConversationListViewModel model = new ConversationListViewModel();
+            model.UserId = _userManager.GetUserId(User);
+            model.Conversations = await _conversationService.GetAllConversationByAdId(id);
+            return View("Conversations", model);
+        }
+
 
         [ValidateAntiForgeryToken]
         [HttpPost]

@@ -109,7 +109,7 @@
             </div>
         </div>
 
-        <div class="col-lg-12">
+        <div class="col-lg-8">
 
             <h3> Похожие объявления</h3>
             <hr />
@@ -135,15 +135,13 @@
                             </div>
                         }
 
-                        <div>
+                            <div class="photo">
 
-                            <a href="~/Ad/AdDetails/@ad.AdId">
+                                <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
+                                    <img style='max-width:170px; max-height:130px;' src="@ad.PhotosList.FirstOrDefault()" />
+                                </a>
 
-                                <img style='max-width:170px; max-height:130px;' src="@ad.PhotosList.FirstOrDefault()" />
-
-                            </a>
-
-                        </div>
+                            </div>
                         <div>
                             <b>@ad.Price .грн</b>
                         </div>

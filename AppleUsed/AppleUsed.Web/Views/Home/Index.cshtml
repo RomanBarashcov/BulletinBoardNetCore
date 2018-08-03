@@ -58,10 +58,8 @@
 
                         <div class="col-lg-2 photo">
 
-                            <a href="~/Ad/AdDetails/@item.AdId">
-
-                                    <img style='max-width:170px; max-height:130px;' src="@item.PhotosList.FirstOrDefault()" />
-
+                            <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@item.AdId">
+                                <img style='max-width:170px; max-height:130px;' src="@item.PhotosList.FirstOrDefault()" />
                             </a>
 
                         </div>
@@ -70,7 +68,9 @@
 
                             <div>
                                 <span>
-                                    @Html.ActionLink(item.Title, "AdDetails", "Ad", new { id = @item.AdId }, new { @class = "ad-title-text" })
+                                    <a class="ad-title-text" asp-controller="Ad" asp-action="AdDetails" asp-route-id="@item.AdId">
+                                        @item.Title
+                                    </a>
                                 </span>
                             </div>
 

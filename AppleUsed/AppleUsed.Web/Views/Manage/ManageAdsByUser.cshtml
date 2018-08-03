@@ -17,7 +17,7 @@
                     <div class="row">
 
                         <div class="col-lg-3">
-                            <a href="~/Ad/AdDetails/@item.AdId">
+                            <a  asp-controller="Ad" asp-action="AdDetails" asp-route-id="@item.AdId">
                                 <img style='max-width:170px; max-height:130px;' src="@item.PhotosList.FirstOrDefault()" />
                             </a>
                         </div>
@@ -26,7 +26,9 @@
 
                             <div>
                                 <span>
-                                    @Html.ActionLink(item.Title, "AdDetails", "Ad", new { id = @item.AdId }, new { @class = "ad-title-text" })
+                                    <a class="ad-title-text" asp-controller="Ad" asp-action="AdDetails" asp-route-id="@item.AdId">
+                                        @item.Title
+                                    </a>
                                 </span>
                             </div>
 
@@ -51,16 +53,24 @@
                                 }
                                 else
                                 {
-                                    <span>@item.Description.Substring(0, 100) ..</span>
+                                    <span>@item.Description.Substring(0, 100) .. </span>
                                 }
                             </div>
 
                             <div class="btn-block">
-                                <a class="btn btn-success" href="~/Chat/GetAllConversationsByAdId/@item.AdId">
+
+                                <a class="btn btn-success" asp-controller="Manage" asp-action="GetAllConversationsByAdId" asp-route-id="@item.AdId">
                                     Сообщения <span class="badge">@item.NotDeliveredMessageCount</span>
                                 </a>
-                                @Html.ActionLink("Редактировать", "EditAd", "Manage", new { @id = item.AdId }, new { @class = "btn btn-default" })
-                                @Html.ActionLink("Деактивировать", "DeactivationAd", "Manage", new { @id = item.AdId }, new { @class = "btn btn-danger" })
+
+                                <a class="btn btn-default" asp-controller="Manage" asp-action="EditAd" asp-route-id="@item.AdId">
+                                    Редактировать
+                                </a>
+
+                                <a class="btn btn-danger" asp-controller="Manage" asp-action="DeactivationAd" asp-route-id="@item.AdId">
+                                    Деактивировать
+                                </a>
+                              
                             </div>
 
                         </div>
