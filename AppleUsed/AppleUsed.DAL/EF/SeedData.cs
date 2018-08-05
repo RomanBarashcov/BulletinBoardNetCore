@@ -132,5 +132,59 @@ namespace AppleUsed.DAL.EF
             public const int _2TB = 2;
         }
 
+        public static class CityAreas
+        {
+            public const string Vineckaya = "Винницкая";
+            public const string Volinskaya = "Волынская";
+            public const string Dnepropetrovskaya = "Днепропетровская";
+            public const string Donetsk = "Донецкая";
+            public const string Zhitomirskaya ="Житомирская";
+            public const string Zakarpatskaya = "Закарпатская";
+            public const string Zaporozhskaya = "Запорожская";
+            public const string IvanoFrankovskaya = "Ивано-Франковская";
+            public const string Kievskaya = "Киевская";
+            public const string Kirovogradskays = "Кировоградская";
+            public const string Liganskaya = "Луганская";
+            public const string Lvovskaya = "Львовская";
+            public const string Nikolaevskaya = "Николаевская";
+            public const string Odesskaya = "Одесская";
+            public const string Poltavskaya = "Полтавская";
+            public const string Rovnenskaya = "Ровенская";
+            public const string Sumskaya = "Сумская";
+            public const string Ternopolskaya = "Тернопольская";
+            public const string Kharkovskaya = "Харьковская";
+            public const string Khersonskaya = "Херсонская";
+            public const string Khmelnickaya = "Хмельницкая";
+            public const string Cherkaskaya = "Черкасская";
+            public const string Chernigovskaya = "Черниговская";
+            public const string Chernoveckaya = "Черновицкая";
+        }
+
+        public static class VineckayaCities
+        {
+            public const string Bar = "Бар";
+            public const string Berdash = "Бершадь";
+            public const string Vinniciya = "Винница";
+            public const string Gaisin = "Гайсин";
+            public const string Gnivan = "Гнивань";
+            public const string Gmerinka = "Жмеринка";
+            public const string Ilyicin = "Ильинцы";
+            public const string Kazatin = "Казатин";
+            public const string Kalinovka = "Калиновка";
+            public const string Krijopol = "Крыжополь";
+            public const string Ladijin = "Ладыжин";
+            public const string Lipovec = "Липовец";
+            public const string MaghilevoPodolsk = "Магилево-Подольский";
+            public const string Nemirov = "Немиров";
+            public const string Pesochin = "Песочин";
+            public const string Pogrebishe = "Погребище";
+            public const string Strijovka = "Стрижовка";
+            public const string Tulchin = "Тульчин";
+            public const string Khmelnik = "Хмельник";
+            public const string Chechelnik = "Чечельник";
+            public const string Shargorod = "Шаргород";
+            public const string Yampol = "Ямполь";
+        }
+
     }
 }
