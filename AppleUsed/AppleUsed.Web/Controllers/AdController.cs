@@ -37,6 +37,7 @@ namespace AppleUsed.Web.Controllers
             IQueryable<AdDTO> adList = await _adService.GetAds();
 
             adList = await new CheckBoxFilter(model, adList).GetFilteredAdsData();
+            adList = new ButtonAreaFilter(adType, adList).GetFilteredAdsData();
 
             if (!string.IsNullOrEmpty(titleFilter))
             {

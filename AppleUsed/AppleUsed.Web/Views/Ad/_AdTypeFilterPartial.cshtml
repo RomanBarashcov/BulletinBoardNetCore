@@ -1,7 +1,7 @@
 ﻿
 @model AppleUsed.Web.Models.ViewModels.AdViewModels.AdIndexViewModel
 
-<div class="ad-list col-sm-9">
+<div class="ad-list col-sm-12">
 
 
     <h3>Новые объявления</h3>
@@ -11,21 +11,11 @@
         <div class="col-lg-3">
             <div class="btn-group" role="group" aria-label="...">
 
-                @using (Html.BeginForm("Index", "Ad", FormMethod.Get, new { @id = "All" }))
-                {
-                    <input type="hidden" name="adType" value="Все" id="ValueForFilteringByAdType" />
-                    <button type="submit" class="btn btn-default">Все</button>
-                }
-                @using (Html.BeginForm("Index", "Ad", FormMethod.Get, new { @id = "Used" }))
-                {
-                    <input type="hidden" name="adType" value="Б/У" id="ValueForFilteringByAdType" />
-                    <button type="submit" class="btn btn-default">Б/У</button>
-                }
-                @using (Html.BeginForm("Index", "Ad", FormMethod.Get, new { @id = "New" }))
-                {
-                    <input type="hidden" name="adType" value="Новые" id="ValueForFilteringByAdType" />
-                    <button type="submit" class="btn btn-default">Новые</button>
-                }
+                    <input type="hidden" name="adType" id="FilteringValue"/>
+                    <button onclick="FilteringByAllProducts()" class="btn btn-default">Все</button>
+                    <button onclick="FilteringByUsedProducts()" class="btn btn-default">Б/У</button>
+                    <button onclick="FilteringByNewProducts()" class="btn btn-default">Новые</button>
+
             </div>
         </div>
         <div class="col-lg-6"></div>
@@ -46,3 +36,35 @@
 
     <hr />
 </div>
+
+<script type="text/javascript">
+
+
+    var All = "Все";
+    var Used = "Б/У";
+    var New = "Новые";
+
+    function FilteringByAllProducts() {
+
+        $('#page').val("");
+        $('#FilteringValue').val(All);
+        $.get("/Index", { model: @Model});
+
+    }
+
+    function FilteringByUsedProducts() {
+
+        $('#page').val("");
+        $('#FilteringValue').val(Used);
+        $.get("/Index", { model: @Model});
+
+    }
+
+    function FilteringByNewProducts() {
+
+        $('#page').val("");
+        $('#FilteringValue').val(New);
+        $.get("/Index", { model: @Model});
+    }
+
+</script>

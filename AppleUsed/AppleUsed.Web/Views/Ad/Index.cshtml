@@ -98,42 +98,11 @@
 
     <div class="col-lg-9">
 
-        <h3>Новые объявления</h3>
-        
-        <div class="row">
+        @await Html.PartialAsync("_AdTypeFilterPartial", Model)
 
-            <div class="col-lg-3">
+        @await Html.PartialAsync("_AdListPartial", Model)
 
-
-                <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default">Все</button>
-                    <button type="button" class="btn btn-default">Б/У</button>
-                    <button type="button" class="btn btn-default">Новые</button>
-                </div>
-
-            </div>
-
-               <div class="col-lg-3 col-lg-offset-6">
-                    <select class="form-control">
-
-                        <option disabled="disabled" value="datePublishStart,desc" selected="selected">Сортировка</option>
-                        <option value="datePublishStart,desc">По дате (новые - старые)</option>
-                        <option value="datePublishStart,asc">По дате (старые - новые)</option>
-                        <option value="price.amount,asc">По цене (дешевле - дороже)</option>
-                        <option value="price.amount,desc">По цене (дороже - дешевле)</option>
-                        <option value="counter,desc">По популярности</option>
-
-                    </select>
-            </div>
-  
-
-            </div>
-
-        <hr />
-
-    @await Html.PartialAsync("_AdListPartial", Model)
-
-</div>
+    </div>
 </form>
 
 <script type="text/javascript">
