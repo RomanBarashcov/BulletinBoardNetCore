@@ -1,29 +1,74 @@
-﻿
+﻿@model AppleUsed.Web.Models.ViewModels.ConversationViewModels.ConversationIndexViewModel
 
-<div class="col-xs-12 col-md-9">
+@{
 
-    <div class="chat__body">
+}
 
-        <div class="row">
-            <div class="col-xs-12 ">
-                <ul class="list-group chat__main"></ul>
-            </div>
+<br />
 
-            <div class="chat__typing">
-                <span id="typerDisplay"></span>
-            </div>
+<div class="col-lg-12">
+
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <b>
+                <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@Model.Ad.AdId">@Model.Ad.Title</a>
+            </b>
+        </div>
+
+        <div class="col-sm-2">
+            <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@Model.Ad.AdId">
+                <img style='max-width:170px; max-height:130px;' src="@Model.Ad.PhotosList.FirstOrDefault()" />
+            </a>
+        </div>
+
+        <div class="col-sm-8">
+            <p>@Model.Ad.Description</p>
         </div>
 
 
-        <div class="down"></div>
-    </div>
-
-    <div class="chat__type__body">
-        <div class="chat__type">
-            <textarea id="message" placeholder="Type your message"></textarea>
-            <button class="btn btn-success" id="sendBtn">Отправить</button>
+        <div class="col-sm-2">
+            <b> Цена : @Model.Ad.Price .грн</b>
         </div>
     </div>
+
+    <hr />
+
+
+    <div class="row">
+        <div class="col-sm-2 dot"></div>
+        <div class="col-sm-10" id="Chat_With">
+        </div>
+    </div>
+
+    <div class="col-lg-8 col-md-offset-2">
+
+        <div class="chat__body">
+
+            <div class="row">
+                <div>
+                    <ul class="list-group chat__main"></ul>
+                </div>
+
+                <div class="chat__typing">
+                    <span id="typerDisplay"></span>
+                </div>
+            </div>
+
+
+            <div class="down"></div>
+        </div>
+
+        <div class="chat__type__body">
+            <div class="chat__type">
+                <textarea id="message" placeholder="Type your message"></textarea>
+                <button class="btn btn-success" id="sendBtn">Отправить</button>
+            </div>
+        </div>
+
+    </div>
+
 
 </div>
 
@@ -34,6 +79,11 @@
 
     var lastMsgId;
 
+    var sellerId = '@Model.Conversation.SellerId';
+    var buyerId = '@Model.Conversation.BuyerId';
+    var sellerName = '@Model.Conversation.SellerName';
+    var buyerName = '@Model.Conversation.BuyerName';
+
     $(document).ready(function ()
     {
         var senderId = '@ViewBag.SenderId';
@@ -41,6 +91,15 @@
         var adId = '@ViewBag.AdId';
 
         var url = "GetConversation";
+
+        if (sellerId == senderId) {
+
+            $('#Chat_With').append('<p><b>' + buyerName +'</b></p>');
+        }
+        else {
+
+            $('#Chat_With').append('<p><b>' + sellerName + '</b></p>');
+        }
 
         $.get(url, {
             adId: adId,
@@ -87,7 +146,10 @@
     // получение сообщения от сервера
     hubConnection.on('Send', function (message, senderId) {
 
+
         var currentUserId = '@ViewBag.SenderId';
+        var contactId = '@ViewBag.RecivedId';
+
         lastMsgId = lastMsgId + 1;
 
         let template = $(newMessageTpl).html();
@@ -108,11 +170,15 @@
 
         $('.chat__main').append(template);
 
+        $('.chat__body').animate({
+            scrollTop: $(".down").offset().top
+        }, 1);
+
     });
 
     function SendMessageToServer() {
 
-        var conversationId = '@ViewBag.ConversationId';
+        var conversationId = parseInt('@Model.Conversation.ConversationId');
         var senderId = '@ViewBag.SenderId';
         var recivedId = '@ViewBag.RecivedId';
         var adId = '@ViewBag.AdId';

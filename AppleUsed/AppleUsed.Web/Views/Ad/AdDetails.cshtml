@@ -118,11 +118,11 @@
                 {
                     <div class="col-sm-3">
 
-                        @if (ad.Title.Length > 25)
+                        @if (ad.Title.Length > 20)
                         {
                             <div>
                                 <b>
-                                    <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 25)</a>
+                                    <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a>
                                 </b>
                             </div>
                         }

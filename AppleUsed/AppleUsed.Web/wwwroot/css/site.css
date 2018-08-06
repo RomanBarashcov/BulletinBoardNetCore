@@ -368,8 +368,13 @@
 
 
 
-
-
+.dot {
+    height: 30px;
+    width: 30px;
+    background-color: #90cf90;
+    border-radius: 50%;
+    display: inline-block;
+}
 
 .chat__body {
     display: none;

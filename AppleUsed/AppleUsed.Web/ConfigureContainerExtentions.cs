@@ -57,7 +57,6 @@ namespace AppleUsed.Web
 
             serviceCollection.AddTransient<IConversationService>(
                 s => new ConversationService(new AppDbContext(optionsBuilder.Options)));
-
         }
 
         /// <summary>

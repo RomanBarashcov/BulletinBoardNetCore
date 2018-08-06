@@ -6,6 +6,7 @@ using AppleUsed.BLL.DTO;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Identity;
 using AppleUsed.Web.Models.ViewModels;
+using AppleUsed.Web.Models.ViewModels.ConversationViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,12 +15,14 @@ namespace AppleUsed.Web.Controllers
     public class ChatController : Controller
     {
         private IConversationService _conversationService;
+        private readonly IAdService _adService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ChatController(IConversationService conversationService, UserManager<ApplicationUser> userManager)
+        public ChatController(IConversationService conversationService, IAdService adService, UserManager<ApplicationUser> userManager)
         {
             _conversationService = conversationService;
             _userManager = userManager;
+            _adService = adService;
         }
 
         //[HttpGet]
@@ -50,13 +53,18 @@ namespace AppleUsed.Web.Controllers
 
 
         [HttpGet]
-        public IActionResult ConversationByAdIdAndContactId(int adId, string contactId)
+        public async Task<IActionResult> ConversationByAdIdAndContactId(int adId, string contactId)
         {
+            ConversationIndexViewModel model = new ConversationIndexViewModel();
             string userId = _userManager.GetUserId(User);
+            model.Conversation = await _conversationService.GetConversationByAdIdAndSenderIdAndContactId(adId, userId, contactId);
+            model.Ad = await _adService.GetAdById(adId);
+            
             ViewBag.SenderId = userId;
             ViewBag.RecivedId = contactId;
             ViewBag.AdId = adId;
-            return View("Conversations");
+
+            return View("Conversations", model);
         }
 
         [HttpGet]
