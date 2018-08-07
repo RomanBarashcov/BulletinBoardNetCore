@@ -36,6 +36,9 @@ namespace AppleUsed.Web.Controllers
 
             IQueryable<AdDTO> adList = await _adService.GetAds();
 
+            if(model.SortViewModel != null)
+                adList = new SelectedOptionFilter(model.SortViewModel.SelectedOptionValue, adList).SelectedOptionChanged();
+
             adList = await new CheckBoxFilter(model, adList).GetFilteredAdsData();
             adList = new ButtonAreaFilter(adType, adList).GetFilteredAdsData();
 
@@ -52,6 +55,7 @@ namespace AppleUsed.Web.Controllers
             }
             else
             {
+                model.SortViewModel.SortOptionList = _prepearingModel.GetSelectionOptionsList();
                 model.AdList = adList.ToList();
             }
            

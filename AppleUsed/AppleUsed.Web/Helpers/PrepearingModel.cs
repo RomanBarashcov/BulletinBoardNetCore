@@ -41,6 +41,7 @@ namespace AppleUsed.Web.Helpers
             AdIndexViewModel adIndexViewModel = new AdIndexViewModel { AdList = ads.ToList() };
             AdDTO dataForFilter = await _adService.GetDataForCreatingAdOrDataForFilter();
 
+            adIndexViewModel.SortViewModel = new SortViewModel();
             adIndexViewModel.Filter = new FilterViewModel();
 
             adIndexViewModel.Filter.ProductsModelFilters = new List<ProductsModelFilter>();
@@ -83,7 +84,22 @@ namespace AppleUsed.Web.Helpers
                     });
             }
 
+            adIndexViewModel.SortViewModel.SortOptionList = GetSelectionOptionsList(); ;
+
             return adIndexViewModel;
+        }
+
+        public SelectList GetSelectionOptionsList()
+        {
+            List<SortOption> sortOptions = new List<SortOption> {
+
+                new SortOption { Name = "По дате добавления (новые - старые)", ValueOption = 1 },
+                new SortOption { Name = "По дате добавления(старые - новые)", ValueOption = 2 },
+                new SortOption { Name = "По цене (от дорогих - к дешовым)", ValueOption = 3 },
+                new SortOption { Name = "По цене (от дешовых - к дорогим)", ValueOption = 4 },
+            };
+
+           return new SelectList(sortOptions, "ValueOption", "Name");
         }
     }
 }

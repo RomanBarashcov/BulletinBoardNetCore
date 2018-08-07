@@ -19,16 +19,13 @@
         </div>
         <div class="col-lg-6"></div>
         <div class="col-lg-3">
-            <select class="form-control">
 
-                <option disabled="disabled" value="datePublishStart,desc" selected="selected">Сортировка</option>
-                <option value="datePublishStart,desc">По дате добавления (новые - старые)</option>
-                <option value="datePublishStart,asc">По дате добавления(старые - новые)</option>
-                <option value="price.amount,asc">По цене (от дорогих - к дешовым)</option>
-                <option value="price.amount,desc">По цене (от дешовых - к дорогим)</option>
-                <option value="counter,desc">По популярности</option>
+            <input type="hidden" asp-for="SortViewModel.SortOptionList" />
 
+            <select asp-for="SortViewModel.SelectedOptionValue" asp-items="Model.SortViewModel.SortOptionList" id="option" onchange="SelectedOptionChanged()" class="form-control">
+                <option disabled="disabled" value="0" selected="selected">Сортировка</option>
             </select>
+
         </div>
 
     </div>
@@ -38,7 +35,6 @@
 
 <script type="text/javascript">
 
-
     var All = "Все";
     var Used = "Б/У";
     var New = "Новые";
@@ -47,7 +43,7 @@
 
         $('#page').val("");
         $('#FilteringValue').val(All);
-        $.get("/Index", { model: @Model});
+        $.get("/Index", { model: @Model });
 
     }
 
@@ -55,7 +51,7 @@
 
         $('#page').val("");
         $('#FilteringValue').val(Used);
-        $.get("/Index", { model: @Model});
+        $.get("/Index", { model: @Model });
 
     }
 
@@ -63,7 +59,17 @@
 
         $('#page').val("");
         $('#FilteringValue').val(New);
-        $.get("/Index", { model: @Model});
+        $.get("/Index", { model: @Model });
+
     }
+
+    function SelectedOptionChanged() {
+
+        $('#page').val("");
+        $('#Filtering').submit();
+
+    }
+
+
 
 </script>

@@ -15,6 +15,8 @@ namespace AppleUsed.Web.Models.ViewModels.AdViewModels
 
         public SearchFilterViewModel SearchFilter { get; set; }
 
+        public SortViewModel SortViewModel { get; set; }
+
         public FilterViewModel Filter { get; set; }
 
         public PageViewModel PageViewModel { get; set; }
