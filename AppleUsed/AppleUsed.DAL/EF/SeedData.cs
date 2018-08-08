@@ -186,5 +186,364 @@ namespace AppleUsed.DAL.EF
             public const string Yampol = "Ямполь";
         }
 
+        public static class VolinskayaCities
+        {
+            public const string Berestechko = "Берестечко";
+            public const string VladimirVolinsky = "Владимир-Волынский";
+            public const string Gorohov = "Горохов";
+            public const string Ivanovich = "Иваничи";
+            public const string KamenKashirskiy = "Камень-Каширский";
+            public const string Kiverciy = "Киверцы";
+            public const string Kovel = "Ковель";
+            public const string Luck = "Луцк";
+            public const string Lubeshov = "Любешов";
+            public const string Lubomol = "Любомль";
+            public const string Mavich = "Маневичи";
+            public const string Novovolinsk = "Нововолынск";
+            public const string Ratno = "Ратно";
+            public const string Rojishe = "Рожище";
+            public const string StarayaVijevka= "Старая Выжевка";
+            public const string Turiysk = "Турийск";
+            public const string Ystylyg = "Устилуг";
+            public const string Cuman = "Цумань";
+            public const string Shacak = "Шацк";
+        }
+
+        public static class DnepropetrovskCities
+        {
+            public const string Apostolovo = "Апостолово";
+            public const string Verhnedneprovsk = "Верхнеднепровск";
+            public const string Volnyogorsk = "Вольногорск";
+            public const string Dnepr = "Днепр";
+            public const string JeltieVodi = "Желтые Воды";
+            public const string Kamenskoe = "Каменское";
+            public const string KrivoyRog = "Кривой Рог";
+            public const string Marganec = "Марганец";
+            public const string Nikopol = "Никополь";
+            public const string Novomoskovsk = "Новомосковск";
+            public const string Orjenihize = "Орджоникидзе";
+            public const string Pavlograd = "Павлоград";
+            public const string Pereshepino = "Перещепино";
+            public const string Pershotravensk = "Першотравенск";
+            public const string Podgorodnoe = "Подгородное";
+            public const string Patihatki = "Пятихатки";
+            public const string Sinelnikovo = "Синельниково";
+            public const string Ternovka = "Терновка";
+            public const string Chaplinka = "Чаплинка";
+        }
+
+        public static class DonetskCities
+        {
+            public const string Avdeevka = "Авдеевка";
+            public const string Alexandrovka = "Александровка";
+            public const string Amvroisievka = "Амвросиевка";
+            public const string Artemovsk = "Артемовск";
+            public const string Volnovaha = "Волноваха";
+            public const string Gorlovka = "Горловка";
+            public const string Debalcevo = "Дебальцево";
+            public const string Djerzinsk = "Дзержинск";
+            public const string Demitrov = "Димитров";
+            public const string Dobropolie = "Доброполье";
+            public const string Dokcuchaevsk = "Докучаевск";
+            public const string Doneck  = "Донецк";
+            public const string Drujovka = "Дружковка";
+            public const string Enakievo = "Енакиево";
+            public const string Jdanovka = "Ждановка";
+            public const string Zugres = "Зугрэс";
+            public const string Kirovskoe = "Кировское";
+            public const string Konstantinovka = "Константиновка";
+            public const string Kramatorsk = "Краматорск";
+            public const string Krasnoarmeysk = "Красноармейск";
+            public const string KrasniyLiman = "Красный Лиман";
+            public const string Mayorsk = "Майорск";
+            public const string Makeevka = "Макеевка";
+            public const string Mariupol = "Мариуполь";
+            public const string Marinka = "Марьинка";
+            public const string Novoazonsk = "Новоазовск";
+            public const string Novogorodovka = "Новогродовка";
+            public const string Selidovo = "Селидово";
+            public const string Slavansk = "Славянск";
+            public const string Snejnoye = "Снежное";
+            public const string Soledar = "Соледар";
+            public const string Starobeshovo = "Старобешево";
+            public const string Torez = "Торез";
+            public const string Ugleder = "Угледар";
+            public const string Kharzisk = "Харцызск";
+            public const string Shahtersk = "Шахтерск";
+            public const string Yasinovataya = "Ясиноватая";
+        }
+
+        public static class ZhitomirskCities
+        {
+            public const string Andrushevka = "Андрушевка";
+            public const string Baranovka = "Барановка";
+            public const string Berdichev = "Бердичев";
+            public const string VolodarskVolinsk = "Володарск-Волынский";
+            public const string Emilchino = "Емильчино";
+            public const string Djitomir = "Житомир";
+            public const string Irshanskiy = "Иршанск";
+            public const string Korosten = "Коростень";
+            public const string Korostishev = "Коростышев";
+            public const string Malin = "Малин";
+            public const string NovogradVolinsk = "Новоград-Волынский";
+            public const string Ovrush = "Овруч";
+            public const string Olevsk = "Олевск";
+            public const string Popelnya = "Попельня";
+            public const string Rodomishl = "Радомышль";
+            public const string Romanov = "Романов";
+            public const string Chernyahov = "Черняхов";
+        }
+
+        public static class ZakarpatskCities
+        {
+            public const string Beregovo = "Берегово";
+            public const string Bushtinova = "Буштына";
+            public const string VelikiyBichkov = "Великий Бычков";
+            public const string Vinogradov = "Виноградов";
+            public const string Vishkovo = "Вышково";
+            public const string Dybovoe = "Дубовое";
+            public const string Irshava = "Иршава";
+            public const string Korolevo = "Королево";
+            public const string Mejgorie = "Межгорье";
+            public const string Mukachevo = "Мукачево";
+            public const string Perechin = "Перечин";
+            public const string Rahov = "Рахов";
+            public const string Svalyava = "Свалява";
+            public const string Solotvina = "Солотвина";
+            public const string Tyachev = "Тячев";
+            public const string Ujgorod = "Ужгород";
+            public const string Hust = "Хуст";
+            public const string Chop = "Чоп";
+        }
+
+        public static class ZaporozhieCities
+        {
+            public const string Akimovka = "Акимовка";
+            public const string Belyaevka = "Беляевка";
+            public const string Berdansk = "Бердянск";
+            public const string Vasilievka = "Васильевка";
+            public const string Vesoloe= "Веселое";
+            public const string Volnansk = "Вольнянск";
+            public const string GulayPole = "Гуляйполе";
+            public const string Dneprorudnoe = "Днепрорудное";
+            public const string Zaporojie = "Запорожье";
+            public const string KamenkaDneprovskaya = "Каменка-Днепровская";
+            public const string Kuibishevo = "Куйбышево";
+            public const string Kushugum = "Кушугум";
+            public const string Melitopol = "Мелитополь";
+            public const string Mihailovka = "Михайловка";
+            public const string Molochansk = "Молочанск";
+            public const string Orehov = "Орехов";
+            public const string Pologin = "Пологи";
+            public const string Primorsk = "Приморск";
+            public const string Rozovka = "Розовка";
+            public const string Tokmak = "Токмак";
+            public const string Energodar = "Энергодар";
+        }
+
+        public static class IvanoFrankovskCities
+        {
+            public const string Bogorchani = "Богородчаны";
+            public const string Bolehov = "Болехов";
+            public const string Burshtin = "Бурштын";
+            public const string Galich = "Галич";
+            public const string Gorodenka = "Городенка";
+            public const string Delyatin = "Делятин";
+            public const string Dolina = "Долина";
+            public const string IvanoFrankovsk = "Ивано-Франковск";
+            public const string Kalush = "Калуш";
+            public const string Kolomiya = "Коломыя";
+            public const string Kosov = "Косов";
+            public const string Lanchin = "Ланчин";
+            public const string Nadvornaya = "Надворная";
+            public const string Pereginskoye = "Перегинское";
+            public const string Rogatin = "Рогатин";
+            public const string Snyatin = "Снятын";
+            public const string Tlymach = "Тлумач";
+            public const string Tismenica = "Тысменица";
+            public const string Yaremche = "Яремче";
+        }
+
+        public static class KievCities
+        {
+            public const string Barishevka = "Барышевка";
+            public const string BelayaCerkov = "Белая Церковь";
+            public const string Berezan = "Березань";
+            public const string Boguslav = "Богуслав";
+            public const string Borispol = "Борисполь";
+            public const string Borodyanka = "Бородянка";
+            public const string Boyarka = "Боярка";
+            public const string Brovari = "Бровары";
+            public const string Bucha = "Буча";
+            public const string Vasilkov = "Васильков";
+            public const string Vishnevoe = "Вишневое";
+            public const string Volodarka = "Володарка";
+            public const string Vishgorod = "Вышгород";
+            public const string Glevaha = "Глеваха";
+            public const string Gostomel = "Гостомель";
+            public const string Ivankov = "Иванков";
+            public const string Irpen = "Ирпень";
+            public const string Kagarlik = "Кагарлык";
+            public const string Kiyev = "Киев";
+            public const string Kocybinskoe = "Коцюбинское";
+            public const string Makarov = "Макаров";
+            public const string Mironovka = "Мироновка";
+            public const string Obyhov = "Обухов";
+            public const string PereyaslovHmelnitskiy = "Переяслав-Хмельницкий";
+            public const string Pripyat = "Припять";
+            public const string Rjishev = "Ржищев";
+            public const string Rokitnoe = "Рокитное";
+            public const string Skvira = "Сквира";
+            public const string Slavytich = "Славутич";
+            public const string Tarasha = "Тараща";
+            public const string Teterev = "Тетиев";
+            public const string Uzin = "Узин";
+            public const string Ukrainka = "Украинка";
+            public const string Fastov = "Фастов";
+            public const string Chernobyil = "Чернобыль";
+            public const string Yagotin = "Яготин";
+        }
+
+        public static class KirovogradCities
+        {
+            public const string Alexandiya = "Александрия";
+            public const string Bobrinec = "Бобринец";
+            public const string Vlasovka = "Власовка";
+            public const string Gayvoron = "Гайворон";
+            public const string Dolinskaya = "Долинская";
+            public const string Znamenka = "Знаменка";
+            public const string Kropevnickiy = "Кропивницкий";
+            public const string MalayaViska = "Малая Виска";
+            public const string NovayaPraga = "Новая Прага";
+            public const string Novoarhangelsk = "Новоархангельск";
+            public const string Novoe = "Новое";
+            public const string Novomirgorod = "Новомиргород";
+            public const string Novoukrainka = "Новоукраинка";
+            public const string Pervomaysk = "Первомайск";
+            public const string Petrovo = "Петрово";
+            public const string Pomoshnaya = "Помошная";
+            public const string Svetlovodsk = "Светловодск";
+            public const string Smolino = "Смолино";
+        }
+
+        public static class LuganskCities
+        {
+            public const string Alexandrovsk = "Александровск";
+            public const string Almaznaya = "Алмазная";
+            public const string Alchevsk = "Алчевск";
+            public const string Antracit = "Антрацит";
+            public const string Artemovsk = "Артемовск";
+            public const string Bryanke = "Брянка";
+            public const string Vahryshevo = "Вахрушево";
+            public const string Gornoye = "Горное";
+            public const string Gorskoye = "Горское";
+            public const string Zimgorie = "Зимогорье";
+            public const string Zolotoe = "Золотое";
+            public const string Zorinsk = "Зоринск";
+            public const string Irnimo = "Ирмино";
+            public const string Kirovsk = "Кировск";
+            public const string Krasnodon = "Краснодон";
+            public const string Krasnopartizansk = "Краснопартизанск";
+            public const string KrasniyLuch = "Красный Луч";
+            public const string Kremennaya = "Кременная";
+            public const string Lisichansk = "Лисичанск";
+            public const string Lugansk = "Луганск";
+            public const string Lytugino = "Лутугино";
+            public const string Miysinsk = "Миусинск";
+            public const string Molodogvardeysk = "Молодогвардейск";
+            public const string Novodrujesk = "Новодружеск";
+            public const string Novopskov = "Новопсков";
+            public const string Pervomaysk = "Первомайск";
+            public const string Pervalsk = "Перевальск";
+            public const string Petrovskoe = "Петровское";
+            public const string Popasnaya = "Попасная";
+            public const string Privolye = "Приволье";
+            public const string Rovenki = "Ровеньки";
+            public const string Rybejnoye = "Рубежное";
+            public const string Svatovo = "Сватово";
+            public const string Sverdlovsk = "Свердловск";
+            public const string Severodonetsk = "Северодонецк";
+            public const string StanicaLuganskaya = "Станица Луганская";
+            public const string Starobelsk = "Старобельск";
+            public const string Stahanov = "Стаханов";
+            public const string Suhodolsk = "Суходольск";
+            public const string Schastie = "Счастье";
+            public const string Chervonopartizansk = "Червонопартизанск";
+        }
+
+        public static class NikolaevskCities
+        {
+            public const string Alexandrovka = "Александровка";
+            public const string Arbyzinka = "Арбузинка";
+            public const string Bashtanka = "Баштанка";
+            public const string Bereznegovatoe = "Березнеговатое";
+            public const string Bratskoe = "Братское";
+            public const string Veselinovo = "Веселиново";
+            public const string Voznesensk = "Вознесенск";
+            public const string Vradievka = "Врадиевка";
+            public const string Domanevka = "Доманевка";
+            public const string Elenec = "Еланец";
+            public const string Kazanka = "Казанка";
+            public const string KrivoeOzero = "Кривое Озеро";
+            public const string Nikolayev = "Николаев";
+            public const string NovayaOdessa = "Новая Одесса";
+            public const string NoviyBug = "Новый Буг";
+            public const string Ochakov = "Очаков";
+            public const string Pervomaysk = "Первомайск";
+            public const string Snigerovka = "Снигиревка";
+            public const string Yjnoukrinsk = "Южноукраинск";
+        }
+
+        public static class OdessaCities
+        {
+
+        }
+
+        public static class PoltavskCities
+        {
+
+        }
+
+        public static class RovnenskCities
+        {
+
+        }
+
+        public static class SumyCities
+        {
+
+        }
+
+        public static class TernopolCities
+        {
+
+        }
+
+        public static class KharkovCities
+        {
+
+        }
+
+        public static class KhmelnickCities
+        {
+
+        }
+
+        public static class CherkassiCities
+        {
+
+        }
+
+        public static class ChernigovCities
+        {
+
+        }
+
+        public static class ChernoveckCities
+        {
+
+        }
+
+
     }
 }
