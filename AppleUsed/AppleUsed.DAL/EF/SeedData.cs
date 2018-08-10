@@ -144,7 +144,7 @@ namespace AppleUsed.DAL.EF
             public const string IvanoFrankovskaya = "Ивано-Франковская";
             public const string Kievskaya = "Киевская";
             public const string Kirovogradskays = "Кировоградская";
-            public const string Liganskaya = "Луганская";
+            public const string Luganskaya = "Луганская";
             public const string Lvovskaya = "Львовская";
             public const string Nikolaevskaya = "Николаевская";
             public const string Odesskaya = "Одесская";
@@ -683,7 +683,7 @@ namespace AppleUsed.DAL.EF
             public const string Shepetivka = "Шепетовка";
         }
 
-        public static class CherkassiCities
+        public static class CherkassyCities
         {
             public const string Vatutino = "Ватутино";
             public const string Gorodishe = "Городище";
