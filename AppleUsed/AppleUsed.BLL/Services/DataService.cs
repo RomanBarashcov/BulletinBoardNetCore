@@ -3,9 +3,7 @@ using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AppleUsed.BLL.Services
 {
@@ -25,6 +23,7 @@ namespace AppleUsed.BLL.Services
             int selectedProductMemorieId = Convert.ToInt32(ad.SelectedProductMemory);
             int selectedProductColorsId = Convert.ToInt32(ad.SelectedProductColor);
             int selectedProductStatesId = Convert.ToInt32(ad.SelectedProductStates);
+            int selectedCityId = Convert.ToInt32(ad.SelectedCity);
 
             Characteristics characteristics = new Characteristics
             {
@@ -42,7 +41,7 @@ namespace AppleUsed.BLL.Services
                 Price = ad.Price,
                 DateCreated = DateTime.Now,
                 DateUpdated = DateTime.Now,
-                //City = ad.CityesList.Where(x => x.Name == ad.SelectedCity).FirstOrDefault(),
+                City = ad.CityesList.Where(x => x.CityId == selectedCityId).FirstOrDefault(),
                 //Photos = ad.PhotosList,
                 Characteristics = characteristics
             };

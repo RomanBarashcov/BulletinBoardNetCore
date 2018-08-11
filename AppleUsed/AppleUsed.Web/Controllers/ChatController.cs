@@ -58,12 +58,16 @@ namespace AppleUsed.Web.Controllers
             ConversationIndexViewModel model = new ConversationIndexViewModel();
             string userId = _userManager.GetUserId(User);
             model.Conversation = await _conversationService.GetConversationByAdIdAndSenderIdAndContactId(adId, userId, contactId);
-            model.Ad = await _adService.GetAdById(adId);
             
             ViewBag.SenderId = userId;
             ViewBag.RecivedId = contactId;
             ViewBag.AdId = adId;
 
+            var getAdByIdResult = await _adService.GetAdById(adId);
+            if (!getAdByIdResult.Succedeed)
+                return View("Conversations", model);
+
+            model.Ad = getAdByIdResult.Property;
             return View("Conversations", model);
         }
 

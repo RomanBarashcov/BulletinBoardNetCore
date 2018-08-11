@@ -34,7 +34,11 @@ namespace AppleUsed.Web.Controllers
         {
             int pageSize = 5;
 
-            IQueryable<AdDTO> adList = await _adService.GetAds();
+            var result = await _adService.GetAds();
+            if (!result.Succedeed)
+                return View(model);
+
+            IQueryable<AdDTO> adList = result.Property;
 
             if(model.SortViewModel != null)
                 adList = new SelectedOptionFilter(model.SortViewModel.SelectedOptionValue, adList).SelectedOptionChanged();
@@ -128,11 +132,28 @@ namespace AppleUsed.Web.Controllers
         public async Task<IActionResult> AdDetails(int? id)
         {
             AdDetailsViewModel model = new AdDetailsViewModel();
-            model.AddDetails = await _adService.GetAdById(id??0);
-            var similarAds = await _adService.GetAdsByProductTypeId(model.AddDetails.SelectedProductTypeId);
+
+            var getByIdReult = await _adService.GetAdById(id ?? 0);
+            if(!getByIdReult.Succedeed)
+                return View(model);
+
+            model.AddDetails = getByIdReult.Property;
+
+            var similarAdsResult = await _adService.GetAdsByProductTypeId(model.AddDetails.SelectedProductTypeId);
+            if(!similarAdsResult.Succedeed)
+                return View(model);
+
+            var similarAds = similarAdsResult.Property;
             model.SimilarAds = await similarAds.Take(4).ToListAsync();
-            var otherAdsByAuthor = await _adService.GetAdsByUserId(model.AddDetails.User.Id);
+
+            var otherAdsByAuthorResult = await _adService.GetAdsByUserId(model.AddDetails.User.Id);
+
+            if(!otherAdsByAuthorResult.Succedeed)
+                return View(model);
+
+            var otherAdsByAuthor = otherAdsByAuthorResult.Property;
             model.OtherAdsByAuthor = await otherAdsByAuthor.Take(5).ToListAsync();
+
             return View(model);
         }
 

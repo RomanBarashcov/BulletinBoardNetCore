@@ -19,6 +19,7 @@ using AppleUsed.BLL.DTO;
 using System.IO;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 
 namespace AppleUsed.Web.Controllers.Manage
 {
@@ -123,16 +124,26 @@ namespace AppleUsed.Web.Controllers.Manage
         public async Task<IActionResult> ManageAdsByUser()
         {
             string userName = User.Identity.Name;
-            var ads = await _adService.GetAdsByUser(userName);
-            return View(await ads.ToListAsync());
+
+            var getAdsByUserResult = await _adService.GetAdsByUser(userName);
+            if (!getAdsByUserResult.Succedeed)
+                return View(new List<AdDTO>());
+
+
+            return View(await getAdsByUserResult.Property.ToListAsync());
         }
         
         [HttpGet]
         public async Task<IActionResult> EditAd(int id)
         {
-            var ad = await _adService.GetAdById(id);
+            AdViewModel model = new AdViewModel();
+
+            var getAdByIdResult = await _adService.GetAdById(id);
+            if(!getAdByIdResult.Succedeed)
+                return View("EditAd", model);
+
             var dataForSelectList = await _adService.GetDataForCreatingAdOrDataForFilter();
-            var model = _prepearingModel.PrepearingAdViewModel(dataForSelectList, ad);
+            model = _prepearingModel.PrepearingAdViewModel(dataForSelectList, getAdByIdResult.Property);
             
             ViewBag.AdId = id;
             return View("EditAd", model);

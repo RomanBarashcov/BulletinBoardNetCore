@@ -5,6 +5,8 @@ using AppleUsed.Web.Models.ViewModels;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
+using System.Collections.Generic;
+using AppleUsed.BLL.DTO;
 
 namespace AppleUsed.Web.Controllers.Home
 {
@@ -21,9 +23,14 @@ namespace AppleUsed.Web.Controllers.Home
 
         public async Task<IActionResult> Index()
         {
-            var ads = await _adService.GetAds();
-            var modelList = ads.OrderByDescending(x=>x.AdId).Take(5).ToList();
-            return View(modelList);
+            List<AdDTO> model = new List<AdDTO>();
+
+            var getAdsResult = await _adService.GetAds();
+            if(!getAdsResult.Succedeed)
+                return View(model);
+
+            model = getAdsResult.Property.OrderByDescending(x=>x.AdId).Take(5).ToList();
+            return View(model);
         }
 
         public IActionResult About()

@@ -12,11 +12,11 @@ namespace AppleUsed.BLL.Interfaces
 {
     public interface IAdService
     {
-        Task<IQueryable<AdDTO>> GetAds();
-        Task<IQueryable<AdDTO>> GetAdsByProductTypeId(int productTypeId);
-        Task<IQueryable<AdDTO>> GetAdsByUserId(string userId);
-        Task<IQueryable<AdDTO>> GetAdsByUser(string userName);
-        Task<AdDTO> GetAdById(int id);
+        Task<OperationDetails<IQueryable<AdDTO>>> GetAds();
+        Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByProductTypeId(int productTypeId);
+        Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUserId(string userId);
+        Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUser(string userName);
+        Task<OperationDetails<AdDTO>> GetAdById(int id);
         Task<AdDTO> GetDataForCreatingAdOrDataForFilter();
         Task<OperationDetails<int>> SaveAd(string userName, AdDTO ad, IFormFileCollection productPhotos);
         Task<OperationDetails<int>> DeleteAd(int id);
