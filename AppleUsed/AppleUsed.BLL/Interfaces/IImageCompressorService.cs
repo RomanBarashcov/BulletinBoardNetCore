@@ -6,7 +6,11 @@ namespace AppleUsed.BLL.Interfaces
 {
     public interface IImageCompressorService
     {
-        byte[] CompresingImage(byte[] inputImage);
-        List<byte[]> CompresingImages(List<byte[]> inputImages);
+        string CompressingImageForSmallSize(byte[] inputImages);
+        string CompressingImageForAvgSize(byte[] inputImages);
+        string CompressingImageForBigSize(byte[] inputImages);
+        List<string> CompressingImagesForSmallSize(List<byte[]> inputImages);
+        List<string> CompressingImagesForAvgSize(List<byte[]> inputImages);
+        List<string> CompressingImagesForBigSize(List<byte[]> inputImages);
     }
 }

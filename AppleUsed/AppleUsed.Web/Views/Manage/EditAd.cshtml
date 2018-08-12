@@ -88,15 +88,9 @@
                     {
                         <div class="row">
 
-                            @using (MagickImage image = new MagickImage(item.Photo))
-                            {
-                                var base64 = image.ToBase64();
-                                var src = String.Format("data:image/jpg;base64,{0}", base64);
-
                                 <div class="col-sm-6">
-                                    <img style='max-width:170px; max-height:130px;' src="@src" />
+                                    <img style='max-width:170px; max-height:130px;' src="@item.PhotoHashSmall" />
                                 </div>
-                            }
 
                             <a data-type="DeleteButton" onclick="RemovePhoto('@item.AdPhotosId')" class="btn btn-danger">Удалить</a>
 

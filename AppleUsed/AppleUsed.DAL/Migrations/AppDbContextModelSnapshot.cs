@@ -74,7 +74,11 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<string>("AdPhotoName");
 
-                    b.Property<byte[]>("Photo");
+                    b.Property<string>("PhotoHashAvg");
+
+                    b.Property<string>("PhotoHashBig");
+
+                    b.Property<string>("PhotoHashSmall");
 
                     b.HasKey("AdPhotosId");
 

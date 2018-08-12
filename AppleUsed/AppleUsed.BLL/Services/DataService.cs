@@ -23,7 +23,7 @@ namespace AppleUsed.BLL.Services
             int selectedProductMemorieId = Convert.ToInt32(ad.SelectedProductMemory);
             int selectedProductColorsId = Convert.ToInt32(ad.SelectedProductColor);
             int selectedProductStatesId = Convert.ToInt32(ad.SelectedProductStates);
-            int selectedCityId = Convert.ToInt32(ad.SelectedCity);
+            int selectedCityId = Convert.ToInt32(ad.SelectedCityId);
 
             Characteristics characteristics = new Characteristics
             {
@@ -41,8 +41,7 @@ namespace AppleUsed.BLL.Services
                 Price = ad.Price,
                 DateCreated = DateTime.Now,
                 DateUpdated = DateTime.Now,
-                City = ad.CityesList.Where(x => x.CityId == selectedCityId).FirstOrDefault(),
-                //Photos = ad.PhotosList,
+                City = _db.Cities.Where(x => x.CityId == selectedCityId).FirstOrDefault(),
                 Characteristics = characteristics
             };
 

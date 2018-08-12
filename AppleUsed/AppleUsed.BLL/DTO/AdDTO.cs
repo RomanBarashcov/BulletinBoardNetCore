@@ -30,10 +30,14 @@ namespace AppleUsed.BLL.DTO
         public string SelectedCityArea { get; set; }
 
         public List<City> CityesList { get; set; }
+        public int SelectedCityId { get; set; }
         public string SelectedCity { get; set; }
 
         public List<AdPhotos> PhotosForEdit { get; set; }
-        public List<string> PhotosList { get; set; }
+
+        public List<string> PhotosSmallSizeList { get; set; }
+        public List<string> PhotosAvgSizeList { get; set; }
+        public List<string> PhotosBigSizeList { get; set; }
 
         public int AdViews { get; set; }
 

@@ -18,7 +18,7 @@
 
                         <div class="col-lg-3 photo">
                             <a  asp-controller="Ad" asp-action="AdDetails" asp-route-id="@item.AdId">
-                                <img style='max-width:170px; max-height:130px;' src="@item.PhotosList.FirstOrDefault()" />
+                                <img style='max-width:170px; max-height:130px;' src="@item.PhotosSmallSizeList.FirstOrDefault()" />
                             </a>
                         </div>
 

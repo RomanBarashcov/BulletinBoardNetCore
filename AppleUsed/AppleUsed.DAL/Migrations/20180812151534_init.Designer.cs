@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppleUsed.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180715130833_GetAllAdsProcedure")]
-    partial class GetAllAdsProcedure
+    [Migration("20180812151534_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,7 +76,11 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<string>("AdPhotoName");
 
-                    b.Property<byte[]>("Photo");
+                    b.Property<string>("PhotoHashAvg");
+
+                    b.Property<string>("PhotoHashBig");
+
+                    b.Property<string>("PhotoHashSmall");
 
                     b.HasKey("AdPhotosId");
 
@@ -110,25 +114,19 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<int?>("AdId");
 
-                    b.Property<int?>("ProductColorsId");
+                    b.Property<int>("ProductColorsId");
 
-                    b.Property<int?>("ProductMemoriesId");
+                    b.Property<int>("ProductMemoriesId");
 
-                    b.Property<int?>("ProductModelsId");
+                    b.Property<int>("ProductModelsId");
 
-                    b.Property<int?>("ProductStatesId");
+                    b.Property<int>("ProductStatesId");
+
+                    b.Property<int>("ProductTypesId");
 
                     b.HasKey("CharacteristicsId");
 
                     b.HasIndex("AdId");
-
-                    b.HasIndex("ProductColorsId");
-
-                    b.HasIndex("ProductMemoriesId");
-
-                    b.HasIndex("ProductModelsId");
-
-                    b.HasIndex("ProductStatesId");
 
                     b.ToTable("Characteristics");
                 });
@@ -161,6 +159,54 @@ namespace AppleUsed.DAL.Migrations
                     b.HasKey("CityAreaId");
 
                     b.ToTable("CityAreas");
+                });
+
+            modelBuilder.Entity("AppleUsed.DAL.Entities.Conversation", b =>
+                {
+                    b.Property<int>("ConversationId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AdId");
+
+                    b.Property<string>("BuyerId");
+
+                    b.Property<string>("BuyerName");
+
+                    b.Property<string>("SellerId");
+
+                    b.Property<string>("SellerName");
+
+                    b.HasKey("ConversationId");
+
+                    b.ToTable("Conversations");
+                });
+
+            modelBuilder.Entity("AppleUsed.DAL.Entities.ConversationMessage", b =>
+                {
+                    b.Property<int>("ConversationMessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AdId");
+
+                    b.Property<int>("ConversationId");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("Message");
+
+                    b.Property<string>("ReceiverId");
+
+                    b.Property<string>("SenderId");
+
+                    b.Property<int>("Status");
+
+                    b.HasKey("ConversationMessageId");
+
+                    b.HasIndex("ConversationId");
+
+                    b.ToTable("ConversationMessages");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.ProductColors", b =>
@@ -483,22 +529,6 @@ namespace AppleUsed.DAL.Migrations
                     b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
                         .WithMany()
                         .HasForeignKey("AdId");
-
-                    b.HasOne("AppleUsed.DAL.Entities.ProductColors", "ProductColors")
-                        .WithMany()
-                        .HasForeignKey("ProductColorsId");
-
-                    b.HasOne("AppleUsed.DAL.Entities.ProductMemories", "ProductMemories")
-                        .WithMany()
-                        .HasForeignKey("ProductMemoriesId");
-
-                    b.HasOne("AppleUsed.DAL.Entities.ProductModels", "ProductModels")
-                        .WithMany()
-                        .HasForeignKey("ProductModelsId");
-
-                    b.HasOne("AppleUsed.DAL.Entities.ProductStates", "ProductStates")
-                        .WithMany()
-                        .HasForeignKey("ProductStatesId");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.City", b =>
@@ -506,6 +536,14 @@ namespace AppleUsed.DAL.Migrations
                     b.HasOne("AppleUsed.DAL.Entities.CityArea", "CityArea")
                         .WithMany("Cities")
                         .HasForeignKey("CityAreaId");
+                });
+
+            modelBuilder.Entity("AppleUsed.DAL.Entities.ConversationMessage", b =>
+                {
+                    b.HasOne("AppleUsed.DAL.Entities.Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.ProductModels", b =>

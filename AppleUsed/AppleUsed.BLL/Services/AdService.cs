@@ -12,19 +12,31 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class GetAdsByAuthorId : IAdService , IDisposable
+    public class AdService : IAdService , IDisposable
     {
         private AppDbContext _db;
         private IDataService _dataService;
         private readonly IImageService _imageService;
         private readonly IConversationService _conversationService;
+        private readonly ICityAreasService _cityAreasService;
+        private readonly ICityService _cityService;
+        private readonly IProductModelsService _productModelService;
 
-        public GetAdsByAuthorId(AppDbContext context, IDataService dataService, IImageService imageService, IConversationService conversationService)
+        public AdService(AppDbContext context,
+            IDataService dataService,
+            IImageService imageService,
+            IConversationService conversationService,
+            ICityAreasService cityAreasService,
+            ICityService cityService,
+            IProductModelsService productModelsService)
         {
             _db = context;
             _dataService = dataService;
             _imageService = imageService;
             _conversationService = conversationService;
+            _cityAreasService = cityAreasService;
+            _cityService = cityService;
+            _productModelService = productModelsService;
         }
 
         public async Task<OperationDetails<IQueryable<AdDTO>>> GetAds()
@@ -37,8 +49,8 @@ namespace AppleUsed.BLL.Services
                 var ads = (from ad in _db.Ads
                            join c in _db.Cities on ad.City.CityId equals c.CityId
                            join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
+                           join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.Ad.AdId into aPhotos
                            join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
-                           join ap in _db.AdPhotos on ad.AdId equals ap.Ad.AdId into aPhotos
                            join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
                            join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
                            join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
@@ -56,7 +68,7 @@ namespace AppleUsed.BLL.Services
                                DateUpdated = ad.DateUpdated,
                                SelectedCityArea = ca.Name,
                                SelectedCity = c.Name,
-                               PhotosList = _imageService.CreatingImageSrc(aPhotos.ToList()),
+                               PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),
                                AdViews = av.SumViews,
                                SelectedProductType = pt.Name,
                                SelectedProductTypeId = pt.ProductTypesId,
@@ -99,7 +111,7 @@ namespace AppleUsed.BLL.Services
                                 join c in _db.Cities on ad.City.CityId equals c.CityId
                                 join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
                                 join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
-                                join ap in _db.AdPhotos on ad.AdId equals ap.Ad.AdId into aPhotos
+                                join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.Ad.AdId into aPhotos
                                 join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
                                 join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
                                 join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
@@ -119,7 +131,8 @@ namespace AppleUsed.BLL.Services
                                     SelectedCityArea = ca.Name,
                                     SelectedCity = c.Name,
                                     PhotosForEdit = aPhotos.ToList(),
-                                    PhotosList = _imageService.CreatingImageSrc(aPhotos.ToList()),
+                                    PhotosAvgSizeList = _imageService.CreatingImageSrcForAvgSize(aPhotos.ToList()),
+                                    PhotosBigSizeList = _imageService.CreatingImageSrcForBigSize(aPhotos.ToList()),
                                     AdViews = av.SumViews,
                                     SelectedProductType = pt.Name,
                                     SelectedProductTypeId = pt.ProductTypesId,
@@ -163,7 +176,7 @@ namespace AppleUsed.BLL.Services
                        join c in _db.Cities on ad.City.CityId equals c.CityId
                        join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
                        join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
-                       join ap in _db.AdPhotos on ad.AdId equals ap.Ad.AdId into aPhotos
+                       join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.Ad.AdId into aPhotos
                        join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
                        join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
                        where pt.ProductTypesId == productTypeId
@@ -182,7 +195,7 @@ namespace AppleUsed.BLL.Services
                            DateUpdated = ad.DateUpdated,
                            SelectedCityArea = ca.Name,
                            SelectedCity = ca.Name,
-                           PhotosList = _imageService.CreatingImageSrc(aPhotos.ToList()),
+                           PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),
                            AdViews = av.SumViews,
                            SelectedProductType = pt.Name,
                            SelectedProductTypeId = pt.ProductTypesId,
@@ -224,7 +237,7 @@ namespace AppleUsed.BLL.Services
                        join c in _db.Cities on ad.City.CityId equals c.CityId
                        join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
                        join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
-                       join ap in _db.AdPhotos on ad.AdId equals ap.Ad.AdId into aPhotos
+                       join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.Ad.AdId into aPhotos
                        join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
                        join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
                        join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
@@ -244,7 +257,7 @@ namespace AppleUsed.BLL.Services
                            NotDeliveredMessageCount = _conversationService.GetCountNotDeliveredMessageByAdId(ad.AdId),
                            SelectedCityArea = ca.Name,
                            SelectedCity = c.Name,
-                           PhotosList = _imageService.CreatingImageSrc(aPhotos.ToList()),
+                           PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),
                            AdViews = av.SumViews,
                            SelectedProductType = pt.Name,
                            SelectedProductTypeId = pt.ProductTypesId,
@@ -284,7 +297,7 @@ namespace AppleUsed.BLL.Services
                        join c in _db.Cities on ad.City.CityId equals c.CityId
                        join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
                        join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
-                       join ap in _db.AdPhotos on ad.AdId equals ap.Ad.AdId into aPhotos
+                       join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.Ad.AdId into aPhotos
                        join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
                        join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
                        join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
@@ -303,7 +316,7 @@ namespace AppleUsed.BLL.Services
                            DateUpdated = ad.DateUpdated,
                            SelectedCityArea = ca.Name,
                            SelectedCity = c.Name,
-                           PhotosList = _imageService.CreatingImageSrc(aPhotos.ToList()),
+                           PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),
                            AdViews = av.SumViews,
                            SelectedProductType = pt.Name,
                            SelectedProductTypeId = pt.ProductTypesId,
@@ -331,28 +344,12 @@ namespace AppleUsed.BLL.Services
 
         public async Task<AdDTO> GetDataForCreatingAdOrDataForFilter()
         {
-
             AdDTO adDto = new AdDTO();
 
-            adDto.CityAreasList = await _db.CityAreas.ToListAsync();
-            adDto.ProductTypesList = await (from t in _db.ProductTypes
-                                            select new ProductTypes
-                                            {
-                                                ProductTypesId = t.ProductTypesId,
-                                                Name = t.Name
-                                             
-                                            }).ToListAsync();
-
-            adDto.ProductModelsList = await (from m in _db.ProductModels
-                                             join t in _db.ProductTypes on m.ProductTypes.ProductTypesId equals t.ProductTypesId
-                                             select new ProductModels
-                                             {
-                                                 ProductModelsId = m.ProductModelsId,
-                                                 Name = m.Name,
-                                                 ProductTypes = t
-
-                                             }).ToListAsync();
-
+            adDto.CityesList = await _cityService.GetCities().ToListAsync();
+            adDto.CityAreasList = await _cityAreasService.GetCityAreas().ToListAsync();
+            adDto.ProductTypesList = await _db.ProductTypes.ToListAsync();
+            adDto.ProductModelsList = await _productModelService.GetProductModels().ToListAsync();
             adDto.ProductMemoriesList = await _db.ProductMemories.ToListAsync();
             adDto.ProductColorsList = await _db.ProductColors.ToListAsync();
             adDto.ProductStatesList = await _db.ProductStates.ToListAsync();
@@ -407,9 +404,11 @@ namespace AppleUsed.BLL.Services
                 operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
             }
 
+            newAd.AdViews = new AdViews { Ad = newAd, SumViews = 0 };
+
             if (productPhotos != null)
             {
-                var binaryPhotoList = _imageService.GetBinaryPhotoList(productPhotos);
+                var binaryPhotoList = _imageService.GetPhotosHashList(productPhotos);
                 binaryPhotoList.ForEach(x => x.Ad = newAd);
                 newAd.Characteristics.Ad = newAd;
 
@@ -425,6 +424,9 @@ namespace AppleUsed.BLL.Services
                     operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
                 }
             }
+
+            
+
 
             return operationDetails;
         }
@@ -461,7 +463,7 @@ namespace AppleUsed.BLL.Services
                         operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
                     }
 
-                    var binaryPhotoList = _imageService.GetBinaryPhotoList(productPhotos);
+                    var binaryPhotoList = _imageService.GetPhotosHashList(productPhotos);
                     binaryPhotoList.ForEach(x => x.Ad = oldAd);
                     oldAd.Characteristics.Ad = oldAd;
 

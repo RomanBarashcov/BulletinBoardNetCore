@@ -60,6 +60,20 @@
                 </select>
             </div>
 
+            <div class="form-group" id="Areas">
+                <label class="control-label">Ваша Область  : </label>
+                <select asp-for="AdDTO.SelectedCityArea" asp-items="Model.CityAreasSelectList" id="AreasList" class="form-control">
+                    <option selected="selected" disabled="disabled"> </option>
+                </select>
+            </div>
+
+            <div class="form-group" id="CityAreas">
+                <label class="control-label">Ваш город  : </label>
+                <select asp-for="AdDTO.SelectedCityId" asp-items="Model.CityesSelectList" id="CityAreasList" class="form-control">
+                    <option selected="selected" disabled="disabled"> </option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label class="control-label">Описание товара : </label>
                 @Html.TextAreaFor(m => m.AdDTO.Description, new { @class = "form-control", @row = 3 })
@@ -88,18 +102,15 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 <script type="text/javascript">
+
     $(function () {
         $('#ProductModel').hide();
     });
 
     $('#ProductType').on('change', function () {
 
-        var data = GetDataForSendController(this.value);
+        let selectedProductType = this.value;
 
         $.ajax({
             type: "POST",
@@ -108,9 +119,9 @@
                 xhr.setRequestHeader("XSRF-TOKEN",
                     $('input:hidden[name="__RequestVerificationToken"]').val());
             },
-            data: data ,
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
+            data: {
+                selectedProductTypeId: selectedProductType
+            },
             success: function (data) {
        
                 var items = '';
@@ -133,16 +144,39 @@
         });
     });
 
+    $('#AreasList').on('change', function () {
 
-    function GetDataForSendController(selectedValue) {
+        let selectedCityAarea = this.value;
 
-        var data = '@Html.Raw(Json.Serialize(Model.AdDTO))';
-        var parseData = $.parseJSON(data);
-        parseData.selectedProductType = selectedValue;
-        data = JSON.stringify(parseData);
+        console.log(selectedCityAarea);
 
-        return data;
-    }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetAreasCitySelectList")",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: { selectedCityAareaId: selectedCityAarea } ,
+            success: function (data) {
+       
+                var items = '';
+                $('#CityAreasList').empty();
+
+                $.each(data, function (i, cityeAreas) {
+                    items += "<option value='" + cityeAreas.value + "'>" + cityeAreas.text + "</option>";
+                });
+
+                $('#CityAreasList').html(items);
+
+                console.log(items);
+                data.empty;
+            },
+            failure: function (errMsg) {
+                alert(errMsg);
+            }
+        });
+    });
 
 </script>
 

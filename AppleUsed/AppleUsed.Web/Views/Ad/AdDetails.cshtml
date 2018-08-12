@@ -37,7 +37,7 @@
             </div>
 
             <div class="photo">
-                <img style='max-width:640px; max-height:480px;' src="@Model.AddDetails.PhotosList.FirstOrDefault()" />
+                <img style='max-width:640px; max-height:480px;' src="@Model.AddDetails.PhotosAvgSizeList.FirstOrDefault()" />
             </div>
 
             <div class="ad-simple-info">
@@ -47,9 +47,9 @@
                             <th> Добавлено : </th>
                             <td>@Model.AddDetails.DateUpdated</td>
                             <th> Город : </th>
-                            <td>Киев</td>
+                            <td>@Model.AddDetails.SelectedCity</td>
                             <th>Область : </th>
-                            <td>Киевская</td>
+                            <td>@Model.AddDetails.SelectedCityArea</td>
                         </tr>
                     </thead>
                 </table>
@@ -101,7 +101,7 @@
 
             <div class="Ad-Photos">
 
-                @foreach (var photo in Model.AddDetails.PhotosList)
+                @foreach (var photo in Model.AddDetails.PhotosAvgSizeList)
                 {
                     <img style='max-width:640px; max-height:480px;' src="@photo" />
                 }
@@ -138,7 +138,7 @@
                             <div class="photo">
 
                                 <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
-                                    <img style='max-width:170px; max-height:130px;' src="@ad.PhotosList.FirstOrDefault()" />
+                                    <img style='max-width:170px; max-height:130px;' src="@ad.PhotosSmallSizeList.FirstOrDefault()" />
                                 </a>
 
                             </div>

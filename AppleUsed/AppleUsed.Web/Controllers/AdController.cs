@@ -22,11 +22,18 @@ namespace AppleUsed.Web.Controllers
     {
         private IAdService _adService;
         private readonly PrepearingModel _prepearingModel;
+        private readonly ICityService _cityService;
+        private readonly IProductModelsService _productModelsService;
 
-        public AdController(IAdService adService)
+        public AdController(
+            IAdService adService, 
+            ICityService cityService, 
+            IProductModelsService productModelsService)
         {
             _adService = adService;
             _prepearingModel = new PrepearingModel(_adService);
+            _cityService = cityService;
+            _productModelsService = productModelsService;
         }
 
         [HttpGet]
@@ -81,32 +88,25 @@ namespace AppleUsed.Web.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public JsonResult GetProductModelsSelectList()
+        public JsonResult GetProductModelsSelectList(string selectedProductTypeId)
         {
-            AdDTO model = new AdDTO();
+            int _selectedProductTypeId = Convert.ToInt32(selectedProductTypeId);
 
-            {
-                MemoryStream stream = new MemoryStream();
-                Request.Body.CopyTo(stream);
-                stream.Position = 0;
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    string requestBody = reader.ReadToEnd();
-                    if (requestBody.Length > 0)
-                    {
+            var productModels = _productModelsService.GetProductModels()
+                .Where(x => x.ProductTypes.ProductTypesId == _selectedProductTypeId);
 
-                        var obj = JsonConvert.DeserializeObject<AdDTO>(requestBody);
-                        if (obj != null)
-                        {
-                            model = obj;
-                        }
-                    }
-                }
-            }
+            return Json(new SelectList(productModels, "ProductModelsId", "Name"));
+        }
 
-            int selectedProductTypeId = Convert.ToInt32(model.SelectedProductType);
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public JsonResult GetAreasCitySelectList(string selectedCityAareaId)
+        {
+            int _selectedCityAreaId = Convert.ToInt32(selectedCityAareaId);
 
-            return Json(new SelectList(model.ProductModelsList.Where(x => x.ProductTypes.ProductTypesId == selectedProductTypeId), "ProductModelsId", "Name"));
+            var areasCities = _cityService.GetCitiesByCityAreaId(_selectedCityAreaId).Where(x => x.CityArea.CityAreaId == _selectedCityAreaId);
+
+            return Json(new SelectList(areasCities, "CityId", "Name"));
         }
 
 

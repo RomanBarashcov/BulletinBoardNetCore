@@ -18,7 +18,7 @@ namespace AppleUsed.BLL.Services
             _imageCompressor = imageCompressor;
         }
 
-        public List<AdPhotos> GetBinaryPhotoList(IFormFileCollection productPhotos)
+        public List<AdPhotos> GetPhotosHashList(IFormFileCollection productPhotos)
         {
             List<AdPhotos> photosList = new List<AdPhotos>();
 
@@ -26,10 +26,14 @@ namespace AppleUsed.BLL.Services
             {
                 using (var binaryReader = new BinaryReader(uploadedFile.OpenReadStream()))
                 {
-                    photosList.Add(
+                    byte[] photoBytes = binaryReader.ReadBytes((int)uploadedFile.Length);
+
+                     photosList.Add(
                         new AdPhotos
                         {
-                            Photo = _imageCompressor.CompresingImage(binaryReader.ReadBytes((int)uploadedFile.Length)),
+                            PhotoHashSmall = _imageCompressor.CompressingImageForSmallSize(photoBytes),
+                            PhotoHashAvg = _imageCompressor.CompressingImageForAvgSize(photoBytes),
+                            PhotoHashBig = _imageCompressor.CompressingImageForBigSize(photoBytes),
                             AdPhotoName = uploadedFile.FileName,
                         });
                 }
@@ -38,20 +42,38 @@ namespace AppleUsed.BLL.Services
             return photosList;
         }
 
-        public List<string> CreatingImageSrc(List<AdPhotos> photoList)
+
+        public List<string> CreatingImageSrcForSmallSize(List<AdPhotos> photoList)
         {
             List<string> imageSrcList = new List<string>();
 
-            foreach (var item in photoList)
+            for (int i = 0; i <= photoList.Count - 1; i++)
             {
-                if (item.Photo != null)
-                {
-                    using (MagickImage image = new MagickImage(item.Photo))
-                    {
-                        var base64 = image.ToBase64();
-                        imageSrcList.Add(String.Format("data:image/jpg;base64,{0}", base64));
-                    }
-                }
+                imageSrcList.Add(String.Format("data:image/jpg;base64,{0}", photoList[i].PhotoHashSmall));
+            }
+
+            return imageSrcList;
+        }
+
+        public List<string> CreatingImageSrcForAvgSize(List<AdPhotos> photoList)
+        {
+            List<string> imageSrcList = new List<string>();
+
+            for(int i = 0; i <= photoList.Count - 1; i++)
+            {
+                imageSrcList.Add(String.Format("data:image/jpg;base64,{0}", photoList[i].PhotoHashAvg));
+            }
+
+            return imageSrcList;
+        }
+
+        public List<string> CreatingImageSrcForBigSize(List<AdPhotos> photoList)
+        {
+            List<string> imageSrcList = new List<string>();
+
+            for (int i = 0; i <= photoList.Count - 1; i++)
+            {
+                imageSrcList.Add(String.Format("data:image/jpg;base64,{0}", photoList[i].PhotoHashBig));
             }
 
             return imageSrcList;

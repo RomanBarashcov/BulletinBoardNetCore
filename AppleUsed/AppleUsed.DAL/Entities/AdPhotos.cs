@@ -10,7 +10,9 @@ namespace AppleUsed.DAL.Entities
         public int AdPhotosId { get; set; }
 
         public string AdPhotoName { get; set; }
-        public byte[] Photo { get; set; }
+        public string PhotoHashSmall { get; set; }
+        public string PhotoHashAvg { get; set; }
+        public string PhotoHashBig { get; set; }
 
         [ForeignKey("AdId")]
         public virtual Ad Ad { get; set; }

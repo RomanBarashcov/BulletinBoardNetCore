@@ -37,6 +37,7 @@ namespace AppleUsed.Web
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlServer(GetDataConnectionStringFromConfig());
+            var dbContext = new AppDbContext(optionsBuilder.Options);
 
             serviceCollection.AddTransient<IEmailSender, EmailSender>();
             serviceCollection.AddTransient<IImageCompressorService, ImageCompressorService>();
@@ -44,16 +45,28 @@ namespace AppleUsed.Web
                 s => new ImageService(new ImageCompressorService()));
 
             serviceCollection.AddTransient<IDataService>(
-                s => new DataService(new AppDbContext(optionsBuilder.Options)));
+                s => new DataService(dbContext));
 
             serviceCollection.AddTransient<ISeedService>(
-                s => new SeedService(new AppDbContext(optionsBuilder.Options)));
+                s => new SeedService(dbContext));
+
+            serviceCollection.AddTransient<ICityAreasService>(
+                s => new CityAreasService(dbContext));
+
+            serviceCollection.AddTransient<ICityService>(
+                s => new CityService(dbContext));
+
+            serviceCollection.AddTransient<IProductModelsService>(
+                s => new ProductModelService(dbContext));
 
             serviceCollection.AddTransient<IAdService>(
-                s => new GetAdsByAuthorId(new AppDbContext(optionsBuilder.Options),
-                new DataService(new AppDbContext(optionsBuilder.Options)), 
+                s => new AdService(dbContext,
+                new DataService(dbContext), 
                 new ImageService(new ImageCompressorService()), 
-                new ConversationService(new AppDbContext(optionsBuilder.Options))));
+                new ConversationService(dbContext),
+                new CityAreasService(dbContext),
+                new CityService(dbContext),
+                new ProductModelService(dbContext)));
 
             serviceCollection.AddTransient<IConversationService>(
                 s => new ConversationService(new AppDbContext(optionsBuilder.Options)));

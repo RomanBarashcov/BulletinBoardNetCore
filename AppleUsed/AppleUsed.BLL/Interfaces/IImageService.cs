@@ -8,7 +8,9 @@ namespace AppleUsed.BLL.Interfaces
 {
     public interface IImageService
     {
-        List<AdPhotos> GetBinaryPhotoList(IFormFileCollection productPhotos);
-        List<string> CreatingImageSrc(List<AdPhotos> photoList);
+        List<AdPhotos> GetPhotosHashList(IFormFileCollection productPhotos);
+        List<string> CreatingImageSrcForSmallSize(List<AdPhotos> photoList);
+        List<string> CreatingImageSrcForAvgSize(List<AdPhotos> photoList);
+        List<string> CreatingImageSrcForBigSize(List<AdPhotos> photoList);
     }
 }

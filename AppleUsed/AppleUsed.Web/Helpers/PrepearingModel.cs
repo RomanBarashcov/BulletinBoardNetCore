@@ -20,10 +20,10 @@ namespace AppleUsed.Web.Helpers
 
         public AdViewModel PrepearingAdViewModel(AdDTO dataForSelectList, AdDTO ad)
         {
-            AdViewModel prepearingModel = new AdViewModel { AdDTO = ad };
+            AdViewModel prepearingModel = new AdViewModel { AdDTO = dataForSelectList };
 
-            //model.CityAreasSelectList = new SelectList(model.AdDTO.CityAreasList, "CityAreaId", "Name");
-            //model.CityesSelectList = new SelectList(model.AdDTO.CityesList, "CityId", "Name");
+            prepearingModel.CityAreasSelectList = new SelectList(dataForSelectList.CityAreasList, "CityAreaId", "Name");
+            prepearingModel.CityesSelectList = new SelectList(dataForSelectList.CityesList, "CityId", "Name");
 
             if(ad.SelectedProductTypeId > 0)
                 prepearingModel.ProductModelsSelectList = new SelectList(dataForSelectList.ProductModelsList.Where(x => x.ProductTypes.ProductTypesId == ad.SelectedProductTypeId), "ProductModelsId", "Name");
