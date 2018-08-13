@@ -81,7 +81,7 @@
                             </div>
 
                             <div class="location">
-                                <span>г. Киев</span>
+                                <span>г. @item.SelectedCity</span>
                             </div>
 
                             <div class="last-modifaed">
@@ -97,6 +97,11 @@
                                 {
                                     <span>@item.Description.Substring(0, 100) ..</span>
                                 }
+                            </div>
+                            <div>
+                                <p>
+                                    Просмотров: @item.AdViews
+                                </p>
                             </div>
                         </div>
                     </div>
