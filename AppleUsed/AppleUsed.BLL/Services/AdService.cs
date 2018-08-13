@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class AdService : IAdService , IDisposable
+    public class AdService : IAdService
     {
-        private AppDbContext _db;
-        private IDataService _dataService;
+        private readonly AppDbContext _db;
+        private readonly IDataService _dataService;
         private readonly IImageService _imageService;
         private readonly IConversationService _conversationService;
         private readonly ICityAreasService _cityAreasService;
@@ -254,7 +254,6 @@ namespace AppleUsed.BLL.Services
                            Price = ad.Price,
                            DateCreated = ad.DateCreated,
                            DateUpdated = ad.DateUpdated,
-                           NotDeliveredMessageCount = _conversationService.GetCountNotDeliveredMessageByAdId(ad.AdId),
                            SelectedCityArea = ca.Name,
                            SelectedCity = c.Name,
                            PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),
@@ -273,7 +272,15 @@ namespace AppleUsed.BLL.Services
 
                        }).OrderByDescending(x => x.DateUpdated);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+
+                var adsList = ads.ToList();
+
+                for (int i = 0; i <= adsList.Count() - 1; i++)
+                {
+                    adsList[i].NotDeliveredMessageCount = _conversationService.GetCountNotDeliveredMessageByAdId(adsList[i].AdId);
+                }
+
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", adsList.AsQueryable());
             }
             catch (Exception ex)
             {
@@ -502,24 +509,6 @@ namespace AppleUsed.BLL.Services
             }
 
             return operationDetails;
-        }
-
-        private bool disposed = false;
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                _db = null;
-                _dataService = null;
-                disposed = true;
-            }
         }
     }
 }

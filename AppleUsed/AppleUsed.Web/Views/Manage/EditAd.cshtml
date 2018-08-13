@@ -76,6 +76,20 @@
                 <span asp-validation-for="AdDTO.Description" class="text-danger"></span>
             </div>
 
+            <div class="form-group" id="Areas">
+                <label class="control-label">Ваша Область  : </label>
+                <select asp-for="AdDTO.SelectedCityArea" asp-items="Model.CityAreasSelectList" id="AreasList" class="form-control">
+                    <option selected="selected" disabled="disabled"> </option>
+                </select>
+            </div>
+
+            <div class="form-group" id="CityAreas">
+                <label class="control-label">Ваш город  : </label>
+                <select asp-for="AdDTO.SelectedCityId" asp-items="Model.CityesSelectList" id="CityAreasList" class="form-control">
+                    <option selected="selected" disabled="disabled"> </option>
+                </select>
+            </div>
+
             <blockquote style="border-left:5px solid #5cb85c">
                 <p>Фото товара : </p>
             </blockquote>
@@ -88,9 +102,9 @@
                     {
                         <div class="row">
 
-                                <div class="col-sm-6">
-                                    <img style='max-width:170px; max-height:130px;' src="@item.PhotoHashSmall" />
-                                </div>
+                            <div class="col-sm-6">
+                                <img style='max-width:170px; max-height:130px;' src="data:image/jpg;base64,@item.PhotoHashSmall" />
+                            </div>
 
                             <a data-type="DeleteButton" onclick="RemovePhoto('@item.AdPhotosId')" class="btn btn-danger">Удалить</a>
 
@@ -124,103 +138,85 @@
 
 <script type="text/javascript">
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        let adId = parseInt('@ViewBag.AdId');
+            let adId = parseInt('@ViewBag.AdId');
 
-        if (adId > 0) {
+            if (adId > 0) {
 
-            $(function () {
-                $('#ProductModel').show();
+                $(function () {
+                    $('#ProductModel').show();
+                });
+            }
+
+        });
+
+        $('#ProductType').on('change', function () {
+
+            let selectedProductType = this.value;
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetProductModelsSelectList")",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: {
+                    selectedProductTypeId: selectedProductType
+                },
+                success: function (data) {
+
+                    var items = '';
+                    $('#ProductModelItems').empty();
+
+                    $.each(data, function (i, selectedModel) {
+                        items += "<option value='" + selectedModel.value + "'>" + selectedModel.text + "</option>";
+                    });
+
+                    $('#ProductModelItems').html(items);
+
+                    console.log(items);
+
+                    $('#ProductModel').show();
+                    data.empty;
+                },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
             });
-        }
+        });
 
-    });
+    $('#AreasList').on('change', function () {
 
-    $('#ProductType').on('change', function () {
-
-        GetProductModelsByProductTypes(this.value);
-
-    });
-
-    function GetProductModelsByProductTypes(selectedProductType) {
-
-        var data = GetDataForSendController(selectedProductType);
+        let selectedCityAarea = this.value;
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("GetProductModelsSelectList")",
+            url: "@Url.Action("GetAreasCitySelectList")",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("XSRF-TOKEN",
                     $('input:hidden[name="__RequestVerificationToken"]').val());
             },
-            data: data ,
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
+            data: { selectedCityAareaId: selectedCityAarea } ,
             success: function (data) {
 
                 var items = '';
-                $('#ProductModelItems').empty();
+                $('#CityAreasList').empty();
 
-                $.each(data, function (i, selectedModel) {
-                    items += "<option value='" + selectedModel.value + "'>" + selectedModel.text + "</option>";
+                $.each(data, function (i, cityeAreas) {
+                    items += "<option value='" + cityeAreas.value + "'>" + cityeAreas.text + "</option>";
                 });
 
-                $('#ProductModelItems').html(items);
+                $('#CityAreasList').html(items);
 
                 console.log(items);
-
-                $('#ProductModel').show();
                 data.empty;
             },
             failure: function (errMsg) {
                 alert(errMsg);
             }
         });
-    }
-
-    function GetDataForSendController(selectedValue) {
-
-        var data = '@Html.Raw(Json.Serialize(Model.AdDTO))';
-        var parseData = $.parseJSON(data);
-        parseData.selectedProductType = selectedValue;
-        data = JSON.stringify(parseData);
-
-        return data;
-    }
-
-    var photoId;
-    function RemovePhoto(value) {
-
-        photoId = value;
-    }
-
-    $('#photos-area').on('click', '[data-type="DeleteButton"]', function () {
-
-        var row = $(this).closest('div');
-
-        if (confirm("Are you sure you want to delete this photo?")) {
-
-            var id = photoId;
-
-            alert(id);
-
-            $.ajax({
-                url: "/Manage/DeletePhoto?photoId=" + id,
-                type: "GET",
-                success: function (data) {
-
-                    $("#ErrorMassage").text("");
-                    row.remove();
-
-                    $("#loadImagesArea").append('<input name="Photos" type="file" class="form-control" />');
-                },
-                error: function (data) {
-
-                    $("#ErrorMassage").text(data.statusText);
-                }
-            });
-        }
     });
 
 

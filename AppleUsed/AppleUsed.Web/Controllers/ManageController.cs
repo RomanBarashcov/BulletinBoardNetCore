@@ -35,6 +35,8 @@ namespace AppleUsed.Web.Controllers.Manage
         private readonly IAdService _adService;
         private readonly PrepearingModel _prepearingModel;
         private readonly IConversationService _conversationService;
+        private readonly ICityService _cityService;
+        private readonly IProductModelsService _productModelsService;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -45,7 +47,9 @@ namespace AppleUsed.Web.Controllers.Manage
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder,
           IAdService adService,
-          IConversationService conversationService)
+          IConversationService conversationService, 
+          ICityService cityService,
+          IProductModelsService productModelsService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -55,6 +59,8 @@ namespace AppleUsed.Web.Controllers.Manage
             _adService = adService;
             _prepearingModel = new PrepearingModel(_adService);
             _conversationService = conversationService;
+            _cityService = cityService;
+            _productModelsService = productModelsService;
         }
 
         [TempData]
@@ -130,7 +136,7 @@ namespace AppleUsed.Web.Controllers.Manage
                 return View(new List<AdDTO>());
 
 
-            return View(await getAdsByUserResult.Property.ToListAsync());
+            return View(getAdsByUserResult.Property.ToList());
         }
         
         [HttpGet]
@@ -194,34 +200,28 @@ namespace AppleUsed.Web.Controllers.Manage
             return RedirectToAction("ManageAdsByUser");
         }
 
+
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public JsonResult GetProductModelsSelectList()
+        public JsonResult GetProductModelsSelectList(string selectedProductTypeId)
         {
-            AdDTO model = new AdDTO();
+            int _selectedProductTypeId = Convert.ToInt32(selectedProductTypeId);
 
-            {
-                MemoryStream stream = new MemoryStream();
-                Request.Body.CopyTo(stream);
-                stream.Position = 0;
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    string requestBody = reader.ReadToEnd();
-                    if (requestBody.Length > 0)
-                    {
+            var productModels = _productModelsService.GetProductModels()
+                .Where(x => x.ProductTypes.ProductTypesId == _selectedProductTypeId);
 
-                        var obj = JsonConvert.DeserializeObject<AdDTO>(requestBody);
-                        if (obj != null)
-                        {
-                            model = obj;
-                        }
-                    }
-                }
-            }
+            return Json(new SelectList(productModels, "ProductModelsId", "Name"));
+        }
 
-            int selectedProductTypeId = Convert.ToInt32(model.SelectedProductType);
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public JsonResult GetAreasCitySelectList(string selectedCityAareaId)
+        {
+            int _selectedCityAreaId = Convert.ToInt32(selectedCityAareaId);
 
-            return Json(new SelectList(model.ProductModelsList.Where(x => x.ProductTypes.ProductTypesId == selectedProductTypeId), "ProductModelsId", "Name"));
+            var areasCities = _cityService.GetCitiesByCityAreaId(_selectedCityAreaId).Where(x => x.CityArea.CityAreaId == _selectedCityAreaId);
+
+            return Json(new SelectList(areasCities, "CityId", "Name"));
         }
 
         [HttpGet]

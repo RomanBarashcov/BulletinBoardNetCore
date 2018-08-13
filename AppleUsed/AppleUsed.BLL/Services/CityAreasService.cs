@@ -2,6 +2,7 @@
 using AppleUsed.DAL.Identity;
 using System.Linq;
 using AppleUsed.DAL.Entities;
+using System;
 
 namespace AppleUsed.BLL.Services
 {
@@ -29,5 +30,6 @@ namespace AppleUsed.BLL.Services
 
             return cityAreas;
         }
+
     }
 }

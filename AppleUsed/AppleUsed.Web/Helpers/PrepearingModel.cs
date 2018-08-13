@@ -20,7 +20,7 @@ namespace AppleUsed.Web.Helpers
 
         public AdViewModel PrepearingAdViewModel(AdDTO dataForSelectList, AdDTO ad)
         {
-            AdViewModel prepearingModel = new AdViewModel { AdDTO = dataForSelectList };
+            AdViewModel prepearingModel = new AdViewModel { AdDTO = ad };
 
             prepearingModel.CityAreasSelectList = new SelectList(dataForSelectList.CityAreasList, "CityAreaId", "Name");
             prepearingModel.CityesSelectList = new SelectList(dataForSelectList.CityesList, "CityId", "Name");

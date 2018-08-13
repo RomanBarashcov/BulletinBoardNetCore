@@ -18,9 +18,9 @@ using Newtonsoft.Json;
 
 namespace AppleUsed.Web.Controllers
 {
-    public class AdController : Controller, IDisposable
+    public class AdController : Controller
     {
-        private IAdService _adService;
+        private readonly IAdService _adService;
         private readonly PrepearingModel _prepearingModel;
         private readonly ICityService _cityService;
         private readonly IProductModelsService _productModelsService;
@@ -156,7 +156,6 @@ namespace AppleUsed.Web.Controllers
 
             return View(model);
         }
-
 
     }
 }

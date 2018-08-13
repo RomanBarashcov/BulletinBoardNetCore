@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class ConversationService : IConversationService, IDisposable
+    public class ConversationService : IConversationService
     {
-        private AppDbContext _db;
+        private readonly AppDbContext _db;
 
         public ConversationService(AppDbContext context)
         {
@@ -304,17 +304,25 @@ namespace AppleUsed.BLL.Services
 
         public int GetCountNotDeliveredMessageByAdId(int adId)
         {
-            var conversationById =  _db.Conversations.Where(x => x.AdId == adId);
+            var conversationById =  _db.Conversations.Where(x => x.AdId == adId).AsQueryable();
+            int notDelivaredMessageCount = 0;
 
-            int notDelivaredMessageCount = (from c in conversationById
-                                            join m in _db.ConversationMessages.Where(x => x.Status == ConversationMessage.messageStatus.Sent) on c.ConversationId equals m.ConversationId into messageResult
-                                                            select new Conversation
-                                                            {
-                                                                ConversationId = c.ConversationId,
-                                                                AdId = c.AdId,
-                                                                Messages = messageResult.ToList()
+            try
+            {
+                notDelivaredMessageCount = (from c in conversationById
+                                                join m in _db.ConversationMessages.Where(x => x.Status == ConversationMessage.messageStatus.Sent) on c.ConversationId equals m.ConversationId into messageResult
+                                                select new Conversation
+                                                {
+                                                    ConversationId = c.ConversationId,
+                                                    AdId = c.AdId,
+                                                    Messages = messageResult.ToList()
 
-                                                            }).Select(x=>x.Messages).Count();
+                                                }).Select(x => x.Messages).Count();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             return notDelivaredMessageCount;
         }
@@ -346,21 +354,21 @@ namespace AppleUsed.BLL.Services
             return conversationMessagesForReturn;
         }
 
-        private bool disposed = false;
+        //private bool disposed = false;
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        //public void Dispose()
+        //{
+        //    Dispose(true);
+        //    GC.SuppressFinalize(this);
+        //}
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                _db = null;
-                disposed = true;
-            }
-        }
+        //protected virtual void Dispose(bool disposing)
+        //{
+        //    if (!disposed)
+        //    {
+        //        _db = null;
+        //        disposed = true;
+        //    }
+        //}
     }
 }

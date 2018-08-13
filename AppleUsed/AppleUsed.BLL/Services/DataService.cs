@@ -9,7 +9,7 @@ namespace AppleUsed.BLL.Services
 {
     public class DataService : IDataService
     {
-        private AppDbContext _db;
+        private readonly AppDbContext _db;
 
         public DataService(AppDbContext db)
         {
@@ -49,21 +49,21 @@ namespace AppleUsed.BLL.Services
         }
 
 
-        private bool disposed = false;
+        //private bool disposed = false;
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        //public void Dispose()
+        //{
+        //    Dispose(true);
+        //    GC.SuppressFinalize(this);
+        //}
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                _db = null;
-                disposed = true;
-            }
-        }
+        //protected virtual void Dispose(bool disposing)
+        //{
+        //    if (!disposed)
+        //    {
+        //        _db = null;
+        //        disposed = true;
+        //    }
+        //}
     }
 }

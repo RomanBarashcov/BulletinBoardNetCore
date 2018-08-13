@@ -9,7 +9,7 @@ using System.Text;
 
 namespace AppleUsed.BLL.Services
 {
-    public class ImageService : IImageService, IDisposable
+    public class ImageService : IImageService
     {
         private readonly IImageCompressorService _imageCompressor;
 
@@ -79,20 +79,21 @@ namespace AppleUsed.BLL.Services
             return imageSrcList;
         }
 
-        private bool disposed = false;
+        //private bool disposed = false;
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        //public void Dispose()
+        //{
+        //    Dispose(true);
+        //    GC.SuppressFinalize(this);
+        //}
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                disposed = true;
-            }
-        }
+        //protected virtual void Dispose(bool disposing)
+        //{
+        //    if (!disposed)
+        //    {
+        //        _imageCompressor = null;
+        //        disposed = true;
+        //    }
+        //}
     }
 }
