@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AppleUsed.BLL.DTO;
 using AppleUsed.BLL.Interfaces;
-using AppleUsed.Web.Extensions;
 using AppleUsed.Web.Filters;
 using AppleUsed.Web.Helpers;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 
 namespace AppleUsed.Web.Controllers

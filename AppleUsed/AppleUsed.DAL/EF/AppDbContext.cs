@@ -30,6 +30,7 @@ namespace AppleUsed.DAL.Identity
         }
 
         public DbSet<Ad> Ads { get; set; }
+        public DbSet<AdUp> AdUps { get; set; }
         public DbSet<AdPhotos> AdPhotos { get; set; }
         public DbSet<AdViews> AdViews { get; set; }
         public DbSet<Characteristics> Characteristics { get; set; }
