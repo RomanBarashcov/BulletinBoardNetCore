@@ -22,10 +22,27 @@
             </div>
             <hr />
             <div class="btn-block">
+                @if (User.Identity.Name != Model.AddDetails.User.UserName)
+                {
                 <p>
                     <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
-                    @Html.ActionLink("Написать владельцу", "ConversationByAdIdAndContactId", "Chat", new { adId = Model.AddDetails.AdId, contactId = Model.AddDetails.User.Id }, new { @class = "btn btn-lg btn-success btn-block" })
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        @Html.ActionLink("Написать владельцу", "Login", "Account", null, new { @class = "btn btn-lg btn-success btn-block" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Написать владельцу", "ConversationByAdIdAndContactId", "Chat", new { adId = Model.AddDetails.AdId, contactId = Model.AddDetails.User.Id }, new { @class = "btn btn-lg btn-success btn-block" })
+
+                    }
                 </p>
+                }
+                else
+                {
+                    <p>
+                        <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
+                    </p>
+                }
             </div>
 
         </div>

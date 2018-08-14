@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class ConversationService : IConversationService
+    public class ConversationService : IConversationService, IDisposable
     {
         private readonly AppDbContext _db;
 
@@ -354,21 +354,20 @@ namespace AppleUsed.BLL.Services
             return conversationMessagesForReturn;
         }
 
-        //private bool disposed = false;
+        private bool disposed = false;
 
-        //public void Dispose()
-        //{
-        //    Dispose(true);
-        //    GC.SuppressFinalize(this);
-        //}
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-        //protected virtual void Dispose(bool disposing)
-        //{
-        //    if (!disposed)
-        //    {
-        //        _db = null;
-        //        disposed = true;
-        //    }
-        //}
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                disposed = true;
+            }
+        }
     }
 }

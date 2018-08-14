@@ -11,7 +11,7 @@ namespace AppleUsed.Web.Models.ViewModels.AdViewModels
 {
     public class AdIndexViewModel
     {
-        public List<AdDTO> AdList { get; set; }
+        public IEnumerable<AdDTO> AdList { get; set; }
 
         public SearchFilterViewModel SearchFilter { get; set; }
 

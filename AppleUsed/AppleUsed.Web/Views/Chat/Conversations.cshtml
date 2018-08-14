@@ -1,41 +1,57 @@
 ﻿@model AppleUsed.Web.Models.ViewModels.ConversationViewModels.ConversationIndexViewModel
 
-@{
+@using AppleUsed.Web.Views.Manage
 
+@{
+    ViewData["Title"] = "Сообщения";
+    ViewData.AddActivePage(ManageNavPages.Messages);
 }
 
 <br />
 
-<hr/>
 <div class="col-lg-12">
 
 
-    <div class="row">
+    <div class="row bg-success">
 
 
-            <div class="col-sm-12">
-                <b>
-                    <a class="ad-title-text" style="font-size:17px" href="~/Ad/AdDetails/@Model.Ad.AdId">@Model.Ad.Title</a>
-                </b>
-            </div>
+        <div class="col-sm-12">
+            <p>
+                <b><a class="ad-title-text" style="font-size:17px" href="~/Ad/AdDetails/@Model.Ad.AdId">@Model.Ad.Title</a></b>
+            </p>
+        </div>
 
-            <div class="col-sm-2">
-                <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@Model.Ad.AdId">
-                    <img style='max-width:170px; max-height:130px;' src="@Model.Ad.PhotosAvgSizeList.FirstOrDefault()" />
-                </a>
-            </div>
+        <div class="col-sm-3 text-center">
+            <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@Model.Ad.AdId">
+                <img style='max-width:170px; max-height:130px;' class="img-rounded" src="@Model.Ad.PhotosAvgSizeList.FirstOrDefault()" />
+            </a>
+        </div>
 
-            <div class="col-sm-8">
-                <p>@Model.Ad.Description</p>
-                <p>г. @Model.Ad.SelectedCity</p>
-                <p>добавлено : @Model.Ad.DateUpdated</p>
-                <p>всего просммотров:@Model.Ad.AdViews </p>
-            </div>
+        <div class="col-sm-6">
+            <p>
+                <b>Описание :</b>
+                @if (Model.Ad.Description.Length > 200)
+                {
+                    <span>
+                        @Model.Ad.Description.Substring(0, 200) ..
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        @Model.Ad.Description
+                    </span>
+                }
+            </p>
+            <p><b>г.</b> @Model.Ad.SelectedCity</p>
+            <p><b>Добавлено :</b> @Model.Ad.DateUpdated</p>
+            <p><b>Всего просмотров :</b> @Model.Ad.AdViews </p>
+        </div>
 
 
-            <div class="col-sm-2">
-                <b> Цена : @Model.Ad.Price .грн</b>
-            </div>
+        <div class="col-sm-3">
+            <b> Цена : @Model.Ad.Price .грн</b>
+        </div>
     </div>
 
     <hr />
@@ -46,8 +62,8 @@
         <div class="col-sm-10" id="Chat_With">
         </div>
     </div>
-
-    <div class="col-lg-8 col-md-offset-2">
+    <hr/>
+    <div class="col-lg-12">
 
         <div class="chat__body">
 
@@ -188,17 +204,18 @@
         var recivedId = '@ViewBag.RecivedId';
         var adId = '@ViewBag.AdId';
 
-        var url = "/Chat/SendMessage";
-        $.post(url, {
-            convsationId: conversationId,
-            adId: adId,
-            message: $('#message').val(),
-            contactId: recivedId,
-        }).done(function (data) {
-            //displayMessage(data);
-            $('#message').val('');
-        });
+        if ($('#message').val() != "") {
 
+            var url = "/Chat/SendMessage";
+            $.post(url, {
+                convsationId: conversationId,
+                adId: adId,
+                message: $('#message').val(),
+                contactId: recivedId,
+            }).done(function (data) {
+                $('#message').val('');
+            });
+        }
     }
 
     function displayMessage(message_obj) {
@@ -235,9 +252,10 @@
         let message = $("#message").val();
         var senderId = '@ViewBag.SenderId';
 
-        hubConnection.invoke('Send', message, senderId);
-        SendMessageToServer();
-
+        if (message != "") {
+            hubConnection.invoke('Send', message, senderId);
+            SendMessageToServer();
+        }
     });
 
     hubConnection.start();

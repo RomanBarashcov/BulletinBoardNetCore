@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AppleUsed.BLL.Services
 {
-    public class ImageCompressorService : IImageCompressorService
+    public class ImageCompressorService : IImageCompressorService, IDisposable
     {
         public ImageCompressorService() { }
 
@@ -107,6 +107,22 @@ namespace AppleUsed.BLL.Services
             }
 
             return outputImage;
+        }
+
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                disposed = true;
+            }
         }
     }
 }
