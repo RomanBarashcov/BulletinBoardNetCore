@@ -10,7 +10,6 @@ namespace AppleUsed.DAL.Entities
         public int AdViewsId { get; set; }
         public int SumViews { get; set; }
 
-        [ForeignKey("AdId")]
-        public virtual Ad Ad { get; set; }
+        public int AdId { get; set; }
     }
 }

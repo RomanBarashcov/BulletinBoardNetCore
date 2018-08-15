@@ -9,6 +9,38 @@ namespace AppleUsed.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AdUps",
+                columns: table => new
+                {
+                    AdUpId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    LimitUp = table.Column<int>(nullable: false),
+                    CurrentRaisedUpCount = table.Column<int>(nullable: false),
+                    StartDateAction = table.Column<DateTime>(nullable: false),
+                    EndDateAction = table.Column<DateTime>(nullable: false),
+                    LastUp = table.Column<DateTime>(nullable: false),
+                    AdId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdUps", x => x.AdUpId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdViews",
+                columns: table => new
+                {
+                    AdViewsId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    SumViews = table.Column<int>(nullable: false),
+                    AdId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdViews", x => x.AdViewsId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -334,20 +366,6 @@ namespace AppleUsed.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AdViews",
-                columns: table => new
-                {
-                    AdViewsId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    SumViews = table.Column<int>(nullable: false),
-                    AdId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AdViews", x => x.AdViewsId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Characteristics",
                 columns: table => new
                 {
@@ -450,9 +468,7 @@ namespace AppleUsed.DAL.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Ads_AdViewsId",
                 table: "Ads",
-                column: "AdViewsId",
-                unique: true,
-                filter: "[AdViewsId] IS NOT NULL");
+                column: "AdViewsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ads_ApplicationUserId",
@@ -475,11 +491,6 @@ namespace AppleUsed.DAL.Migrations
                 name: "IX_Ads_PurchasedId",
                 table: "Ads",
                 column: "PurchasedId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AdViews_AdId",
-                table: "AdViews",
-                column: "AdId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -559,14 +570,6 @@ namespace AppleUsed.DAL.Migrations
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AdViews_Ads_AdId",
-                table: "AdViews",
-                column: "AdId",
-                principalTable: "Ads",
-                principalColumn: "AdId",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_Characteristics_Ads_AdId",
                 table: "Characteristics",
                 column: "AdId",
@@ -586,10 +589,6 @@ namespace AppleUsed.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_AdViews_Ads_AdId",
-                table: "AdViews");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_Characteristics_Ads_AdId",
                 table: "Characteristics");
 
@@ -599,6 +598,9 @@ namespace AppleUsed.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "AdPhotos");
+
+            migrationBuilder.DropTable(
+                name: "AdUps");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");

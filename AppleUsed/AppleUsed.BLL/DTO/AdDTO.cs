@@ -68,6 +68,7 @@ namespace AppleUsed.BLL.DTO
         public string SelectedProductStates { get; set; }
         public int SelectedProductStatesId { get; set; }
 
+        public DateTime LastUpAd { get; set; }
         public ApplicationUser User { get; set; }
     }
 }

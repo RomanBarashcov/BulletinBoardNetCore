@@ -19,16 +19,19 @@ namespace AppleUsed.Web.Controllers
         private readonly PrepearingModel _prepearingModel;
         private readonly ICityService _cityService;
         private readonly IProductModelsService _productModelsService;
+        private readonly IAdViewsService _adViewsService;
 
         public AdController(
             IAdService adService, 
             ICityService cityService, 
-            IProductModelsService productModelsService)
+            IProductModelsService productModelsService,
+            IAdViewsService adViewsService)
         {
             _adService = adService;
             _prepearingModel = new PrepearingModel(_adService);
             _cityService = cityService;
             _productModelsService = productModelsService;
+            _adViewsService = adViewsService;
         }
 
         [HttpGet]
@@ -132,6 +135,7 @@ namespace AppleUsed.Web.Controllers
             if(!getByIdReult.Succedeed)
                 return View(model);
 
+            await _adViewsService.UpdateViewsAd(id ?? 0);
             model.AddDetails = getByIdReult.Property;
 
             var similarAdsResult = await _adService.GetAdsByProductTypeId(model.AddDetails.SelectedProductTypeId);

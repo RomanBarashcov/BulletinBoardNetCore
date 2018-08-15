@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppleUsed.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180812151534_init")]
+    [Migration("20180815111043_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,9 +49,7 @@ namespace AppleUsed.DAL.Migrations
 
                     b.HasKey("AdId");
 
-                    b.HasIndex("AdViewsId")
-                        .IsUnique()
-                        .HasFilter("[AdViewsId] IS NOT NULL");
+                    b.HasIndex("AdViewsId");
 
                     b.HasIndex("ApplicationUserId");
 
@@ -89,19 +87,40 @@ namespace AppleUsed.DAL.Migrations
                     b.ToTable("AdPhotos");
                 });
 
+            modelBuilder.Entity("AppleUsed.DAL.Entities.AdUp", b =>
+                {
+                    b.Property<int>("AdUpId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AdId");
+
+                    b.Property<int>("CurrentRaisedUpCount");
+
+                    b.Property<DateTime>("EndDateAction");
+
+                    b.Property<DateTime>("LastUp");
+
+                    b.Property<int>("LimitUp");
+
+                    b.Property<DateTime>("StartDateAction");
+
+                    b.HasKey("AdUpId");
+
+                    b.ToTable("AdUps");
+                });
+
             modelBuilder.Entity("AppleUsed.DAL.Entities.AdViews", b =>
                 {
                     b.Property<int>("AdViewsId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AdId");
+                    b.Property<int>("AdId");
 
                     b.Property<int>("SumViews");
 
                     b.HasKey("AdViewsId");
-
-                    b.HasIndex("AdId");
 
                     b.ToTable("AdViews");
                 });
@@ -490,8 +509,8 @@ namespace AppleUsed.DAL.Migrations
             modelBuilder.Entity("AppleUsed.DAL.Entities.Ad", b =>
                 {
                     b.HasOne("AppleUsed.DAL.Entities.AdViews", "AdViews")
-                        .WithOne()
-                        .HasForeignKey("AppleUsed.DAL.Entities.Ad", "AdViewsId");
+                        .WithMany()
+                        .HasForeignKey("AdViewsId");
 
                     b.HasOne("AppleUsed.DAL.Identity.ApplicationUser", "ApplicationUser")
                         .WithMany("Ads")
@@ -514,13 +533,6 @@ namespace AppleUsed.DAL.Migrations
                 {
                     b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
                         .WithMany("Photos")
-                        .HasForeignKey("AdId");
-                });
-
-            modelBuilder.Entity("AppleUsed.DAL.Entities.AdViews", b =>
-                {
-                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
-                        .WithMany()
                         .HasForeignKey("AdId");
                 });
 

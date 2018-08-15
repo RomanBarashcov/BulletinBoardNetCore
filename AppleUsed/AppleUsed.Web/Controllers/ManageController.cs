@@ -12,12 +12,9 @@ using AppleUsed.DAL.Identity;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Extensions;
 using AppleUsed.Web.Models.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
 using AppleUsed.Web.Helpers;
 using AppleUsed.BLL.DTO;
-using System.IO;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
@@ -37,6 +34,7 @@ namespace AppleUsed.Web.Controllers.Manage
         private readonly IConversationService _conversationService;
         private readonly ICityService _cityService;
         private readonly IProductModelsService _productModelsService;
+        private readonly IAdUpService _adUpService;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -49,7 +47,8 @@ namespace AppleUsed.Web.Controllers.Manage
           IAdService adService,
           IConversationService conversationService, 
           ICityService cityService,
-          IProductModelsService productModelsService)
+          IProductModelsService productModelsService,
+          IAdUpService adUpService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -61,6 +60,7 @@ namespace AppleUsed.Web.Controllers.Manage
             _conversationService = conversationService;
             _cityService = cityService;
             _productModelsService = productModelsService;
+            _adUpService = adUpService;
         }
 
         [TempData]
@@ -135,10 +135,19 @@ namespace AppleUsed.Web.Controllers.Manage
             if (!getAdsByUserResult.Succedeed)
                 return View(new List<AdDTO>());
 
-
             return View(getAdsByUserResult.Property.ToList());
         }
         
+        [HttpGet]
+        public async Task<IActionResult> AdUpToList(int id)
+        {
+            var updateUpAdResult = await _adUpService.UpAd(id);
+            if (!updateUpAdResult.Succedeed)
+                this.StatusMessage = updateUpAdResult.Message;
+
+            return RedirectToAction("ManageAdsByUser");
+        }
+
         [HttpGet]
         public async Task<IActionResult> EditAd(int id)
         {

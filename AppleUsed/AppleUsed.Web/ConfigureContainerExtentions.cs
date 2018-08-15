@@ -66,7 +66,14 @@ namespace AppleUsed.Web
                 new ConversationService(dbContext),
                 new CityAreasService(dbContext),
                 new CityService(dbContext),
-                new ProductModelService(dbContext)));
+                new ProductModelService(dbContext),
+                new AdUpService(dbContext)));
+
+            serviceCollection.AddTransient<IAdUpService>(
+                s => new AdUpService(dbContext));
+
+            serviceCollection.AddTransient<IAdViewsService>(
+                s => new AdViewsService(dbContext));
 
             serviceCollection.AddTransient<IConversationService>(
                 s => new ConversationService(new AppDbContext(optionsBuilder.Options)));

@@ -14,7 +14,6 @@ namespace AppleUsed.DAL.Entities
         public DateTime EndDateAction { get; set; }
         public DateTime LastUp { get; set; }
 
-        [ForeignKey("AdId")]
-        public virtual Ad Ad { get; set; }
+        public int AdId { get; set; }
     }
 }

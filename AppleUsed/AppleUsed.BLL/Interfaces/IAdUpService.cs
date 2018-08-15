@@ -10,5 +10,6 @@ namespace AppleUsed.BLL.Interfaces
     {
         Task<OperationDetails<int>> UpdateUpAd(int adId);
         Task<OperationDetails<int>> UpAd(int adId);
+        Task<OperationDetails<int>> InitUpAd(int adId);
     }
 }
