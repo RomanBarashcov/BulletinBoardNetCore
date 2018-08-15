@@ -21,36 +21,40 @@
 
                             <div class="col-lg-9">
 
-                                <div>
-                                    <a class="ad-title-text" asp-controller="Ad" asp-action="AdDetails" asp-route-id="@item.AdId">
-                                        @item.Title
-                                    </a>
+                                <div class="col-lg-8">
+                                    <p>
+                                        <a class="ad-title-text" asp-controller="Ad" asp-action="AdDetails" asp-route-id="@item.AdId">
+                                            @item.Title
+                                        </a>
+                                    </p>
+
+                                    <div class="location">
+                                        <p>
+                                            | <span class="glyphicon glyphicon-map-marker"></span>г. @item.SelectedCity |
+                                            <span class="glyphicon glyphicon-refresh"></span> @item.DateUpdated |
+                                            <b>Просмотров : </b>@item.AdViews <span class="glyphicon glyphicon-eye-open"></span> |
+                                        </p>
+                                    </div>
+
+                                    <div class="ad-description">
+                                        @if (item.Description.Length < 100)
+                                        {
+                                            <span>@item.Description.Substring(0, item.Description.Length) ..</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@item.Description.Substring(0, 100) ..</span>
+                                        }
+                                    </div>
                                 </div>
 
-                                <div class="ad-price-text">
+                                <div class="col-lg-4 ad-price-text">
                                     <span>
                                         <b>@item.Price  .грн</b>
                                     </span>
                                 </div>
 
-                                <div class="location">
-                                    <span>г. @item.SelectedCity</span>
-                                </div>
 
-                                <div class="last-modifaed">
-                                    <span>@item.DateUpdated</span>
-                                </div>
-
-                                <div class="ad-description">
-                                    @if (item.Description.Length < 100)
-                                    {
-                                        <span>@item.Description.Substring(0, item.Description.Length) ..</span>
-                                    }
-                                    else
-                                    {
-                                        <span>@item.Description.Substring(0, 100) ..</span>
-                                    }
-                                </div>
                             </div>
                         </div>
                     </li>
