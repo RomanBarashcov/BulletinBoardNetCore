@@ -52,11 +52,11 @@
                 <ul class="nav navbar-nav navbar-right">
                     @{ if (User.Identity.IsAuthenticated)
                         {
-                            <li><a asp-area="" asp-controller="Ad" asp-action="CreateAd">+ Подать объявление</a></li>
+                            <li><a asp-area="" asp-controller="Ad" asp-action="CreateAd"><span class="glyphicon glyphicon-plus-sign"></span> Подать объявление</a></li>
                         }
                         else
                         {
-                            <li><a asp-area="" asp-controller="Account" asp-action="Login">+ Подать объявление</a></li>
+                            <li><a asp-area="" asp-controller="Account" asp-action="Login"><span class="glyphicon glyphicon-plus-sign"></span> Подать объявление</a></li>
                         }
                     }
                 </ul>

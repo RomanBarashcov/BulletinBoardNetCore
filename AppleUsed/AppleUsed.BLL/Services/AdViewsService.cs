@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class AdViewsService : IAdViewsService
+    public class AdViewsService : IAdViewsService, IDisposable
     {
         private readonly AppDbContext _db;
 
@@ -31,6 +31,38 @@ namespace AppleUsed.BLL.Services
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async Task ResetViews(int adId)
+        {
+            var adViews = _db.AdViews.Where(x => x.AdId == adId).FirstOrDefault();
+
+            adViews.SumViews = 0;
+            try
+            {
+                _db.AdViews.Update(adViews);
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                disposed = true;
             }
         }
     }

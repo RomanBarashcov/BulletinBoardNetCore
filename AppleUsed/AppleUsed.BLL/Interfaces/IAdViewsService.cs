@@ -8,5 +8,6 @@ namespace AppleUsed.BLL.Interfaces
     public interface IAdViewsService
     {
         Task UpdateViewsAd(int adId);
+        Task ResetViews(int adId);
     }
 }

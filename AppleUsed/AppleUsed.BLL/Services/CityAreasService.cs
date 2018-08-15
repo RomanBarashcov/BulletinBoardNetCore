@@ -6,7 +6,7 @@ using System;
 
 namespace AppleUsed.BLL.Services
 {
-    public class CityAreasService : ICityAreasService
+    public class CityAreasService : ICityAreasService, IDisposable
     {
         private readonly AppDbContext _db;
 
@@ -29,6 +29,22 @@ namespace AppleUsed.BLL.Services
                                         });
 
             return cityAreas;
+        }
+
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                disposed = true;
+            }
         }
 
     }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class CityService : ICityService
+    public class CityService : ICityService, IDisposable
     {
         private readonly AppDbContext _db;
 
@@ -48,6 +48,22 @@ namespace AppleUsed.BLL.Services
                           });
 
             return cities;
+        }
+
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                disposed = true;
+            }
         }
     }
 }

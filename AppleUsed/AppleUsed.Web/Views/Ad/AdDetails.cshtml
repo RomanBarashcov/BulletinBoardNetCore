@@ -6,12 +6,15 @@
 
 <br />
 
-<div>
-    <span>
-        <a asp-action="Index"> Назад</a>
-    </span>
+<div class="row">
+    <div class="col-lg-3">
+        <ul class="breadcrumb text-center">
+            <li><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductType"> Назад </a></li>
+            <li><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductType"> @Model.AddDetails.SelectedProductType</a></li>
+            <li class="active"><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductModel">@Model.AddDetails.SelectedProductModel</a></li>
+        </ul>
+    </div>
 </div>
-
 <br />
 
     <div class="row">
@@ -44,7 +47,11 @@
                     </p>
                 }
             </div>
-
+            <div class="btn-block">
+                <p>
+                    <a class="btn btn-lg btn-success btn-block" href="#">Другие объявления автора</a>
+                </p>
+            </div>
         </div>
 
         <div class="col-lg-8 col-lg-pull-4">
@@ -64,9 +71,7 @@
                             <th> Обновленно : </th>
                             <td>@Model.AddDetails.DateUpdated</td>
                             <th> Город : </th>
-                            <td>@Model.AddDetails.SelectedCity</td>
-                            <th>Область : </th>
-                            <td>@Model.AddDetails.SelectedCityArea</td>
+                            <td>@Model.AddDetails.SelectedCity, @Model.AddDetails.SelectedCityArea область</td>
                             <th>Просмотров : </th>
                             <td>@Model.AddDetails.AdViews <span class="glyphicon glyphicon-eye-open"></span> </td>
                         </tr>
@@ -140,17 +145,21 @@
                         @if (ad.Title.Length > 20)
                         {
                             <div>
-                                <b>
-                                    <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a>
-                                </b>
+                                <p>
+                                    <b>
+                                        <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a>
+                                    </b>
+                                </p>
                             </div>
                         }
                         else
                         {
                             <div>
-                                <b>
-                                    <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a>
-                                </b>
+                                <p>
+                                    <b>
+                                        <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a>
+                                    </b>
+                                </p>
                             </div>
                         }
 
@@ -162,7 +171,9 @@
 
                             </div>
                         <div>
-                            <b>@ad.Price .грн</b>
+                            <p>
+                                <b>@ad.Price .грн</b>
+                            </p>
                         </div>
                     </div>
 

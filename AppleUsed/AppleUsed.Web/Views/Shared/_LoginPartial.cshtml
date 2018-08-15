@@ -8,10 +8,10 @@
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a asp-area="" asp-controller="Manage" asp-action="ManageAdsByUser" title="Manage">Мой Профиль</a>
+                <a asp-area="" asp-controller="Manage" asp-action="ManageAdsByUser" title="Manage">Мой Профиль <span class="glyphicon glyphicon-user"></span></a>
             </li>
             <li>
-                <button type="submit" class="btn nav-bar-logout-btn navbar-btn navbar-link">Выйти</button>
+                <a href="#" onclick="Logout()">Выйти  <span class="glyphicon glyphicon-log-out"></span></a>
             </li>
         </ul>
     </form>
@@ -20,6 +20,14 @@ else
 {
     <ul class="nav navbar-nav navbar-right">
         @*<li><a asp-area="" asp-controller="Account" asp-action="Register">Личний кабинет</a></li>*@
-        <li><a asp-area="" asp-controller="Account" asp-action="Login">Вход</a></li>
+        <li><a asp-area="" asp-controller="Account" asp-action="Login">Вход <span class="glyphicon glyphicon-log-in"></span></a></li>
     </ul>
 }
+
+<script>
+
+    function Logout() {
+        $('#logoutForm').submit();
+    }
+
+</script>

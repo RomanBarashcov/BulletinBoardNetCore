@@ -35,6 +35,7 @@ namespace AppleUsed.Web.Controllers.Manage
         private readonly ICityService _cityService;
         private readonly IProductModelsService _productModelsService;
         private readonly IAdUpService _adUpService;
+        private readonly IAdViewsService _adViewsService;
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -48,7 +49,8 @@ namespace AppleUsed.Web.Controllers.Manage
           IConversationService conversationService, 
           ICityService cityService,
           IProductModelsService productModelsService,
-          IAdUpService adUpService)
+          IAdUpService adUpService,
+          IAdViewsService adViewsService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -61,6 +63,7 @@ namespace AppleUsed.Web.Controllers.Manage
             _cityService = cityService;
             _productModelsService = productModelsService;
             _adUpService = adUpService;
+            _adViewsService = adViewsService;
         }
 
         [TempData]
@@ -145,6 +148,13 @@ namespace AppleUsed.Web.Controllers.Manage
             if (!updateUpAdResult.Succedeed)
                 this.StatusMessage = updateUpAdResult.Message;
 
+            return RedirectToAction("ManageAdsByUser");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ResetViews(int id)
+        {
+            await _adViewsService.ResetViews(id);
             return RedirectToAction("ManageAdsByUser");
         }
 

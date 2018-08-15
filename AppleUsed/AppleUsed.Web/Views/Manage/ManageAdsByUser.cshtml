@@ -55,25 +55,6 @@
                                     </p>
                                 </div>
 
-                                <div class="btn-block">
-
-                                    <a class="text-primary" asp-controller="Manage" asp-action="EditAd" asp-route-id="@item.AdId">
-                                        | Редактировать
-                                        <span class="glyphicon glyphicon-pencil"></span> |
-                                    </a>
-
-                                    <a class="text-danger" asp-controller="Manage" asp-action="DeactivationAd" asp-route-id="@item.AdId">
-                                        Деактивировать
-                                        <span class="glyphicon glyphicon-trash"></span> |
-                                    </a>
-
-                                    <a class="text-primary" asp-controller="Manage" asp-action="AdUpToList" asp-route-id="@item.AdId">
-                                        Поднять
-                                        <span class="glyphicon glyphicon-arrow-up"></span> |
-                                    </a>
-
-                                </div>
-
                             </div>
 
                             <div class="ad-price-text">
@@ -84,24 +65,46 @@
                                 </div>
                                 <div>
                                     <p>
-                                        <a class="btn btn-success" asp-controller="Manage" asp-action="GetAllConversationsByAdId" asp-route-id="@item.AdId">
+                                        <a class="btn btn-success btn-block" asp-controller="Manage" asp-action="GetAllConversationsByAdId" asp-route-id="@item.AdId">
                                             <span class="glyphicon glyphicon-envelope"></span> Сообщения <span class="badge">@item.NotDeliveredMessageCount</span>
                                         </a>
                                     </p>
-
                                 </div>
                                 <div>
                                     <p>
-                                        <a class="btn btn-warning" href="#">
+                                        <a class="btn btn-warning btn-block" href="#">
                                             Рекламировать
                                             <span class="glyphicon glyphicon-usd"></span>
                                         </a>
                                     </p>
                                 </div>
+                                <div>
+                                    <p>
+                                        <a class="btn btn-primary btn-block" asp-controller="Manage" asp-action="AdUpToList" asp-route-id="@item.AdId">
+                                            Поднять
+                                            <span class="glyphicon glyphicon-arrow-up"></span>
+                                        </a>
+                                    </p>
+                                </div>
                             </div>
+                            <div class="btn-block small_text">
 
+                                <a class="text-primary" asp-controller="Manage" asp-action="EditAd" asp-route-id="@item.AdId">
+                                     Редактировать
+                                    <span class="glyphicon glyphicon-pencil"></span> |
+                                </a>
 
+                                <a class="text-danger" asp-controller="Manage" asp-action="DeactivationAd" asp-route-id="@item.AdId">
+                                    Деактивировать
+                                    <span class="glyphicon glyphicon-trash"></span> |
+                                </a>
 
+                                <a class="text-warning" asp-controller="Manage" asp-action="ResetViews" asp-route-id="@item.AdId">
+                                    Сбросить просмотры
+                                    <span class="glyphicon glyphicon-eye-open"></span> 
+                                </a>
+
+                            </div>
                         </div>
                     </div>
                 </li>

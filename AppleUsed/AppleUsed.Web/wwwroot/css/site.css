@@ -357,11 +357,13 @@
 .photo {
     text-align: center;
     background-color: #eee;
+    border-radius: 4px;
 }
 
 .Ad-Photos {
     text-align: center;
     background-color: #eee;
+    border-radius: 4px;
 }
 
 
@@ -503,4 +505,8 @@
     background-color: #5cb85cad;
     padding: 5px;
     border-radius: 5px;
+}
+
+.small_text {
+    font-size: 11px;
 }
