@@ -82,9 +82,10 @@ namespace AppleUsed.BLL.Services
                 try
                 {
                     conversations = await (from c in _db.Conversations
-                                          join m in conMessages on c.ConversationId equals m.ConversationId into messageResult
-                                          select new ConversationDTO
-                                          {
+                                           where c.SellerId == senderId || c.BuyerId == senderId
+                                           join m in conMessages on c.ConversationId equals m.ConversationId into messageResult
+                                           select new ConversationDTO
+                                           {
                                               ConversationId = c.ConversationId,
                                               AdId = c.AdId,
                                               SellerId = c.SellerId,
@@ -93,7 +94,7 @@ namespace AppleUsed.BLL.Services
                                               BuyerName = c.BuyerName,
                                               Messages = messageResult.ToList()
 
-                                          }).ToListAsync();
+                                           }).ToListAsync();
 
                 }
                 catch (Exception ex)
@@ -142,8 +143,10 @@ namespace AppleUsed.BLL.Services
 
                 try
                 {
+
                     conversation = await (from c in _db.Conversations
-                                          where c.SellerId == senderId && c.BuyerId == contactId || c.BuyerId == senderId && c.SellerId == contactId
+                                          where c.SellerId == senderId && c.BuyerId == contactId && c.AdId == adId ||
+                                          c.BuyerId == senderId && c.SellerId == contactId && c.AdId == adId
                                           join m in conMessages on c.ConversationId equals m.ConversationId into messageResult
                                           select new ConversationDTO
                                           {
@@ -178,7 +181,6 @@ namespace AppleUsed.BLL.Services
                     };
 
                 }
-
             }
 
             return conversation;
