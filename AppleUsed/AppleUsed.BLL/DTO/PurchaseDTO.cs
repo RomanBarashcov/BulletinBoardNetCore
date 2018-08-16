@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace AppleUsed.DAL.Entities
+namespace AppleUsed.BLL.DTO
 {
-    public class Purchase
+    [NotMapped]
+    public class PurchaseDTO
     {
         public int PurchaseId { get; set; }
 
@@ -18,6 +19,5 @@ namespace AppleUsed.DAL.Entities
 
         public int ServicesId { get; set; }
         public int AdId { get; set; }
-
     }
 }

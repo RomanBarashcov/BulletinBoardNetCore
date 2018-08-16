@@ -28,8 +28,7 @@ namespace AppleUsed.DAL.Entities
         [ForeignKey("CharacteristicsId")]
         public virtual Characteristics Characteristics { get; set; }
 
-        [ForeignKey("PurchasedId")]
-        public virtual Purchase Purchased { get; set; }
+        public virtual ICollection<Purchase> Purhcases { get; set; }
 
         [ForeignKey("ApplicationUserId")]
         public ApplicationUser ApplicationUser { get; set; }
