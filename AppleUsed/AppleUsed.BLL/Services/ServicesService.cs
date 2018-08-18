@@ -18,10 +18,10 @@ namespace AppleUsed.BLL.Services
             _db = db;
         }
 
-        public IQueryable<ServicesDTO> GetAllServices()
+        public IQueryable<ServiceDTO> GetAllServices()
         {
             var services = _db.Services.Select(x=> 
-            new ServicesDTO
+            new ServiceDTO
             {
                 ServicesId = x.ServicesId,
                 Name = x.Name,
@@ -33,16 +33,16 @@ namespace AppleUsed.BLL.Services
             return services;
         }
 
-        public async Task<OperationDetails<ServicesDTO>> GetServiceById(int id)
+        public async Task<OperationDetails<ServiceDTO>> GetServiceById(int id)
         {
-            OperationDetails<ServicesDTO> operationDetails = 
-                new OperationDetails<ServicesDTO>(false, "", new ServicesDTO());
+            OperationDetails<ServiceDTO> operationDetails = 
+                new OperationDetails<ServiceDTO>(false, "", new ServiceDTO());
 
             if (id <= 0)
                 return operationDetails;
 
             var service = await _db.Services.Where(s=>s.ServicesId == id).Select(x =>
-            new ServicesDTO
+            new ServiceDTO
             {
                 ServicesId = x.ServicesId,
                 Name = x.Name,
@@ -52,12 +52,12 @@ namespace AppleUsed.BLL.Services
 
             }).FirstOrDefaultAsync();
 
-            operationDetails = new OperationDetails<ServicesDTO>(true, "", service);
+            operationDetails = new OperationDetails<ServiceDTO>(true, "", service);
 
             return operationDetails;
         }
 
-        public async Task<OperationDetails<int>> CreateService(ServicesDTO service)
+        public async Task<OperationDetails<int>> CreateService(ServiceDTO service)
         {
             OperationDetails<int> operationDetails =
                 new OperationDetails<int>(false, "", 0);
@@ -87,7 +87,7 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
-        public async Task<OperationDetails<int>> UpdateService(ServicesDTO service)
+        public async Task<OperationDetails<int>> UpdateService(ServiceDTO service)
         {
             OperationDetails<int> operationDetails =
                 new OperationDetails<int>(false, "", 0);

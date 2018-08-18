@@ -7,10 +7,10 @@ namespace AppleUsed.BLL.Interfaces
 {
     public interface IServicesService
     {
-        IQueryable<ServicesDTO> GetAllServices();
-        Task<OperationDetails<ServicesDTO>> GetServiceById(int id);
-        Task<OperationDetails<int>> CreateService(ServicesDTO service);
-        Task<OperationDetails<int>> UpdateService(ServicesDTO service);
+        IQueryable<ServiceDTO> GetAllServices();
+        Task<OperationDetails<ServiceDTO>> GetServiceById(int id);
+        Task<OperationDetails<int>> CreateService(ServiceDTO service);
+        Task<OperationDetails<int>> UpdateService(ServiceDTO service);
         Task<OperationDetails<int>> DeleteService(int id);
     }
 }

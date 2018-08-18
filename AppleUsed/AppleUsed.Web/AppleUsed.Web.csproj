@@ -34,5 +34,13 @@
     <Content Update="Views\Chat\_ManageNav.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Shared\_StatusMessage.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Views\Administration\" />
+    <Folder Include="Views\Moderation\" />
   </ItemGroup>
 </Project>
