@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AppleUsed.BLL.DTO;
+using AppleUsed.BLL.Infrastructure;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Models.ViewModels.ServicesViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -47,19 +48,6 @@ namespace AppleUsed.Web.Controllers
             return View("Details", model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SaveNewService(ServiceDetailsViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View("CreateService", model);
-
-            var operationDetail = await _servicesService.CreateService(model.ServiceDetail);
-            if (!operationDetail.Succedeed)
-                return View("CreateService", model);
-
-            return RedirectToAction("Index");
-        }
-
         [HttpGet]
         public async Task<IActionResult> UpdateService(int id)
         {
@@ -75,12 +63,23 @@ namespace AppleUsed.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveUpdatedService(ServiceDetailsViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveService(ServiceDetailsViewModel model)
         {
-            if(!ModelState.IsValid)
+            OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
+
+            if (!ModelState.IsValid)
                 return View("Details", model);
 
-            var operationDetails = await _servicesService.UpdateService(model.ServiceDetail);
+            if (model.ServiceDetail.ServicesId > 0)
+            {
+                operationDetails = await _servicesService.UpdateService(model.ServiceDetail);
+            }
+            else
+            {
+                operationDetails = await _servicesService.CreateService(model.ServiceDetail);
+            }
+
             if(!operationDetails.Succedeed)
                 return View("Details", model.StatusMessage = operationDetails.Message);
 
@@ -92,13 +91,13 @@ namespace AppleUsed.Web.Controllers
         {
             var model = new ServicesIndexViewModel();
             var operationDetails = await _servicesService.DeleteService(id);
-
             if (!operationDetails.Succedeed)
             {
-                var getAllServicesResult = _servicesService.GetAllServices();
-                model.Services = getAllServicesResult;
                 model.StatusMessage = operationDetails.Message;
             }
+
+            var getAllServicesResult = _servicesService.GetAllServices();
+            model.Services = getAllServicesResult;
 
             return View("Index", model);
         }

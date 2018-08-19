@@ -130,6 +130,7 @@ namespace AppleUsed.BLL.Services
             try
             {
                 _db.Remove(oldServices);
+                await _db.SaveChangesAsync();
                 operationDetails = new OperationDetails<int>(true, "", 0);
             }
             catch(Exception ex)

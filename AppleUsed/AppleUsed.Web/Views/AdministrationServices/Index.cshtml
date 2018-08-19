@@ -14,24 +14,35 @@
 
     <hr />
 
-    <a asp-controller="AdministrationServices" asp-action="CreateService" class="btn btn-success"> Добавить услугу </a>
+    <a asp-controller="AdministrationServices" asp-action="CreateService" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Добавить услугу </a>
 
+    <br />
+    <br />
     <div>
 
         @if (@Model.Services.Count() > 0)
         {
             @foreach (var item in Model.Services)
             {
-                <div class="row">
-                    <div><b>Название : </b>@item.Name</div>
-                    <div><b>Описание : </b>@item.Description</div>
-                    <div><b>Стоимость : </b>@item.Cost</div>
-                    <div><b>Время действия : </b> @item.DaysOfActiveService</div>
-                    <div class="btn-group">
-                        <a asp-controller="AdministrationServices" asp-action="UpdateService" asp-route-id="@item.ServicesId" class="btn-warrning">Редактировать</a>
-                        <a asp-controller="AdministrationServices" asp-action="DeleteService" asp-route-id="@item.ServicesId" class="btn-danger">Удалить</a>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <p><b>Название : </b>@item.Name</p>
+                <p>
+                    <b>Стоимость : </b>@item.Cost <span class="glyphicon glyphicon-usd"></span>
+                </p>
+                <p>
+                    <b>Время действия : </b> @item.DaysOfActiveService дней. <span class="glyphicon glyphicon-calendar"></span>
+                </p>
+            </div>
+            <div class="col-lg-8"><p><b>Описание : </b>@item.Description</p></div>
+
+            <div class="btn-group col-lg-offset-8 col-lg-4">
+                <p>
+                    <a asp-controller="AdministrationServices" asp-action="UpdateService" asp-route-id="@item.ServicesId" class="btn btn-warning">Редактировать <span class="glyphicon glyphicon-pencil"></span></a>
+                    <a asp-controller="AdministrationServices" asp-action="DeleteService" asp-route-id="@item.ServicesId" class="btn btn-danger">Удалить <span class="glyphicon glyphicon-remove"></span></a>
+                </p>
+            </div>
+        </div>
 
                 <hr />
             }

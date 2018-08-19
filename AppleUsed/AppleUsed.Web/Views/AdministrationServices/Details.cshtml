@@ -22,7 +22,14 @@
 
     <hr />
 
-    <form class="form-horizontal" asp-controller="Administration" asp-action="CreateService">
+    <form class="form-horizontal" 
+          asp-controller="AdministrationServices" 
+          asp-action="SaveService" 
+          method="post">
+
+        <input type="hidden" asp-for="ServiceDetail.ServicesId"/>
+
+        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group">
             <label class="control-label col-sm-3">Название : </label>
             <div class="col-sm-4">
@@ -50,7 +57,7 @@
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-4">
                 <button type="submit" class="btn btn-success">Сохранить</button>
-                <a type="submit" class="btn btn-default" asp-controller="AdministrationServices" asp-action="Index">Отмена</a>
+                <a class="btn btn-default" asp-controller="AdministrationServices" asp-action="Index">Отмена</a>
             </div>
         </div>
     </form>

@@ -57,6 +57,7 @@ namespace AppleUsed.Web.Controllers
             return View("Index", model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetActivePurchasesByUser()
         {
             var model = new PurchasesIndexViewModel();
@@ -71,6 +72,7 @@ namespace AppleUsed.Web.Controllers
             return View("Index", model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetDeactivatedPurchasesByUser()
         {
             var model = new PurchasesIndexViewModel();
@@ -95,6 +97,7 @@ namespace AppleUsed.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveNewPurchase(PurchaseDetailsViewModel model)
         {
             if (!ModelState.IsValid)
@@ -121,6 +124,7 @@ namespace AppleUsed.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveUpdatedPurchase(PurchaseDetailsViewModel model)
         {
             if(!ModelState.IsValid)
