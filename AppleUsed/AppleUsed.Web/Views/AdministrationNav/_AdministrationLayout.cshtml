@@ -3,10 +3,10 @@
 }
 
 <div>
-    <hr />
+        <h3>Панель управления</h3>
     <div class="row">
         <div class="col-md-3">
-            @await Html.PartialAsync("_ManageNav")
+            @await Html.PartialAsync("~/Views/AdministrationNav/_AdministrationNav.cshtml")
         </div>
         <div class="col-md-9">
             @RenderBody()

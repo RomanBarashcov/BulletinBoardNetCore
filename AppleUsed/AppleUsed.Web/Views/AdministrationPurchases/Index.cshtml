@@ -1,7 +1,10 @@
 ﻿@model AppleUsed.Web.Models.ViewModels.PurchasesViewModels.PurchasesIndexViewModel
 @{
+    Layout = "/Views/AdministrationNav/_AdministrationLayout.cshtml";
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Покупки</h2>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
+
+<hr />

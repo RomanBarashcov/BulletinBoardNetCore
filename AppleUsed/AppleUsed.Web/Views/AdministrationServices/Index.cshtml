@@ -1,0 +1,46 @@
+﻿@using AppleUsed.Web.Views
+@model AppleUsed.Web.Models.ViewModels.ServicesViewModels.ServicesIndexViewModel
+@{
+    Layout = "/Views/AdministrationNav/_AdministrationLayout.cshtml";
+    ViewData["Title"] = "Index";
+    ViewData.AddActivePage(AdministrationNavPages.Services);
+}
+
+<div class="col-lg-12">
+
+    <h2>Услуги по продвижению объявлений</h2>
+
+    @Html.Partial("_StatusMessage", Model.StatusMessage)
+
+    <hr />
+
+    <a asp-controller="AdministrationServices" asp-action="CreateService" class="btn btn-success"> Добавить услугу </a>
+
+    <div>
+
+        @if (@Model.Services.Count() > 0)
+        {
+            @foreach (var item in Model.Services)
+            {
+                <div class="row">
+                    <div><b>Название : </b>@item.Name</div>
+                    <div><b>Описание : </b>@item.Description</div>
+                    <div><b>Стоимость : </b>@item.Cost</div>
+                    <div><b>Время действия : </b> @item.DaysOfActiveService</div>
+                    <div class="btn-group">
+                        <a asp-controller="AdministrationServices" asp-action="UpdateService" asp-route-id="@item.ServicesId" class="btn-warrning">Редактировать</a>
+                        <a asp-controller="AdministrationServices" asp-action="DeleteService" asp-route-id="@item.ServicesId" class="btn-danger">Удалить</a>
+                    </div>
+                </div>
+
+                <hr />
+            }
+        }
+        else
+        {
+            <h4>Нет ни одной созданой услуги</h4>
+        }
+
+    </div>
+
+</div>

@@ -77,6 +77,20 @@ namespace AppleUsed.Web
 
             serviceCollection.AddTransient<IConversationService>(
                 s => new ConversationService(new AppDbContext(optionsBuilder.Options)));
+
+            serviceCollection.AddTransient<IPurchasesService>(
+               s => new PurchasesService(new AppDbContext(optionsBuilder.Options),
+                    new AdService(dbContext,
+                    new DataService(dbContext),
+                    new ImageService(new ImageCompressorService()),
+                    new ConversationService(dbContext),
+                    new CityAreasService(dbContext),
+                    new CityService(dbContext),
+                    new ProductModelService(dbContext),
+                    new AdUpService(dbContext))));
+
+            serviceCollection.AddTransient<IServicesService>(
+                s => new ServicesService(new AppDbContext(optionsBuilder.Options)));
         }
 
         /// <summary>

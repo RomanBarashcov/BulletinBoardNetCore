@@ -10,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppleUsed.Web.Controllers
 {
-    public class ServicesController : Controller
+    public class AdministrationServicesController : Controller
     {
         public readonly IServicesService _servicesService;
 
-        public ServicesController(IServicesService servicesService)
+        public AdministrationServicesController(IServicesService servicesService)
         {
             _servicesService = servicesService;
         }

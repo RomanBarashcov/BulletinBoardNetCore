@@ -10,12 +10,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AppleUsed.Web.Controllers
 {
-    public class PurchasesController : Controller
+    public class AdministrationPurchasesController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         public readonly IPurchasesService _purchasesService;
 
-        public PurchasesController(
+        public AdministrationPurchasesController(
             UserManager<ApplicationUser> userManager, 
             IPurchasesService purchasesService)
         {

@@ -1,0 +1,58 @@
+﻿@using AppleUsed.Web.Views
+@model AppleUsed.Web.Models.ViewModels.ServicesViewModels.ServiceDetailsViewModel
+@{
+    Layout = "/Views/AdministrationNav/_AdministrationLayout.cshtml";
+    ViewData["Title"] = "Details";
+    ViewData.AddActivePage(AdministrationNavPages.Services);
+}
+
+<div class="col-lg-12">
+
+    @{  if (Model.ServiceDetail == null)
+        {
+            <h2> Создание новой услуги </h2>
+        }
+        else
+        {
+            <h2> Редактирование услуги </h2>
+        }
+    }
+
+    @Html.Partial("_StatusMessage", Model.StatusMessage)
+
+    <hr />
+
+    <form class="form-horizontal" asp-controller="Administration" asp-action="CreateService">
+        <div class="form-group">
+            <label class="control-label col-sm-3">Название : </label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" placeholder="Введите название" asp-for="ServiceDetail.Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">Описание : </label>
+            <div class="col-sm-4">
+                <textarea rows="5" class="form-control" placeholder="Введите описание" asp-for="ServiceDetail.Description"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">Срок действия : </label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" placeholder="Срок действия услуги" asp-for="ServiceDetail.DaysOfActiveService">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-3">Стоимость :</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" placeholder="Введите стоимость" asp-for="ServiceDetail.Cost">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-4">
+                <button type="submit" class="btn btn-success">Сохранить</button>
+                <a type="submit" class="btn btn-default" asp-controller="AdministrationServices" asp-action="Index">Отмена</a>
+            </div>
+        </div>
+    </form>
+
+</div>
