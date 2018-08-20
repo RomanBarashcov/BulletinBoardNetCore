@@ -12,6 +12,10 @@ namespace AppleUsed.Web.Views.Manage
 
         public static string Messages => "Сообщения";
 
+        public static string Purchases => "Покупки";
+
+        public static string Services => "Услуги";
+
         public static string Index => "Index";
 
         public static string ChangePassword => "ChangePassword";
@@ -25,6 +29,10 @@ namespace AppleUsed.Web.Views.Manage
         public static string MessagesNavClass(ViewContext viewContext) => PageNavClass(viewContext, Messages);
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
+
+        public static string PurchasesNavClass(ViewContext viewContext) => PageNavClass(viewContext, Purchases);
+
+        public static string ServicesNavClass(ViewContext viewContext) => PageNavClass(viewContext, Services);
 
         public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
 

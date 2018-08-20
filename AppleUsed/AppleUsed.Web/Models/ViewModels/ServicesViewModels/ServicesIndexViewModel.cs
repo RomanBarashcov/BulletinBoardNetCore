@@ -9,5 +9,6 @@ namespace AppleUsed.Web.Models.ViewModels.ServicesViewModels
     public class ServicesIndexViewModel : BaseServicesViewModel
     {
         public IEnumerable<ServiceDTO> Services { get; set; }
+        public int SelectedAdId { get; set; }
     }
 }

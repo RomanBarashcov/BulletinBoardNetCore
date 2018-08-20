@@ -1,0 +1,85 @@
+﻿@using AppleUsed.Web.Views.Manage
+@model AppleUsed.Web.Models.ViewModels.PurchasesViewModels.PurchasesIndexViewModel
+@{
+    Layout = "/Views/Manage/_Layout.cshtml";
+    ViewData["Title"] = "Мои покупки";
+    ViewData.AddActivePage(ManageNavPages.Purchases);
+}
+
+<div class="col-lg-12">
+
+    <h2>@ViewData["Title"]</h2>
+
+    @await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
+
+    <hr />
+
+    <br />
+
+    <div>
+
+        @if (@Model.Purchases.Count() > 0)
+        {
+            @foreach (var item in Model.Purchases)
+            {
+                <div class="row">
+                    <div class="col-lg-4">
+                        <p><b>№ Объявления : </b>@item.AdId</p>
+                        <p>
+                            <b>Стоимость : </b>@item.TotalCost <span class="glyphicon glyphicon-usd"></span>
+                        </p>
+                        <p>
+                            <b>Время действия : </b> c @item.StartDateService.Day по @item.EndDateService.Day дней. <span class="glyphicon glyphicon-calendar"></span>
+                        </p>
+                    </div>
+
+                    <div class="col-lg-8">
+                        <p>
+                            <b>Статус : </b>
+                            @{
+                                if (item.IsActive)
+                                {
+                                    <span> Активно </span>
+                                }
+                                else
+                                {
+                                    <span> Не активно </span>
+                                }
+                            }
+                        </p>
+                        <p>
+                            <b>Статус оплаты: </b>
+                            @{
+                                if (item.IsPayed)
+                                {
+                                    <span> Оплачено </span>
+                                }
+                                else
+                                {
+                                    <span> Не оплачено  </span>
+                                }
+                            }
+                        </p>
+                    </div>
+
+                    <div class="btn-group col-lg-offset-8 col-lg-4">
+                        <p>
+                            <a asp-controller="ManagePurchases"
+                               asp-action="GetPurchase"
+                               asp-route-id="@item.PurchaseId"
+                               class="btn btn-warning">Подробнее<span class="glyphicon glyphicon-pencil"></span></a>
+                        </p>
+                    </div>
+                </div>
+
+                <hr />
+            }
+        }
+        else
+        {
+            <h4>Нет ни одной купленой услуги</h4>
+        }
+
+    </div>
+
+</div>

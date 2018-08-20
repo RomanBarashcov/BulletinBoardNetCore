@@ -1,23 +1,21 @@
-﻿@using AppleUsed.Web.Views
+﻿@using AppleUsed.Web.Views.Manage
 @model AppleUsed.Web.Models.ViewModels.ServicesViewModels.ServicesIndexViewModel
 @{
-    Layout = "/Views/AdministrationNav/_AdministrationLayout.cshtml";
-    ViewData["Title"] = "Index";
-    ViewData.AddActivePage(AdministrationNavPages.Services);
+    Layout = "/Views/Manage/_Layout.cshtml";
+    ViewData["Title"] = "Услуги по продвижению объявлений";
+    ViewData.AddActivePage(ManageNavPages.Services);
 }
 
 <div class="col-lg-12">
 
-    <h2>Услуги по продвижению объявлений</h2>
+    <h2>@ViewData["Title"]</h2>
 
     @await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
 
     <hr />
 
-    <a asp-controller="AdministrationServices" asp-action="CreateService" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Добавить услугу </a>
+    <br />
 
-    <br />
-    <br />
     <div>
 
         @if (@Model.Services.Count() > 0)
@@ -25,6 +23,7 @@
             @foreach (var item in Model.Services)
             {
                 <div class="row">
+
                     <div class="col-lg-4">
                         <p><b>Название : </b>@item.Name</p>
                         <p>
@@ -34,14 +33,22 @@
                             <b>Время действия : </b> @item.DaysOfActiveService дней. <span class="glyphicon glyphicon-calendar"></span>
                         </p>
                     </div>
+
                     <div class="col-lg-8"><p><b>Описание : </b>@item.Description</p></div>
 
-                    <div class="btn-group col-lg-offset-8 col-lg-4">
-                        <p>
-                            <a asp-controller="AdministrationServices" asp-action="UpdateService" asp-route-id="@item.ServicesId" class="btn btn-warning">Редактировать <span class="glyphicon glyphicon-pencil"></span></a>
-                            <a asp-controller="AdministrationServices" asp-action="DeleteService" asp-route-id="@item.ServicesId" class="btn btn-danger">Удалить <span class="glyphicon glyphicon-remove"></span></a>
-                        </p>
-                    </div>
+                    @if (Model.SelectedAdId > 0)
+                    {
+                        <div class="btn-group col-lg-offset-10">
+                            <p>
+                                <a asp-controller="ManagePurchases"
+                                   asp-action="CreatePurchase"
+                                   asp-route-adId="@Model.SelectedAdId"
+                                   asp-route-serviceId="@item.ServicesId"
+                                   class="btn btn-warning">Выбрать <span class="glyphicon glyphicon-plus"></span></a>
+                            </p>
+                        </div>
+                    }
+
                 </div>
 
                 <hr />
