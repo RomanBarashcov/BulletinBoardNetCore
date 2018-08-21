@@ -15,13 +15,16 @@ namespace AppleUsed.Web.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         public readonly IPurchasesService _purchasesService;
+        public readonly IServicesService _servicesService;
 
         public ManagePurchasesController(
             UserManager<ApplicationUser> userManager,
-            IPurchasesService purchasesService)
+            IPurchasesService purchasesService,
+            IServicesService servicesService)
         {
             _userManager = userManager;
             _purchasesService = purchasesService;
+            _servicesService = servicesService;
         }
 
         [HttpGet]
@@ -91,9 +94,22 @@ namespace AppleUsed.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CreatePurchase(int adId, int serviceId)
         {
-            var model = new PurchaseDetailsViewModel() { PurhcaseDetail = new PurchaseDTO() };
+            var model = new PurchaseDetailsViewModel()
+            {
+                PurhcaseDetail = new PurchaseDTO(), SelectedService = new ServiceDTO()
+            };
+
+            var operationDetails = await _servicesService.GetServiceById(serviceId);
+            if (!operationDetails.Succedeed)
+                return View("Details", model.StatusMessage = operationDetails.Message);
+
             model.PurhcaseDetail.AdId = adId;
+            model.PurhcaseDetail.StartDateService = DateTime.Now;
+            model.PurhcaseDetail.EndDateService = DateTime.Now.AddDays(operationDetails.Property.DaysOfActiveService);
             model.PurhcaseDetail.ServicesId = serviceId;
+            model.PurhcaseDetail.TotalCost = operationDetails.Property.Cost;
+            model.SelectedService = operationDetails.Property;
+
             return View("Details", model);
         }
 
@@ -101,7 +117,7 @@ namespace AppleUsed.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveNewPurchase(PurchaseDetailsViewModel model)
         {
-            if (!ModelState.IsValid)
+            if(model.PurhcaseDetail == null || !ModelState.IsValid)
                 return View("Details", model);
 
             var operationDetails = await _purchasesService.CreatePurchase(model.PurhcaseDetail);

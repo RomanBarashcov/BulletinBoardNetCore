@@ -1,7 +1,50 @@
-﻿
+﻿@using AppleUsed.Web.Views.Manage
+@model AppleUsed.Web.Models.ViewModels.PurchasesViewModels.PurchaseDetailsViewModel
 @{
-    ViewData["Title"] = "Details";
+    Layout = Layout = "/Views/Manage/_Layout.cshtml";
+    ViewData["Title"] = "Подтверждение выбранной услуги";
+    ViewData.AddActivePage(ManageNavPages.Purchases);
 }
 
-<h2>Details</h2>
+<h4>@ViewData["Title"]</h4>
+@await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
 
+<div>
+    <p>Тут вы можете подтвердить выбранную вами услугу, и перейти к оплате</p>
+</div>
+
+<hr />
+
+<form asp-controller="ManagePurchases" asp-action="SaveNewPurchase" method="post">
+
+    <input type="hidden" asp-for="PurhcaseDetail.AdId" />
+    <input type="hidden" asp-for="PurhcaseDetail.ServicesId" />
+    <input type="hidden" asp-for="PurhcaseDetail.TotalCost" />
+    <input type="hidden" asp-for="PurhcaseDetail.StartDateService" />
+    <input type="hidden" asp-for="PurhcaseDetail.EndDateService" />
+
+    <div class="row">
+
+        <div class="col-lg-4">
+            <p><b>Название : </b>@Model.SelectedService.Name</p>
+            <p>
+                <b>Сумма к оплате : </b>@Model.SelectedService.Cost <span class="glyphicon glyphicon-usd"></span>
+            </p>
+            <p>
+                <b>Время действия : </b> @Model.SelectedService.DaysOfActiveService дней. <span class="glyphicon glyphicon-calendar"></span>
+            </p>
+        </div>
+
+        <div class="col-lg-8"><p><b>Описание : </b>@Model.SelectedService.Description</p></div>
+
+        <div class="btn-group col-lg-offset-8">
+            <p>
+                <a asp-controller="Manage" asp-action="ManageAdsByUser" class="btn btn-default">Отмена</a>
+                <input type="submit" class="btn btn-success" value="Перейти к оплате" />
+            </p>
+        </div>
+
+    </div>
+
+</form>
+<hr />

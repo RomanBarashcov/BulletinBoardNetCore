@@ -9,5 +9,6 @@ namespace AppleUsed.Web.Models.ViewModels.PurchasesViewModels
     public class PurchaseDetailsViewModel : BasePurchasesViewModel
     {
         public PurchaseDTO PurhcaseDetail { get; set; }
+        public ServiceDTO SelectedService { get; set; }
     }
 }

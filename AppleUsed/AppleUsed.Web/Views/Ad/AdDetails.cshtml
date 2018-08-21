@@ -1,7 +1,7 @@
 ﻿@model AppleUsed.Web.Models.ViewModels.AdViewModels.AdDetailsViewModel
 
 @{
-    ViewData["Title"] = "AdDetails";
+    ViewData["Title"] = Model.AddDetails.Title;
 }
 
 <br />
@@ -186,11 +186,11 @@
                                 <div class="thumbnail photo">
                                     @if (ad.Title.Length > 20)
                                     {
-                                        <p><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a></p>
+                                        <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a></b></p>
                                     }
                                     else
                                     {
-                                        <p><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a></p>
+                                        <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a></b></p>
                                     }
                                     <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
                                         <img src="@ad.PhotosSmallSizeList.FirstOrDefault()" />
@@ -202,7 +202,7 @@
                                         <small><span class="glyphicon glyphicon-repeat"></span> @ad.DateUpdated</small> |
                                         <small><span class="glyphicon glyphicon-eye-open"></span> @ad.AdViews</small>
                                         <br />
-                                        <small><span class="glyphicon glyphicon-map-marker"></span> @ad.SelectedCity, @Model.AddDetails.SelectedCityArea область</small>
+                                        <small><span class="glyphicon glyphicon-map-marker"></span> @ad.SelectedCity, @ad.SelectedCityArea область</small>
                                     </div>
                                 </div>
                             </div>

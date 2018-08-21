@@ -26,13 +26,10 @@
             @foreach (var item in Model.Purchases)
             {
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <p><b>№ Объявления : </b>@item.AdId</p>
                         <p>
                             <b>Стоимость : </b>@item.TotalCost <span class="glyphicon glyphicon-usd"></span>
-                        </p>
-                        <p>
-                            <b>Время действия : </b> c @item.StartDateService.Day по @item.EndDateService.Day дней. <span class="glyphicon glyphicon-calendar"></span>
                         </p>
                     </div>
 
@@ -63,14 +60,18 @@
                                 }
                             }
                         </p>
+
+                        <p>
+                            <b>Время действия : </b> c @item.StartDateService по @item.EndDateService  <span class="glyphicon glyphicon-calendar"></span>
+                        </p>
                     </div>
 
-                    <div class="btn-group col-lg-offset-8 col-lg-4">
+                    <div class="btn-group col-lg-offset-10 col-lg-2">
                         <p>
                             <a asp-controller="ManagePurchases"
                                asp-action="GetPurchase"
                                asp-route-id="@item.PurchaseId"
-                               class="btn btn-warning">Подробнее<span class="glyphicon glyphicon-pencil"></span></a>
+                               class="btn btn-warning">Подробнее <span class="glyphicon glyphicon-pencil"></span></a>
                         </p>
                     </div>
                 </div>
