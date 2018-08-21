@@ -134,9 +134,9 @@
 
         <div class="col-lg-8">
 
-            <h3> Похожие объявления</h3>
+            <h3> Другие объявления</h3>
             <hr />
-            <div class="row">
+            @*<div class="row">
                 @foreach (var ad in Model.SimilarAds)
                 {
                     <div class="col-sm-3">
@@ -162,13 +162,13 @@
                             </div>
                         }
 
-                            <div class="photo">
+                        <div class="photo">
 
-                                <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
-                                    <img style='max-width:170px; max-height:130px;' src="@ad.PhotosSmallSizeList.FirstOrDefault()" />
-                                </a>
+                            <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
+                                <img style='max-width:170px; max-height:130px;' src="@ad.PhotosSmallSizeList.FirstOrDefault()" />
+                            </a>
 
-                            </div>
+                        </div>
                         <div>
                             <p>
                                 <b>@ad.Price .грн</b>
@@ -177,8 +177,39 @@
                     </div>
 
                 }
-            </div>
-        </div>
+            </div>*@
+
+            <div class="row">
+                @foreach (var ad in Model.SimilarAds)
+                {
+                            <div class="col-sm-4 col-md-4">
+                                <div class="thumbnail photo">
+                                    @if (ad.Title.Length > 20)
+                                    {
+                                        <p><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a></p>
+                                    }
+                                    else
+                                    {
+                                        <p><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a></p>
+                                    }
+                                    <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
+                                        <img src="@ad.PhotosSmallSizeList.FirstOrDefault()" />
+                                    </a>
+                                    <div class="caption">
+                                        <p>
+                                            <b>Цена : @ad.Price .грн</b>
+                                        </p>
+                                        <small><span class="glyphicon glyphicon-repeat"></span> @ad.DateUpdated</small> |
+                                        <small><span class="glyphicon glyphicon-eye-open"></span> @ad.AdViews</small>
+                                        <br />
+                                        <small><span class="glyphicon glyphicon-map-marker"></span> @ad.SelectedCity, @Model.AddDetails.SelectedCityArea область</small>
+                                    </div>
+                                </div>
+                            </div>
+                }
+                        </div>
+                  
+                    </div>
     </div>
 
 

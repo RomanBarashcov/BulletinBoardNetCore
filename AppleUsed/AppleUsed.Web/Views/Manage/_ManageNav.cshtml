@@ -8,12 +8,12 @@
 }
 
 <ul class="nav nav-pills nav-stacked">
-    <li class="@ManageNavPages.ManageMyAdsNavClass(ViewContext)"><a asp-controller="Manage" asp-action="ManageAdsByUser">Мои объявления</a></li>
-    <li class="@ManageNavPages.MessagesNavClass(ViewContext)"><a asp-controller="Manage" asp-action="GetAllMessages">Мои Сообщения</a></li>
-    <li class="@ManageNavPages.PurchasesNavClass(ViewContext)"><a asp-controller="ManagePurchases" asp-action="GetPurchasesByUser">Купленные услуги</a></li>
-    <li class="@ManageNavPages.ServicesNavClass(ViewContext)"><a asp-controller="ManageServices" asp-action="Index">Услуги</a></li>
-    <li class="@ManageNavPages.IndexNavClass(ViewContext)"><a asp-controller="Manage" asp-action="Index">Профиль</a></li>
-    <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)"><a asp-controller="Manage" asp-action="ChangePassword">Пароль</a></li>
+    <li class="@ManageNavPages.ManageMyAdsNavClass(ViewContext)"><a asp-controller="Manage" asp-action="ManageAdsByUser"> <span class="glyphicon glyphicon-list"></span> Мои объявления</a></li>
+    <li class="@ManageNavPages.MessagesNavClass(ViewContext)"><a asp-controller="Manage" asp-action="GetAllMessages"><span class="glyphicon glyphicon-comment"></span> Мои Сообщения</a></li>
+    <li class="@ManageNavPages.PurchasesNavClass(ViewContext)"><a asp-controller="ManagePurchases" asp-action="GetPurchasesByUser"><span class="glyphicon glyphicon-usd"></span> Платежи</a></li>
+    @*<li class="@ManageNavPages.ServicesNavClass(ViewContext)"><a asp-controller="ManageServices" asp-action="Index">Услуги</a></li>*@
+    <li class="@ManageNavPages.IndexNavClass(ViewContext)"><a asp-controller="Manage" asp-action="Index"><span class="glyphicon glyphicon-user"></span> Профиль</a></li>
+    <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)"><a asp-controller="Manage" asp-action="ChangePassword">*** Пароль</a></li>
     @if (hasExternalLogins)
     {
         <li class="@ManageNavPages.ExternalLoginsNavClass(ViewContext)"><a asp-controller="Manage" asp-action="ExternalLogins">External logins</a></li>

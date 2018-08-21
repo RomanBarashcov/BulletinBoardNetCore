@@ -1,7 +1,7 @@
 ﻿@using AppleUsed.Web.Views.Manage
 @model AppleUsed.Web.Models.ViewModels.IndexViewModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Профиль";
     ViewData.AddActivePage(ManageNavPages.Index);
 }
 <h4>@ViewData["Title"]</h4>
@@ -31,11 +31,11 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PhoneNumber"></label>
+                <label>Контактный номер</label>
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-default">Save</button>
+            <button type="submit" class="btn btn-default">Сохранить</button>
         </form>
     </div>
 </div>

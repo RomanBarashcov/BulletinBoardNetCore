@@ -8,10 +8,13 @@
 
 <div class="col-lg-12">
 
-    <h2>@ViewData["Title"]</h2>
+    <h4>@ViewData["Title"]</h4>
 
     @await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
 
+    <div>
+        <p> Здесь вы найдете сведения обо всех платёжных операциях, произведенных для продвижения ваших объявлений.</p>
+    </div>
     <hr />
 
     <br />
