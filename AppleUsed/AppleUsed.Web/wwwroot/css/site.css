@@ -35,11 +35,20 @@
 
 }
 
+a {
+    color: #5cb85c;
+    text-decoration: none;
+}
+
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
     color: #fff;
     background-color: #5cb85c;
 }
 
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    color: #fff;
+    background-color: #5cb85c;
+}
 
 /*Navbar start*/
 
@@ -256,11 +265,13 @@
     width: 100%;
 }
 
-    .ad-title-text {
-        font-size: 20px;
-        margin-top: 5px;
-    }
+.ad-title-text {
+    padding: 3px;
+    font-size: 20px;
+    margin-top: 5px;
+}
     .ad-title-text:hover {
+        padding:3px;
         background-color: #5cb85c;
         color:white;
     }

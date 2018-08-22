@@ -28,6 +28,7 @@ namespace AppleUsed.BLL.DTO
 
         public List<CityArea> CityAreasList { get; set; }
         public string SelectedCityArea { get; set; }
+        public int SelectedCityAreaId { get; set; }
 
         public List<City> CityesList { get; set; }
         public int SelectedCityId { get; set; }

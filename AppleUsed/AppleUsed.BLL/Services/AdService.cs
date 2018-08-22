@@ -133,6 +133,8 @@ namespace AppleUsed.BLL.Services
                                         Price = ad.Price,
                                         DateCreated = ad.DateCreated,
                                         DateUpdated = ad.DateUpdated,
+                                        SelectedCityId = c.CityId,
+                                        SelectedCityAreaId = ca.CityAreaId,
                                         SelectedCityArea = ca.Name,
                                         SelectedCity = c.Name,
                                         PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),

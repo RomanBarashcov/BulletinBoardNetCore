@@ -114,8 +114,8 @@ namespace AppleUsed.Web.Filters
 
         private List<AdDTO> GetAdsWithApplyedFilterByPrice(List<AdDTO> ads)
         {
-            var filteringWithPrice = ads.Where(x => x.Price > decimal.Parse(_model.Filter.PriceFilterFrom)
-                   && x.Price < decimal.Parse(_model.Filter.PriceFilterTo)).ToList();
+            var filteringWithPrice = ads.Where(x => x.Price >= decimal.Parse(_model.Filter.PriceFilterFrom)
+                   && x.Price <= decimal.Parse(_model.Filter.PriceFilterTo)).ToList();
 
             return filteringWithPrice;
         }

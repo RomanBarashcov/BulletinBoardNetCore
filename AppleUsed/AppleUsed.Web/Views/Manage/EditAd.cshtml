@@ -14,7 +14,7 @@
 
 <div class="row">
     <div class="col-md-8">
-        <form asp-action="UpdateAd" method="post" enctype="multipart/form-data">
+        <form asp-action="UpdateAd" method="post" enctype="multipart/form-data" class="form-horizontal">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <input type="hidden" asp-for="AdDTO.AdId" />
@@ -24,114 +24,143 @@
             </blockquote>
 
             <div class="form-group">
-                <label class="control-label">Заголовок : </label>
-                <input asp-for="AdDTO.Title" class="form-control" />
-                <span asp-validation-for="AdDTO.Title" class="text-danger"></span>
+                <label class="control-label col-sm-4">Заголовок : </label>
+                <div class="col-sm-8">
+                    <input asp-for="AdDTO.Title" class="form-control" />
+                    <span asp-validation-for="AdDTO.Title" class="text-danger"></span>
+                </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label">Стоимость : </label>
-                <input asp-for="AdDTO.Price" class="form-control" />
-                <span asp-validation-for="AdDTO.Price" class="text-danger"></span>
+                <label class="control-label col-sm-4">Стоимость : </label>
+                <div class="col-sm-8">
+                    <input asp-for="AdDTO.Price" class="form-control" />
+                    <span asp-validation-for="AdDTO.Price" class="text-danger"></span>
+                </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label">Выберите категорию : </label>
-                <select asp-for="AdDTO.SelectedProductTypeId" asp-items="Model.ProductTypesSelectList" id="ProductType" class="form-control">
-                    <option selected="selected" disabled="disabled">Выберите модель</option>
-                </select>
-            </div>
+                <label class="control-label col-sm-4">Выберите категорию : </label>
+                <div class="col-sm-8">
+                    <select asp-for="AdDTO.SelectedProductTypeId" asp-items="Model.ProductTypesSelectList" id="ProductType" class="form-control">
+                        <option selected="selected" disabled="disabled">Выберите модель</option>
+                    </select>
+                    </div>
+                </div>
 
             <div class="form-group" id="ProductModel">
-                <label class="control-label">Выберите модель : </label>
-                <select asp-for="AdDTO.SelectedProductModelId" asp-items="Model.ProductModelsSelectList" id="ProductModelItems" class="form-control">
-                    <option selected="selected" disabled="disabled"> </option>
-                </select>
-            </div>
+                <label class="control-label col-sm-4">Выберите модель : </label>
+                <div class="col-sm-8">
+                    <select asp-for="AdDTO.SelectedProductModelId" asp-items="Model.ProductModelsSelectList" id="ProductModelItems" class="form-control">
+                        <option selected="selected" disabled="disabled"> </option>
+                    </select>
+                    </div>
+                </div>
 
             <div class="form-group">
-                <label class="control-label">Память : </label>
-                <select asp-for="AdDTO.SelectedProductMemoryId" asp-items="Model.ProductMemoriesSelectList" class="form-control">
-                    <option selected="selected" disabled="disabled"> </option>
-                </select>
-            </div>
+                <label class="control-label col-sm-4">Память : </label>
+                <div class="col-sm-8">
+                    <select asp-for="AdDTO.SelectedProductMemoryId" asp-items="Model.ProductMemoriesSelectList" class="form-control">
+                        <option selected="selected" disabled="disabled"> </option>
+                    </select>
+                    </div>
+                </div>
 
             <div class="form-group">
-                <label class="control-label">Цвет : </label>
-                <select asp-for="AdDTO.SelectedProductColorId" asp-items="Model.ProductColorsSelectList" class="form-control">
-                    <option selected="selected" disabled="disabled"> </option>
-                </select>
-            </div>
+                <label class="control-label col-sm-4">Цвет : </label>
+                <div class="col-sm-8">
+                    <select asp-for="AdDTO.SelectedProductColorId" asp-items="Model.ProductColorsSelectList" class="form-control">
+                        <option selected="selected" disabled="disabled"> </option>
+                    </select>
+                    </div>
+                </div>
 
             <div class="form-group">
-                <label class="control-label">Состояние : </label>
-                <select asp-for="AdDTO.SelectedProductStatesId" asp-items="Model.ProductStatesSelectList" class="form-control">
-                    <option selected="selected" disabled="disabled"> </option>
-                </select>
-            </div>
+                <label class="control-label col-sm-4">Состояние : </label>
+                <div class="col-sm-8">
+                    <select asp-for="AdDTO.SelectedProductStatesId" asp-items="Model.ProductStatesSelectList" class="form-control">
+                        <option selected="selected" disabled="disabled"> </option>
+                    </select>
+                    </div>
+                </div>
 
             <div class="form-group">
-                <label class="control-label">Описание товара : </label>
-                @Html.TextAreaFor(m => m.AdDTO.Description, new { @class = "form-control" })
-                <span asp-validation-for="AdDTO.Description" class="text-danger"></span>
-            </div>
+                <label class="control-label col-sm-4">Описание товара : </label>
+                <div class="col-sm-8">
+                    @Html.TextAreaFor(m => m.AdDTO.Description, new { @class = "form-control" })
+                    <span asp-validation-for="AdDTO.Description" class="text-danger"></span>
+                    </div>
+                </div>
 
             <div class="form-group" id="Areas">
-                <label class="control-label">Ваша Область  : </label>
-                <select asp-for="AdDTO.SelectedCityArea" asp-items="Model.CityAreasSelectList" id="AreasList" class="form-control">
-                    <option selected="selected" disabled="disabled"> </option>
-                </select>
-            </div>
+                <label class="control-label col-sm-4">Ваша Область  : </label>
+                <div class="col-sm-8">
+                    <select asp-for="AdDTO.SelectedCityAreaId" asp-items="Model.CityAreasSelectList" id="AreasList" class="form-control">
+                        <option selected="selected" disabled="disabled"> </option>
+                    </select>
+                    </div>
+                </div>
 
             <div class="form-group" id="CityAreas">
-                <label class="control-label">Ваш город  : </label>
-                <select asp-for="AdDTO.SelectedCityId" asp-items="Model.CityesSelectList" id="CityAreasList" class="form-control">
-                    <option selected="selected" disabled="disabled"> </option>
-                </select>
-            </div>
+                <label class="control-label col-sm-4">Ваш город  : </label>
+                <div class="col-sm-8">
+                    <select asp-for="AdDTO.SelectedCityId" asp-items="Model.CityesSelectList" id="CityAreasList" class="form-control">
+                        <option selected="selected" disabled="disabled"> </option>
+                    </select>
+                    </div>
+                </div>
 
-            <blockquote style="border-left:5px solid #5cb85c">
-                <p>Фото товара : </p>
-            </blockquote>
+                <blockquote style="border-left:5px solid #5cb85c">
+                    <p>Фото товара : </p>
+                </blockquote>
 
 
-            <div class="form-group">
-                <div id="photos-area">
+                <div class="col-lg-offset-4 col-lg-8">
+                    <div class="form-group">
+                        <div id="photos-area">
 
-                    @foreach (var item in Model.AdDTO.PhotosForEdit)
-                    {
-                        <div class="row">
+                            @foreach (var item in Model.AdDTO.PhotosForEdit)
+                            {
+                                <div class="row">
 
-                            <div class="col-sm-6">
-                                <img style='max-width:170px; max-height:130px;' src="data:image/jpg;base64,@item.PhotoHashSmall" />
-                            </div>
+                                    <div class="col-sm-6">
+                                        <p>
+                                            <img style='max-width:170px; max-height:130px;' src="data:image/jpg;base64,@item.PhotoHashSmall" />
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-offset-3 col-sm-2">
+                                        <p>
+                                            <a data-type="DeleteButton" onclick="RemovePhoto('@item.AdPhotosId')" class="btn btn-danger">Удалить</a>
+                                        </p>
+                                    </div>
+                                    
 
-                            <a data-type="DeleteButton" onclick="RemovePhoto('@item.AdPhotosId')" class="btn btn-danger">Удалить</a>
+                                </div>
+                            }
+                            @if (Model.AdDTO.PhotosForEdit.Count() <= 5)
+                            {
+                                int count = 5 - Model.AdDTO.PhotosForEdit.Count();
+                                for (int i = 0; i <= count - 1; i++)
+                                {
+                                    <div id="loadImagesArea">
+                                        <p>
+                                            <input name="Photos" type="file" class="form-control" />
+                                        </p>
+                                    </div>
+                                }
+                            }
 
                         </div>
-                    }
-                    @if (Model.AdDTO.PhotosForEdit.Count() < 5)
-                    {
-                        for (int i = 5 - Model.AdDTO.PhotosForEdit.Count(); i <= Model.AdDTO.PhotosForEdit.Count(); i++)
-                        {
-                            <div id="loadImagesArea">
-                                <input name="Photos" type="file" class="form-control" />
+
+                        <div class="col-sm-offset-6 col-sm-6">
+                            <div class="form-group">
+                                <a class="btn btn-default" href="~/Manage/ManageAdsByUser/">Отмена</a>
+                                <input type="submit" value="Обновить" class="btn btn-success" />
                             </div>
-                        }
-                    }
-
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group">
-                    <a class="btn btn-default" href="~/Manage/ManageAdsByUser/">Отмена</a>
-                    <input type="submit" value="Обновить" class="btn btn-success" />
-                </div>
-            </div>
-
-
-        </form>
+</form>
     </div>
 </div>
 
