@@ -45,7 +45,9 @@
 
 <div class="ad-list col-lg-12">
     <hr />
-    <h3>Новые объявления</h3>
+    <blockquote style="border-left:5px solid #5cb85c">
+        <strong> Новые объявления</strong>
+    </blockquote>
     <hr />
 
 
@@ -66,31 +68,31 @@
 
                         <div class="col-lg-8">
 
+                            <p>
+                                <a class="ad-title-text" asp-controller="Ad" asp-action="AdDetails" asp-route-id="@item.AdId">
+                                    @item.Title
+                                </a>
+                            </p>
+
+                            <div class="location">
                                 <p>
-                                    <a class="ad-title-text" asp-controller="Ad" asp-action="AdDetails" asp-route-id="@item.AdId">
-                                        @item.Title
-                                    </a>
+                                    <span class="glyphicon glyphicon-map-marker"></span>г. @item.SelectedCity |
+                                    <span class="glyphicon glyphicon-refresh"></span> @item.DateUpdated |
+                                    <b>Просмотров : </b>@item.AdViews <span class="glyphicon glyphicon-eye-open"></span>
                                 </p>
+                            </div>
 
-                                <div class="location">
-                                    <p>
-                                        <span class="glyphicon glyphicon-map-marker"></span>г. @item.SelectedCity |
-                                        <span class="glyphicon glyphicon-refresh"></span> @item.DateUpdated |
-                                        <b>Просмотров : </b>@item.AdViews <span class="glyphicon glyphicon-eye-open"></span>
-                                    </p>
-                                </div>
+                            <div class="ad-description">
+                                @if (item.Description.Length < 100)
+                                {
+                                    <span>@item.Description.Substring(0, item.Description.Length) ..</span>
+                                }
+                                else
+                                {
+                                    <span>@item.Description.Substring(0, 100) ..</span>
+                                }
+                            </div>
 
-                                <div class="ad-description">
-                                    @if (item.Description.Length < 100)
-                                    {
-                                        <span>@item.Description.Substring(0, item.Description.Length) ..</span>
-                                    }
-                                    else
-                                    {
-                                        <span>@item.Description.Substring(0, 100) ..</span>
-                                    }
-                                </div>
-                  
 
                         </div>
                         <div class="col-lg-2 ad-price-text">

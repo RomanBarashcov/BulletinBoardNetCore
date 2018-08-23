@@ -1,6 +1,7 @@
 ﻿@using AppleUsed.Web.Views.Manage
 @model List<AppleUsed.BLL.DTO.AdDTO>
 @{
+    Layout = "/Views/Manage/_Layout.cshtml";
     ViewData["Title"] = "Мои объявления";
     ViewData.AddActivePage(ManageNavPages.MyAds);
 }
@@ -15,6 +16,16 @@
     </div>
 
     <hr />
+
+    <div>
+        <div class="btn-group" role="group" aria-label="...">
+            <button type="button" class="btn btn-default">Aктивные</button>
+            <button type="button" class="btn btn-default">Ожидающие</button>
+            <button type="button" class="btn btn-default">Неактивные</button>
+        </div>
+    </div>
+
+    <br />
 
     @{ foreach (var item in Model)
         {
@@ -86,7 +97,7 @@
                                 </div>
                                 <div>
                                     <p>
-                                        <a class="btn btn-primary btn-block" asp-controller="Manage" asp-action="AdUpToList" asp-route-id="@item.AdId">
+                                        <a class="btn btn-primary btn-block" asp-controller="ManageAd" asp-action="AdUpToList" asp-route-id="@item.AdId">
                                             Поднять
                                             <span class="glyphicon glyphicon-arrow-up"></span>
                                         </a>
@@ -95,18 +106,18 @@
                             </div>
                             <div class="btn-block small_text">
 
-                                <a class="text-primary" asp-controller="Manage" asp-action="EditAd" asp-route-id="@item.AdId">
+                                <a class="text-primary" asp-controller="ManageAd" asp-action="EditAd" asp-route-id="@item.AdId">
                                     Редактировать
                                     <span class="glyphicon glyphicon-pencil"></span> |
                                 </a>
 
-                                <a class="text-danger" asp-controller="Manage" asp-action="DeactivationAd" asp-route-id="@item.AdId">
+                                <a class="text-danger" asp-controller="ManageAd" asp-action="DeactivationAd" asp-route-id="@item.AdId">
                                     Деактивировать
                                     <span class="glyphicon glyphicon-trash"></span> |
                                 </a>
 
-                                <a class="text-warning" asp-controller="Manage" asp-action="ResetViews" asp-route-id="@item.AdId">
-                                    Сбросить просмотры @item.AdViews 
+                                <a class="text-warning" asp-controller="ManageAd" asp-action="ResetViews" asp-route-id="@item.AdId">
+                                    Сбросить просмотры @item.AdViews
                                     <span class="glyphicon glyphicon-eye-open"></span>
                                 </a>
 

@@ -12,11 +12,6 @@ using AppleUsed.DAL.Identity;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Extensions;
 using AppleUsed.Web.Models.ViewModels;
-using AppleUsed.Web.Models.ViewModels.AdViewModels;
-using AppleUsed.Web.Helpers;
-using AppleUsed.BLL.DTO;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
 
 namespace AppleUsed.Web.Controllers.Manage
 {
@@ -29,13 +24,8 @@ namespace AppleUsed.Web.Controllers.Manage
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
-        private readonly IAdService _adService;
-        private readonly PrepearingModel _prepearingModel;
         private readonly IConversationService _conversationService;
-        private readonly ICityService _cityService;
-        private readonly IProductModelsService _productModelsService;
-        private readonly IAdUpService _adUpService;
-        private readonly IAdViewsService _adViewsService;
+
 
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
@@ -45,25 +35,15 @@ namespace AppleUsed.Web.Controllers.Manage
           IEmailSender emailSender,
           ILogger<ManageController> logger,
           UrlEncoder urlEncoder,
-          IAdService adService,
           IConversationService conversationService, 
-          ICityService cityService,
-          IProductModelsService productModelsService,
-          IAdUpService adUpService,
-          IAdViewsService adViewsService)
+          ICityService cityServic)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _urlEncoder = urlEncoder;
-            _adService = adService;
-            _prepearingModel = new PrepearingModel(_adService);
             _conversationService = conversationService;
-            _cityService = cityService;
-            _productModelsService = productModelsService;
-            _adUpService = adUpService;
-            _adViewsService = adViewsService;
         }
 
         [TempData]
@@ -130,57 +110,6 @@ namespace AppleUsed.Web.Controllers.Manage
         }
 
         [HttpGet]
-        public async Task<IActionResult> ManageAdsByUser()
-        {
-            string userName = User.Identity.Name;
-
-            var getAdsByUserResult = await _adService.GetAdsByUser(userName);
-            if (!getAdsByUserResult.Succedeed)
-                return View(new List<AdDTO>());
-
-            return View(getAdsByUserResult.Property.ToList());
-        }
-        
-        [HttpGet]
-        public async Task<IActionResult> AdUpToList(int id)
-        {
-            var updateUpAdResult = await _adUpService.UpAd(id);
-            if (!updateUpAdResult.Succedeed)
-                this.StatusMessage = updateUpAdResult.Message;
-
-            return RedirectToAction("ManageAdsByUser");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ResetViews(int id)
-        {
-            await _adViewsService.ResetViews(id);
-            return RedirectToAction("ManageAdsByUser");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> EditAd(int id)
-        {
-            AdViewModel model = new AdViewModel();
-
-            var getAdByIdResult = await _adService.GetAdById(id);
-            if(!getAdByIdResult.Succedeed)
-                return View("EditAd", model);
-
-            var dataForSelectList = await _adService.GetDataForCreatingAdOrDataForFilter();
-            model = _prepearingModel.PrepearingAdViewModel(dataForSelectList, getAdByIdResult.Property);
-            
-            ViewBag.AdId = id;
-            return View("EditAd", model);
-        }
-
-        public async Task<IActionResult> DeletePhoto(int photoId)
-        {
-            return Ok();
-        }
-
-
-        [HttpGet]
         public async Task<IActionResult> GetAllMessages()
         {
             ConversationListViewModel model = new ConversationListViewModel();
@@ -197,66 +126,6 @@ namespace AppleUsed.Web.Controllers.Manage
             model.UserId = _userManager.GetUserId(User);
             model.Conversations = await _conversationService.GetAllConversationByAdId(id);
             return View("Conversations", model);
-        }
-
-
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public async Task<IActionResult> UpdateAd(AdViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View("EditAd", model);
-
-            string userName = User.Identity.Name;
-
-            var result = await _adService.SaveAd(userName, model.AdDTO, model.Photos);
-            if (!result.Succedeed)
-            {
-                ModelState.AddModelError("", result.Message);
-                return View("EditAd", model);
-            }
-
-            return RedirectToAction("ManageAdsByUser");
-        }
-
-
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public JsonResult GetProductModelsSelectList(string selectedProductTypeId)
-        {
-            int _selectedProductTypeId = Convert.ToInt32(selectedProductTypeId);
-
-            var productModels = _productModelsService.GetProductModels()
-                .Where(x => x.ProductTypes.ProductTypesId == _selectedProductTypeId);
-
-            return Json(new SelectList(productModels, "ProductModelsId", "Name"));
-        }
-
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public JsonResult GetAreasCitySelectList(string selectedCityAareaId)
-        {
-            int _selectedCityAreaId = Convert.ToInt32(selectedCityAareaId);
-
-            var areasCities = _cityService.GetCitiesByCityAreaId(_selectedCityAreaId).Where(x => x.CityArea.CityAreaId == _selectedCityAreaId);
-
-            return Json(new SelectList(areasCities, "CityId", "Name"));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> DeactivationAd(int? adId = 0)
-        {
-            int id = adId ?? 0;
-            if(id > 0)
-            {
-                var result = await _adService.DeleteAd(id);
-                if (!result.Succedeed)
-                {
-                    ModelState.AddModelError("", result.Message);
-                }
-            }
-
-            return RedirectToActionPermanent("ManageAdsByUser");
         }
 
         [HttpPost]

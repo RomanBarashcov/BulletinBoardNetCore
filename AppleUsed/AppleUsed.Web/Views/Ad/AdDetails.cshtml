@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-lg-3">
         <ul class="breadcrumb text-center">
-            <li><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductType"> Назад </a></li>
+            <li><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductType"> <span class="glyphicon glyphicon-home"></span> Назад </a></li>
             <li><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductType"> @Model.AddDetails.SelectedProductType</a></li>
             <li class="active"><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductModel">@Model.AddDetails.SelectedProductModel</a></li>
         </ul>
@@ -55,21 +55,23 @@
 
         <div class="col-lg-8 col-lg-pull-4">
 
-            <div class="ad-title-details">
-                <strong> @Model.AddDetails.Title</strong>
-            </div>
+            <blockquote style="border-left:5px solid #5cb85c">
+                <strong class="ad-title-details"> @Model.AddDetails.Title</strong>
+            </blockquote>
 
             <div class="photo">
                 <img style='max-width:640px; max-height:480px;' src="@Model.AddDetails.PhotosAvgSizeList.FirstOrDefault()" />
             </div>
 
+            <br />
+
             <div class="ad-simple-info">
                 <table>
                     <thead>
                         <tr>
-                            <th> Обновленно : </th>
+                            <th><span class="glyphicon glyphicon-repeat"></span> Обновленно : </th>
                             <td>@Model.AddDetails.DateUpdated</td>
-                            <th> Город : </th>
+                            <th><span class="glyphicon glyphicon-map-marker"></span> Город : </th>
                             <td>@Model.AddDetails.SelectedCity, @Model.AddDetails.SelectedCityArea область</td>
                             <th>Просмотров : </th>
                             <td>@Model.AddDetails.AdViews <span class="glyphicon glyphicon-eye-open"></span> </td>
@@ -115,9 +117,7 @@
             <hr />
 
             <div class="ad-full-description">
-                <p> <b>Описание</b>  </p>
                 <p> @Model.AddDetails.Description </p>
-
             </div>
 
             <hr />
@@ -132,84 +132,44 @@
             </div>
         </div>
 
+     
         <div class="col-lg-8">
-
-            <h3> Другие объявления</h3>
-            <hr />
-            @*<div class="row">
-                @foreach (var ad in Model.SimilarAds)
-                {
-                    <div class="col-sm-3">
-
-                        @if (ad.Title.Length > 20)
-                        {
-                            <div>
-                                <p>
-                                    <b>
-                                        <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a>
-                                    </b>
-                                </p>
-                            </div>
-                        }
-                        else
-                        {
-                            <div>
-                                <p>
-                                    <b>
-                                        <a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a>
-                                    </b>
-                                </p>
-                            </div>
-                        }
-
-                        <div class="photo">
-
-                            <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
-                                <img style='max-width:170px; max-height:130px;' src="@ad.PhotosSmallSizeList.FirstOrDefault()" />
-                            </a>
-
-                        </div>
-                        <div>
-                            <p>
-                                <b>@ad.Price .грн</b>
-                            </p>
-                        </div>
-                    </div>
-
-                }
-            </div>*@
+            <br />
+            <blockquote style="border-left:5px solid #5cb85c">
+                <strong>  Другие объявления</strong>
+            </blockquote>
 
             <div class="row">
                 @foreach (var ad in Model.SimilarAds)
                 {
-                            <div class="col-sm-4 col-md-4">
-                                <div class="thumbnail photo">
-                                    @if (ad.Title.Length > 20)
-                                    {
-                                        <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a></b></p>
-                                    }
-                                    else
-                                    {
-                                        <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a></b></p>
-                                    }
-                                    <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
-                                        <img src="@ad.PhotosSmallSizeList.FirstOrDefault()" />
-                                    </a>
-                                    <div class="caption">
-                                        <p>
-                                            <b>Цена : @ad.Price .грн</b>
-                                        </p>
-                                        <small><span class="glyphicon glyphicon-repeat"></span> @ad.DateUpdated</small> |
-                                        <small><span class="glyphicon glyphicon-eye-open"></span> @ad.AdViews</small>
-                                        <br />
-                                        <small><span class="glyphicon glyphicon-map-marker"></span> @ad.SelectedCity, @ad.SelectedCityArea область</small>
-                                    </div>
-                                </div>
+                    <div class="col-sm-4 col-md-4">
+                        <div class="thumbnail photo">
+                            @if (ad.Title.Length > 20)
+                            {
+                                <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a></b></p>
+                            }
+                            else
+                            {
+                                <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a></b></p>
+                            }
+                            <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
+                                <img src="@ad.PhotosSmallSizeList.FirstOrDefault()" />
+                            </a>
+                            <div class="caption">
+                                <p>
+                                    <b>Цена : @ad.Price .грн</b>
+                                </p>
+                                <small><span class="glyphicon glyphicon-repeat"></span> @ad.DateUpdated</small> |
+                                <small><span class="glyphicon glyphicon-eye-open"></span> @ad.AdViews</small>
+                                <br />
+                                <small><span class="glyphicon glyphicon-map-marker"></span> @ad.SelectedCity, @ad.SelectedCityArea область</small>
                             </div>
-                }
                         </div>
-                  
                     </div>
+                }
+            </div>
+
+        </div>
     </div>
 
 

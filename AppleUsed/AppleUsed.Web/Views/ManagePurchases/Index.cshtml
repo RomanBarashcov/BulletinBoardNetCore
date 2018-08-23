@@ -33,7 +33,7 @@
                         </p>
                     </div>
 
-                    <div class="col-lg-8">
+                    <div class="col-lg-7">
                         <p>
                             <b>Статус : </b>
                             @{
@@ -62,11 +62,11 @@
                         </p>
 
                         <p>
-                            <b>Время действия : </b> c @item.StartDateService по @item.EndDateService  <span class="glyphicon glyphicon-calendar"></span>
+                            <b>Время действия : </b> c @item.StartDateService <b>-</b> @item.EndDateService  
                         </p>
                     </div>
 
-                    <div class="btn-group col-lg-offset-10 col-lg-2">
+                    <div class="btn-group">
                         <p>
                             <a asp-controller="ManagePurchases"
                                asp-action="GetPurchase"
