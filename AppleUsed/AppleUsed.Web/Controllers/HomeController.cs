@@ -32,7 +32,7 @@ namespace AppleUsed.Web.Controllers.Home
         {
             List<AdDTO> model = new List<AdDTO>();
 
-            var getAdsResult = await _adService.GetAds();
+            var getAdsResult = await _adService.GetActiveAds();
             if(!getAdsResult.Succedeed)
                 return View(model);
 

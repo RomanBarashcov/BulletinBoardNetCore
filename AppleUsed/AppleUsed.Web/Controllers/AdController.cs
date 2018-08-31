@@ -39,7 +39,7 @@ namespace AppleUsed.Web.Controllers
         {
             int pageSize = 5;
 
-            var result = await _adService.GetAds();
+            var result = await _adService.GetActiveAds();
             if (!result.Succedeed)
                 return View(model);
 

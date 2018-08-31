@@ -747,5 +747,12 @@ namespace AppleUsed.DAL.EF
             public const string Hotin = "Хотин";
             public const string Chernivtsi = "Черновцы";
         }
+
+        public static class AdStatus
+        {
+            public const string Active = "Active";
+            public const string InProgress = "InProgress";
+            public const string Deactivated = "Deactivated";
+        }
     }
 }

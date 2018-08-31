@@ -17,6 +17,7 @@ namespace AppleUsed.DAL.EF
         {
             this.appDbContext = appDbContext;
 
+            InitAdStatuses();
             ProductTypeInit();
             ProductColorsInit();
             ProductStatesInit();
@@ -58,6 +59,29 @@ namespace AppleUsed.DAL.EF
                 AddCitiesToCherkasskayaArea();
                 AddCitiesToChernigovskayaArea();
                 AddCitiesToChernovetckayaArea();
+            }
+
+        }
+
+        private void InitAdStatuses()
+        {
+            if (!appDbContext.AdStatuses.Any())
+            {
+                string[] adStatuses = new string[] {
+                    SeedData.AdStatus.Active,
+                    SeedData.AdStatus.InProgress,
+                    SeedData.AdStatus.Deactivated
+                };
+
+                List<Entities.AdStatus> adStatusesList = new List<Entities.AdStatus>();
+
+                for (int i = 0; i <= adStatuses.Length - 1; i++)
+                {
+                    adStatusesList.Add(new Entities.AdStatus { Name = adStatuses[i] });
+                }
+
+                appDbContext.AddRange(adStatusesList);
+                appDbContext.SaveChanges();
             }
         }
 

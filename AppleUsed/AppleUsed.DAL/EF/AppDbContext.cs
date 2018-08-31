@@ -21,6 +21,8 @@ namespace AppleUsed.DAL.Identity
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
+
+            //modelBuilder.Entity<AdStatus>().ToTable("AdStatuses");
         }
 
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
@@ -30,6 +32,7 @@ namespace AppleUsed.DAL.Identity
         }
 
         public DbSet<Ad> Ads { get; set; }
+        public DbSet<AdStatus> AdStatuses { get; set; }
         public DbSet<AdUp> AdUps { get; set; }
         public DbSet<AdPhotos> AdPhotos { get; set; }
         public DbSet<AdViews> AdViews { get; set; }

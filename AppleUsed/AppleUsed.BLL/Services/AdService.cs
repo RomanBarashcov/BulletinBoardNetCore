@@ -1,4 +1,5 @@
 ﻿using AppleUsed.BLL.DTO;
+using AppleUsed.BLL.Enums;
 using AppleUsed.BLL.Infrastructure;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
@@ -42,14 +43,14 @@ namespace AppleUsed.BLL.Services
             _adUpService = adUpService;
         }
 
-        public async Task<OperationDetails<IQueryable<AdDTO>>> GetAds()
+        public async Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAds()
         {
             OperationDetails<IQueryable<AdDTO>> operationDetails = 
                 new OperationDetails<IQueryable<AdDTO>>(false, "", null);
 
             try
             {
-                var ads = (from ad in _db.Ads
+                var ads = (from ad in _db.Ads.Where(x => x.AdStatusId == 1 && x.IsModerate)
                            join au in _db.AdUps on ad.AdId equals au.AdId
                            join c in _db.Cities on ad.City.CityId equals c.CityId
                            join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
@@ -85,6 +86,8 @@ namespace AppleUsed.BLL.Services
                                SelectedProductStates = prs.Name,
                                SelectedProductStatesId = prs.ProductStatesId,
                                LastUpAd = au.LastUp,
+                               AdStatusId = ad.AdStatusId,
+                               IsModerate = ad.IsModerate,
                                User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
 
                            }).OrderByDescending(x => x.LastUpAd);
@@ -153,6 +156,8 @@ namespace AppleUsed.BLL.Services
                                         SelectedProductStates = prs.Name,
                                         SelectedProductStatesId = prs.ProductStatesId,
                                         LastUpAd = au.LastUp,
+                                        AdStatusId = ad.AdStatusId,
+                                        IsModerate = ad.IsModerate,
                                         User = new ApplicationUser
                                         {   Id = u.Id,
                                             Email = u.Email,
@@ -281,6 +286,8 @@ namespace AppleUsed.BLL.Services
                                SelectedProductStates = prs.Name,
                                SelectedProductStatesId = prs.ProductStatesId,
                                LastUpAd = au.LastUp,
+                               AdStatusId = ad.AdStatusId,
+                               IsModerate = ad.IsModerate,
                                User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
 
                            }).OrderByDescending(x => x.LastUpAd);
@@ -395,6 +402,9 @@ namespace AppleUsed.BLL.Services
             if (user == null)
                 return operationDetails;
 
+            ad.AdStatusId = (int)AdStatuses.Activated;
+            ad.IsModerate = true;
+
             var newAd = _dataService.TransformingAdDTOToAdEntities(ad);
             newAd.ApplicationUser = user;
 
@@ -404,6 +414,9 @@ namespace AppleUsed.BLL.Services
             }
             else
             {
+                ad.AdStatusId = (int)AdStatuses.InProgress;
+                ad.IsModerate = false;
+
                 operationDetails = await UpdateAd(user, newAd, productPhotos);
             }
 
@@ -500,16 +513,46 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
-        public async Task<OperationDetails<int>> DeleteAd(int id)
+        public async Task<OperationDetails<int>> ActivationAd(int id)
         {
             OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
 
             if (id > 0)
             {
                 var oldAd = await _db.Ads.Where(x => x.AdId == id).FirstOrDefaultAsync();
+
+                oldAd.AdStatusId = (int)AdStatuses.InProgress;
+                oldAd.IsModerate = false;
+
                 try
                 {
-                    _db.Remove(oldAd);
+                    _db.Update(oldAd);
+                    await _db.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
+                }
+            }
+
+            return operationDetails;
+        }
+
+        public async Task<OperationDetails<int>> DeactivationAd(int id)
+        {
+            OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
+
+            if (id > 0)
+            {
+                var oldAd = await _db.Ads.Where(x => x.AdId == id).FirstOrDefaultAsync();
+
+                oldAd.AdStatusId = (int)AdStatuses.Deactivated;
+                oldAd.IsModerate = false;
+
+                try
+                {
+                    _db.Update(oldAd);
+                    await _db.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {

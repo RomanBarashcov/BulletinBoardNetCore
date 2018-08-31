@@ -25,6 +25,8 @@ namespace AppleUsed.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AdStatusId");
+
                     b.Property<int?>("AdViewsId");
 
                     b.Property<string>("ApplicationUserId");
@@ -38,6 +40,8 @@ namespace AppleUsed.DAL.Migrations
                     b.Property<DateTime>("DateUpdated");
 
                     b.Property<string>("Description");
+
+                    b.Property<bool>("IsModerate");
 
                     b.Property<decimal>("Price");
 
@@ -79,6 +83,19 @@ namespace AppleUsed.DAL.Migrations
                     b.HasIndex("AdId");
 
                     b.ToTable("AdPhotos");
+                });
+
+            modelBuilder.Entity("AppleUsed.DAL.Entities.AdStatus", b =>
+                {
+                    b.Property<int>("AdStatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("AdStatusId");
+
+                    b.ToTable("AdStatuses");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.AdUp", b =>

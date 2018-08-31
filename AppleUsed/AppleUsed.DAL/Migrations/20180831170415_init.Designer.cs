@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppleUsed.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180815111043_init")]
+    [Migration("20180831170415_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,6 +27,8 @@ namespace AppleUsed.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AdStatusId");
+
                     b.Property<int?>("AdViewsId");
 
                     b.Property<string>("ApplicationUserId");
@@ -41,9 +43,9 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<decimal>("Price");
+                    b.Property<bool>("IsModerate");
 
-                    b.Property<int?>("PurchasedId");
+                    b.Property<decimal>("Price");
 
                     b.Property<string>("Title");
 
@@ -58,8 +60,6 @@ namespace AppleUsed.DAL.Migrations
                         .HasFilter("[CharacteristicsId] IS NOT NULL");
 
                     b.HasIndex("CityId");
-
-                    b.HasIndex("PurchasedId");
 
                     b.ToTable("Ads");
                 });
@@ -85,6 +85,19 @@ namespace AppleUsed.DAL.Migrations
                     b.HasIndex("AdId");
 
                     b.ToTable("AdPhotos");
+                });
+
+            modelBuilder.Entity("AppleUsed.DAL.Entities.AdStatus", b =>
+                {
+                    b.Property<int>("AdStatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("AdStatusId");
+
+                    b.ToTable("AdStatuses");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.AdUp", b =>
@@ -303,15 +316,17 @@ namespace AppleUsed.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AdId");
+                    b.Property<int>("AdId");
 
                     b.Property<DateTime>("DateOfPayment");
 
                     b.Property<DateTime>("EndDateService");
 
+                    b.Property<bool>("IsActive");
+
                     b.Property<bool>("IsPayed");
 
-                    b.Property<int?>("ServicesId");
+                    b.Property<int>("ServicesId");
 
                     b.Property<DateTime>("StartDateService");
 
@@ -320,8 +335,6 @@ namespace AppleUsed.DAL.Migrations
                     b.HasKey("PurchaseId");
 
                     b.HasIndex("AdId");
-
-                    b.HasIndex("ServicesId");
 
                     b.ToTable("Purchases");
                 });
@@ -523,10 +536,6 @@ namespace AppleUsed.DAL.Migrations
                     b.HasOne("AppleUsed.DAL.Entities.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId");
-
-                    b.HasOne("AppleUsed.DAL.Entities.Purchase", "Purchased")
-                        .WithMany()
-                        .HasForeignKey("PurchasedId");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.AdPhotos", b =>
@@ -567,13 +576,10 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.Purchase", b =>
                 {
-                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
-                        .WithMany()
-                        .HasForeignKey("AdId");
-
-                    b.HasOne("AppleUsed.DAL.Entities.Services", "Services")
-                        .WithMany()
-                        .HasForeignKey("ServicesId");
+                    b.HasOne("AppleUsed.DAL.Entities.Ad")
+                        .WithMany("Purhcases")
+                        .HasForeignKey("AdId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

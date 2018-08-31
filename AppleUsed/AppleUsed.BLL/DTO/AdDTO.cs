@@ -71,6 +71,9 @@ namespace AppleUsed.BLL.DTO
 
         public List<PurchaseDTO> Purhcases { get; set; } 
 
+        public int AdStatusId { get; set; }
+        public bool IsModerate { get; set; }
+
         public DateTime LastUpAd { get; set; }
         public ApplicationUser User { get; set; }
     }

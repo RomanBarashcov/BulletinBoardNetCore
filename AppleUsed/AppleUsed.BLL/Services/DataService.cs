@@ -42,7 +42,10 @@ namespace AppleUsed.BLL.Services
                 DateCreated = DateTime.Now,
                 DateUpdated = DateTime.Now,
                 City = _db.Cities.Where(x => x.CityId == selectedCityId).FirstOrDefault(),
-                Characteristics = characteristics
+                Characteristics = characteristics,
+                IsModerate = ad.IsModerate,
+                AdStatusId = ad.AdStatusId
+                
             };
 
             return Ad;

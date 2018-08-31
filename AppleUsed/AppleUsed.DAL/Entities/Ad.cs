@@ -33,6 +33,9 @@ namespace AppleUsed.DAL.Entities
         [ForeignKey("ApplicationUserId")]
         public ApplicationUser ApplicationUser { get; set; }
 
+        public int AdStatusId { get; set; }
+        public bool IsModerate { get; set; }
+
         public Ad()
         {
             Photos = new List<AdPhotos>();

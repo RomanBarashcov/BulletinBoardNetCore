@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AppleUsed.BLL.DTO;
+using AppleUsed.BLL.Enums;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Helpers;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
@@ -39,7 +40,7 @@ namespace AppleUsed.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int adStatusId = 1)
         {
             string userName = User.Identity.Name;
 
@@ -47,7 +48,18 @@ namespace AppleUsed.Web.Controllers
             if (!getAdsByUserResult.Succedeed)
                 return View(new List<AdDTO>());
 
-            return View(getAdsByUserResult.Property.ToList());
+            List<AdDTO> ads = new List<AdDTO>();
+
+            if(adStatusId == (int)AdStatuses.InProgress || adStatusId == (int)AdStatuses.Deactivated)
+            {
+                ads = getAdsByUserResult.Property.Where(x => x.AdStatusId == adStatusId).ToList();
+            }
+            else
+            {
+                ads = getAdsByUserResult.Property.Where(x => x.AdStatusId == adStatusId && x.IsModerate).ToList();
+            }
+
+            return View(ads);
         }
 
         [HttpGet]
@@ -131,12 +143,28 @@ namespace AppleUsed.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> ActivationAd(int? adId = 0)
+        {
+            int id = adId ?? 0;
+            if (id > 0)
+            {
+                var result = await _adService.ActivationAd(id);
+                if (!result.Succedeed)
+                {
+                    ModelState.AddModelError("", result.Message);
+                }
+            }
+
+            return RedirectToActionPermanent("Index");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> DeactivationAd(int? adId = 0)
         {
             int id = adId ?? 0;
             if (id > 0)
             {
-                var result = await _adService.DeleteAd(id);
+                var result = await _adService.DeactivationAd(id);
                 if (!result.Succedeed)
                 {
                     ModelState.AddModelError("", result.Message);
