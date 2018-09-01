@@ -14,6 +14,7 @@ namespace AppleUsed.BLL.Interfaces
     {
         Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAds();
         Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByProductTypeId(int productTypeId);
+        OperationDetails<IQueryable<AdDTO>> GetActiveAdsByUserId(string userId);
         Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUserId(string userId);
         Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUser(string userName);
         Task<OperationDetails<AdDTO>> GetAdById(int id);

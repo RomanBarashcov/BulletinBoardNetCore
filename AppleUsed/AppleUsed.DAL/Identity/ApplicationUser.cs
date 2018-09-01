@@ -9,6 +9,8 @@ namespace AppleUsed.DAL.Identity
     public class ApplicationUser : IdentityUser
     {
         public List<Ad> Ads { get; set; }
+        public DateTime RegistrationDate { get; set; }
+
         public ApplicationUser()
         {
            Ads = new List<Ad>();

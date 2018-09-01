@@ -19,6 +19,9 @@ namespace AppleUsed.Web.Filters
 
         public IQueryable<AdDTO> SelectedOptionChanged()
         {
+            if(_filteredbySelectOption == null)
+                return _query;
+
             switch (_filteredbySelectOption)
             {
                 case "1":

@@ -19,7 +19,7 @@
 
     <div class="row">
 
-        <div class="col-lg-4 col-lg-push-8">
+        <div class="col-lg-3 col-lg-push-8">
             <div class="ad-price">
                 <strong> @Model.AddDetails.Price .грн</strong>
             </div>
@@ -27,17 +27,17 @@
             <div class="btn-block">
                 @if (User.Identity.Name != Model.AddDetails.User.UserName)
                 {
-                <p>
-                    <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
-                    @if (!User.Identity.IsAuthenticated)
-                    {
-                        @Html.ActionLink("Написать владельцу", "Login", "Account", null, new { @class = "btn btn-lg btn-success btn-block" })
-                    }
-                    else
-                    {
-                        @Html.ActionLink("Написать владельцу", "ConversationByAdIdAndContactId", "Chat", new { adId = Model.AddDetails.AdId, contactId = Model.AddDetails.User.Id }, new { @class = "btn btn-lg btn-success btn-block" })
-                    }
-                </p>
+                    <p>
+                        <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            @Html.ActionLink("Написать владельцу", "Login", "Account", null, new { @class = "btn btn-lg btn-success btn-block" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Написать владельцу", "ConversationByAdIdAndContactId", "Chat", new { adId = Model.AddDetails.AdId, contactId = Model.AddDetails.User.Id }, new { @class = "btn btn-lg btn-success btn-block" })
+                        }
+                    </p>
                 }
                 else
                 {
@@ -47,13 +47,21 @@
                 }
             </div>
             <div class="btn-block">
-                <p>
-                    <a class="btn btn-lg btn-success btn-block" href="#">Другие объявления автора</a>
-                </p>
+                <div class="thumbnail photo">
+                    <div class="ad_location">
+                        <p><b><small class="ad_location_info"><span class="glyphicon glyphicon-map-marker"></span> г. @Model.AddDetails.SelectedCity @Model.AddDetails.SelectedCityArea  обл.</small></b></p>
+                    </div>
+                    <div class="caption">
+                        <div class="col-lg-offset-4 user_img no_photo"></div>
+                        <p>@Model.AddDetails.User.UserName</p>
+                        <p><small> на AU с @Model.AddDetails.User.RegistrationDate.Day / @Model.AddDetails.User.RegistrationDate.Month / @Model.AddDetails.User.RegistrationDate.Year </small> </p>
+                        <p><a class="btn btn-success" asp-controller="Ad" asp-action="GetActiveAdsByUserId" asp-route-id="@Model.AddDetails.User.Id">Другие объявления автора</a></p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="col-lg-8 col-lg-pull-4">
+        <div class="col-lg-8 col-lg-pull-3">
 
             <blockquote style="border-left:5px solid #5cb85c">
                 <strong class="ad-title-details"> @Model.AddDetails.Title</strong>

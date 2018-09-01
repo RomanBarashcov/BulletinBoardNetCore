@@ -46,9 +46,13 @@ namespace AppleUsed.Web.Filters
         {
             var ads = new List<AdDTO>();
 
+            int selectedProductId = _model.Filter.SelectedProductTypeId == 0 ? _model.SearchFilter.SelectedProductTypeId : 0;
             var selectedByModels = _model.Filter.ProductsModelFilters.Where(x => x.Selected).AsQueryable();
             var selectedByMemories = _model.Filter.ProductMemmories.Where(x => x.Selected).AsQueryable();
             var selectedByColors = _model.Filter.ProductsColors.Where(x => x.Selected).AsQueryable();
+
+            if (selectedByModels.Count() == 0 && selectedByColors.Count() == 0 && selectedByMemories.Count() == 0)
+                return await _adList.Where(x => x.SelectedProductTypeId == selectedProductId).ToListAsync();
 
             if (selectedByModels.Count() > 0)
             {
@@ -102,11 +106,6 @@ namespace AppleUsed.Web.Filters
 
                     ads.AddRange(byColors);
                 }   
-            }
-
-            if (selectedByModels.Count() == 0 && selectedByColors.Count() == 0 && selectedByMemories.Count() == 0)
-            {
-                ads = await _adList.Where(x => x.SelectedProductType == _model.Filter.SelectedProductType).ToListAsync();
             }
 
             return ads;

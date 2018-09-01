@@ -377,7 +377,40 @@ a {
     border-radius: 4px;
 }
 
+/* Location info in AdDetails */
 
+.ad_location {
+    background-image: url(../images/static_location_iamge.png);
+    background-repeat: no-repeat;
+    height: 100px;
+    background-position: 50% 50%;
+}
+
+.ad_location_info {
+    background-color: white;
+    padding: 5px;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+    border: 1px solid #5cb85c;
+    border-radius: 4px;
+}
+
+.user_img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 2px solid silver;
+    object-fit: cover;
+}
+
+.no_photo {
+    background-image: url(../images/no-photo.jpg);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+
+/* END Location info in AdDetails */
 .dot {
     height: 30px;
     width: 30px;
@@ -443,11 +476,11 @@ a {
     margin-bottom: 0px;
 }
 
-        .chat__body {
-            background-color: #e6e6e6;
-            width: 100%;
+.chat__body {
+    background-color: #e6e6e6;
+    width: 100%;
 
-        }
+}
 
 .chat__type__body .chat__type {
     background-color: #e6e6e6;
@@ -474,12 +507,12 @@ a {
     display: inline-block;
 }
 
-            .chat__body .chat__type__body .chat__type #sendMessage {
-                position: relative;
-                display: inline-block;
-                top: -15px;
-                width: 14%;
-            }
+    .chat__body .chat__type__body .chat__type #sendMessage {
+        position: relative;
+        display: inline-block;
+        top: -15px;
+        width: 14%;
+    }
 
     .chat__body .typing_display__open {
         bottom: 30px;

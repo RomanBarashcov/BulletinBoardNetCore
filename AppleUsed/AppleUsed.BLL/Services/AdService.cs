@@ -50,7 +50,7 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = (from ad in _db.Ads.Where(x => x.AdStatusId == 1 && x.IsModerate)
+                var ads = (from ad in _db.Ads.Where(x => x.AdStatusId == (int)AdStatuses.Activated && x.IsModerate)
                            join au in _db.AdUps on ad.AdId equals au.AdId
                            join c in _db.Cities on ad.City.CityId equals c.CityId
                            join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
@@ -161,7 +161,9 @@ namespace AppleUsed.BLL.Services
                                         User = new ApplicationUser
                                         {   Id = u.Id,
                                             Email = u.Email,
-                                            UserName = u.UserName
+                                            UserName = u.UserName,
+                                            PhoneNumber = u.PhoneNumber,
+                                            RegistrationDate = u.RegistrationDate
                                         }
 
                                     }).FirstOrDefaultAsync();
@@ -310,6 +312,74 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
+        public OperationDetails<IQueryable<AdDTO>> GetActiveAdsByUserId(string userId)
+        {
+            OperationDetails<IQueryable<AdDTO>> operationDetails =
+              new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+
+            if (string.IsNullOrEmpty(userId))
+                return operationDetails;
+
+            try
+            {
+                var ads = (from ad in _db.Ads.Where(x => x.AdStatusId == (int)AdStatuses.Activated && x.IsModerate)
+                           join au in _db.AdUps on ad.AdId equals au.AdId
+                           join c in _db.Cities on ad.City.CityId equals c.CityId
+                           join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
+                           join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
+                           join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.Ad.AdId into aPhotos
+                           join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
+                           join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
+                           join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
+                           join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
+                           join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
+                           join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
+                           join u in _db.Users on ad.ApplicationUser.Id equals u.Id
+                           where u.Id == userId
+                           select new AdDTO
+                           {
+                               AdId = ad.AdId,
+                               Title = ad.Title,
+                               Description = ad.Description,
+                               Price = ad.Price,
+                               DateCreated = ad.DateCreated,
+                               DateUpdated = ad.DateUpdated,
+                               SelectedCityArea = ca.Name,
+                               SelectedCity = c.Name,
+                               PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),
+                               AdViews = av.SumViews,
+                               SelectedProductType = pt.Name,
+                               SelectedProductTypeId = pt.ProductTypesId,
+                               SelectedProductModel = pm.Name,
+                               SelectedProductModelId = pm.ProductModelsId,
+                               SelectedProductMemory = prm.Name,
+                               SelectedProductMemoryId = prm.ProductMemoriesId,
+                               SelectedProductColor = pc.Name,
+                               SelectedProductColorId = pc.ProductColorsId,
+                               SelectedProductStates = prs.Name,
+                               SelectedProductStatesId = prs.ProductStatesId,
+                               LastUpAd = au.LastUp,
+                               User = new ApplicationUser
+                               {
+                                   Id = u.Id,
+                                   Email = u.Email,
+                                   UserName = u.UserName,
+                                   PhoneNumber = u.PhoneNumber,
+                                   RegistrationDate = u.RegistrationDate
+                               }
+
+                           }).OrderByDescending(x => x.LastUpAd);
+
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+            }
+            catch (Exception ex)
+            {
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+            }
+
+            return operationDetails;
+        }
+
         public async Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUserId(string userId)
         {
             OperationDetails<IQueryable<AdDTO>> operationDetails =
@@ -357,7 +427,14 @@ namespace AppleUsed.BLL.Services
                                SelectedProductStates = prs.Name,
                                SelectedProductStatesId = prs.ProductStatesId,
                                LastUpAd = au.LastUp,
-                               User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
+                               User = new ApplicationUser
+                               {
+                                   Id = u.Id,
+                                   Email = u.Email,
+                                   UserName = u.UserName ,
+                                   PhoneNumber = u.PhoneNumber,
+                                   RegistrationDate = u.RegistrationDate
+                               }
 
                            }).OrderByDescending(x => x.LastUpAd);
 

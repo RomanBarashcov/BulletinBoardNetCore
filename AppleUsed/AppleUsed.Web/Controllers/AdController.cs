@@ -5,6 +5,7 @@ using AppleUsed.BLL.DTO;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Filters;
 using AppleUsed.Web.Helpers;
+using AppleUsed.Web.Models.ViewModels.AccountViewModels;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,6 +18,7 @@ namespace AppleUsed.Web.Controllers
     {
         private readonly IAdService _adService;
         private readonly PrepearingModel _prepearingModel;
+        private readonly AdFilter _adFilter;
         private readonly ICityService _cityService;
         private readonly IProductModelsService _productModelsService;
         private readonly IAdViewsService _adViewsService;
@@ -29,6 +31,7 @@ namespace AppleUsed.Web.Controllers
         {
             _adService = adService;
             _prepearingModel = new PrepearingModel(_adService);
+            _adFilter = new AdFilter(_prepearingModel);
             _cityService = cityService;
             _productModelsService = productModelsService;
             _adViewsService = adViewsService;
@@ -43,32 +46,22 @@ namespace AppleUsed.Web.Controllers
             if (!result.Succedeed)
                 return View(model);
 
-            IQueryable<AdDTO> adList = result.Property;
+            IQueryable<AdDTO> adQueryResult = result.Property;
+            adQueryResult = await _adFilter.FilteringData(titleFilter, adType, adQueryResult, model);
 
-            if(model.SortViewModel != null)
-                adList = new SelectedOptionFilter(model.SortViewModel.SelectedOptionValue, adList).SelectedOptionChanged();
-
-            adList = await new CheckBoxFilter(model, adList).GetFilteredAdsData();
-            adList = new ButtonAreaFilter(adType, adList).GetFilteredAdsData();
-
-            if (!string.IsNullOrEmpty(titleFilter))
+            if (model.Filter == null)
             {
-                adList = adList.Where(x => x.Title.ToLower().Contains(titleFilter.ToLower()));
-            }
-
-            if(model.Filter == null)
-            {
-                string selectedProductType = adList.Select(a => a.SelectedProductType).FirstOrDefault();
-                model = await _prepearingModel.PrepearingAdIndexViewModel(adList, selectedProductType);
-                model.Filter.SelectedProductType = selectedProductType;
+                model = await _prepearingModel.PrepearingAdIndexViewModel(adQueryResult, model.SearchFilter.SelectedProductTypeId);
             }
             else
             {
-                model.SortViewModel.SortOptionList = _prepearingModel.GetSelectionOptionsList();
-                model.AdList = adList.ToList();
+                model.SortViewModel.SortOptionList = _prepearingModel.GetSerachSelectionOptionsList();
+                model.SearchFilter.ProductTypesOptionList = _prepearingModel.GetProductTypeSelectionOptionsList();
+                model.Filter.SelectedProductTypeId = model.SearchFilter.SelectedProductTypeId;
+                model.AdList = adQueryResult.ToList();
             }
-           
-            int count = adList.Count();
+
+            int count = model.AdList.Count();
             PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
             model.PageViewModel = pageViewModel;
             model.AdList = model.AdList.Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -154,6 +147,32 @@ namespace AppleUsed.Web.Controllers
             model.OtherAdsByAuthor = await otherAdsByAuthor.Take(5).ToListAsync();
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetActiveAdsByUserId(string id)
+        {
+            if(String.IsNullOrEmpty(id))
+                return RedirectToAction("Index");
+
+            var operationDetails = _adService.GetActiveAdsByUserId(id);
+            if(!operationDetails.Succedeed)
+                return RedirectToAction("Index");
+
+            UserAdsViewModel model = new UserAdsViewModel
+            {
+                Ads = operationDetails.Property.ToList(),
+                User = new UserDTO
+                {
+                    Id = operationDetails.Property.FirstOrDefault().User.Id,
+                    Email = operationDetails.Property.FirstOrDefault().User.Email,
+                    UserName = operationDetails.Property.FirstOrDefault().User.UserName,
+                    PhoneNumber = operationDetails.Property.FirstOrDefault().User.PhoneNumber,
+                    RegistrationDate = operationDetails.Property.FirstOrDefault().User.RegistrationDate
+                }
+            };
+
+            return View("UserActiveAds", model);
         }
 
     }

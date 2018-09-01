@@ -6,7 +6,7 @@
 }
 
 
-@await Html.PartialAsync("_SearchBarPartial")
+@await Html.PartialAsync("_SearchBarPartialSecond", Model)
 
 
 <form asp-controller="Ad" asp-action="Index" method="get" id="Filtering">
@@ -19,7 +19,7 @@
                 Цена
             </p>
 
-            <input type="hidden" asp-for="@Model.Filter.SelectedProductType" />
+            <input type="hidden" asp-for="@Model.Filter.SelectedProductTypeId" />
 
             <div class="form-group-sm">
                 <input type="text" placeholder="от" asp-for="Filter.PriceFilterFrom" class="form-control" />
@@ -109,12 +109,12 @@
 
 
 
-        function Filtering() {
+    function Filtering() {
 
-            $('#page').val("");
-            $('#Filtering').submit();
+        $('#page').val("");
+        $('#Filtering').submit();
 
-        }
+    }
 
 
 </script>

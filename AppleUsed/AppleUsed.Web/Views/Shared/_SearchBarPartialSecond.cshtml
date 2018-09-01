@@ -1,0 +1,47 @@
+﻿@model AppleUsed.Web.Models.ViewModels.AdViewModels.AdIndexViewModel
+
+<form asp-controller="Ad" asp-action="Index" method="get" id="searchForm">
+    <div class="serach-tab">
+        <div class="col-sm-1"></div>
+        <div class="row">
+
+            <div class="col-sm-3">
+
+                <input type="hidden" asp-for="SearchFilter.SelectedProductTypeId" id="SelectedProductType" />
+
+                <select asp-for="SearchFilter.SelectedProductTypeId" asp-items="Model.SearchFilter.ProductTypesOptionList" id="option" onchange="SelectedProductTypeChanged()" class="form-control">
+                    <option disabled="disabled" value="0" selected="selected">Все категории</option>
+                </select>
+
+            </div>
+
+            &nbsp;
+            <div class="col-sm-3">
+                <input class="form-control" type="text" asp-for="SearchFilter.SearchByCity" placeholder="Например: Киев" />
+            </div>
+            &nbsp;
+            <div class="col-sm-3">
+                <button class="btn btn-success btn-block">Найти!</button>
+            </div>
+            &nbsp;
+        </div>
+
+
+        <div class="col-sm-1"></div>
+    </div>
+</form>
+
+<script type="text/javascript">
+
+
+
+    function SelectedProductTypeChanged() {
+
+        let selectedValue = $('#option').val();
+
+        $('#SelectedProductType').val(selectedValue);
+
+    }
+
+
+</script>

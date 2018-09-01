@@ -1,0 +1,89 @@
+﻿@model AppleUsed.Web.Models.ViewModels.AdViewModels.UserAdsViewModel
+@{
+    ViewData["Title"] = "";
+}
+
+<div>
+    <br />
+    <h4>Другие объявления пользователя @Model.User.UserName </h4>
+    <hr />
+</div>
+
+<div class="row">
+    <div class="col-lg-3">
+
+        <div class="btn-block">
+            <div class="thumbnail photo">
+                <div class="ad_location">
+                    <p><b><small class="ad_location_info"><span class="glyphicon glyphicon-map-marker"></span> г. @Model.Ads.FirstOrDefault().SelectedCity @Model.Ads.FirstOrDefault().SelectedCityArea  обл.</small></b></p>
+                </div>
+                <div class="caption">
+                    <div class="col-lg-offset-4 user_img no_photo"></div>
+                    <p>@Model.User.UserName</p>
+                    <p><small> на AU с @Model.User.RegistrationDate.Day / @Model.User.RegistrationDate.Month / @Model.User.RegistrationDate.Year </small> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ad-list col-lg-9">
+
+        @{ foreach (var item in Model.Ads)
+            {
+
+                <ul>
+                    <li>
+                        <div class="row">
+
+                            <div class="col-lg-3 photo">
+
+                                <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@item.AdId">
+                                    <img style='max-width:170px; max-height:130px;' src="@item.PhotosSmallSizeList.FirstOrDefault()" />
+                                </a>
+
+                            </div>
+
+                            <div class="col-lg-6">
+
+                                <p>
+                                    <a class="ad-title-text" asp-controller="Ad" asp-action="AdDetails" asp-route-id="@item.AdId">
+                                        @item.Title
+                                    </a>
+                                </p>
+
+                                <div class="location">
+                                    <p>
+                                        <span class="glyphicon glyphicon-map-marker"></span>г. @item.SelectedCity |
+                                        <span class="glyphicon glyphicon-refresh"></span> @item.DateUpdated |
+                                        <b>Просмотров : </b>@item.AdViews <span class="glyphicon glyphicon-eye-open"></span>
+                                    </p>
+                                </div>
+
+                                <div class="ad-description">
+                                    @if (item.Description.Length < 100)
+                                    {
+                                        <span>@item.Description.Substring(0, item.Description.Length) ..</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.Description.Substring(0, 100) ..</span>
+                                    }
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-3 ad-price-text">
+                                <span>
+                                    <b>@item.Price  .грн</b>
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <hr />
+
+            }
+
+        }
+    </div>
+</div>
