@@ -12,23 +12,25 @@ namespace AppleUsed.BLL.Services
     public class ServicesService : IServicesService
     {
         private readonly AppDbContext _db;
+        private readonly IServiecActiveTimeService _serviecActiveTimeService;
 
-        public ServicesService(AppDbContext db)
+        public ServicesService(AppDbContext db, IServiecActiveTimeService serviecActiveTimeService)
         {
             _db = db;
+            _serviecActiveTimeService = serviecActiveTimeService;
         }
 
         public IQueryable<ServiceDTO> GetAllServices()
         {
-            var services = _db.Services.Select(x=> 
-            new ServiceDTO
-            {
-                ServicesId = x.ServicesId,
-                Name = x.Name,
-                Description = x.Description,
-                Cost = x.Cost,
-                DaysOfActiveService = x.DaysOfActiveService
-            });
+            var services = (from s in _db.Services
+                                join sa in _db.ServiceActiveTimes on s.ServicesId equals sa.ServiceId into result
+                                select new ServiceDTO
+                                {
+                                    ServicesId = s.ServicesId,
+                                    Name = s.Name,
+                                    Description = s.Description,
+                                    ServiceActiveTimes = result.ToList()
+                                }); 
 
             return services;
         }
@@ -41,22 +43,22 @@ namespace AppleUsed.BLL.Services
             if (id <= 0)
                 return operationDetails;
 
-            var service = await _db.Services.Where(s=>s.ServicesId == id).Select(x =>
-            new ServiceDTO
-            {
-                ServicesId = x.ServicesId,
-                Name = x.Name,
-                Description = x.Description,
-                Cost = x.Cost,
-                DaysOfActiveService = x.DaysOfActiveService
-
-            }).FirstOrDefaultAsync();
+            var service = await (from s in _db.Services.Where(x => x.ServicesId == id)
+                            join sa in _db.ServiceActiveTimes on s.ServicesId equals sa.ServiceId into result
+                            select new ServiceDTO
+                            {
+                                ServicesId = s.ServicesId,
+                                Name = s.Name,
+                                Description = s.Description,
+                                ServiceActiveTimes = result.ToList()
+                            }).FirstOrDefaultAsync();
 
             operationDetails = new OperationDetails<ServiceDTO>(true, "", service);
 
             return operationDetails;
         }
 
+       
         public async Task<OperationDetails<int>> CreateService(ServiceDTO service)
         {
             OperationDetails<int> operationDetails =
@@ -68,9 +70,7 @@ namespace AppleUsed.BLL.Services
             DAL.Entities.Services newServices = new DAL.Entities.Services
             {
                 Name = service.Name,
-                Description = service.Description,
-                Cost = service.Cost,
-                DaysOfActiveService = service.DaysOfActiveService
+                Description = service.Description
             };
 
             try
@@ -78,11 +78,16 @@ namespace AppleUsed.BLL.Services
                 await _db.AddAsync(newServices);
                 await _db.SaveChangesAsync();
                 operationDetails = new OperationDetails<int>(true, "", newServices.ServicesId);
+                service.ServicesId = newServices.ServicesId;
             }
             catch(Exception ex)
             {
                 operationDetails = new OperationDetails<int>(false, ex.Message, 0);
             }
+
+            var createServiceActiveTimeResult = await _serviecActiveTimeService.CreateServiceActiveTime(service);
+            if (!createServiceActiveTimeResult.Succedeed)
+                return createServiceActiveTimeResult;
 
             return operationDetails;
         }
@@ -99,10 +104,12 @@ namespace AppleUsed.BLL.Services
             if (oldServices == null)
                 return operationDetails;
 
+            var updateServiceActiveTimeResult = await _serviecActiveTimeService.UpdateServiceActiveTime(service);
+            if (!updateServiceActiveTimeResult.Succedeed)
+                return updateServiceActiveTimeResult;
+
             oldServices.Name = service.Name;
             oldServices.Description = service.Description;
-            oldServices.Cost = service.Cost;
-            oldServices.DaysOfActiveService = service.DaysOfActiveService;
           
             try
             {

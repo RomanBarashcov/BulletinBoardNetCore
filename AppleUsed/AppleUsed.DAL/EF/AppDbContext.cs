@@ -46,6 +46,7 @@ namespace AppleUsed.DAL.Identity
         public DbSet<City> Cities { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<Services> Services { get; set; }
+        public DbSet<ServiceActiveTime> ServiceActiveTimes { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<ConversationMessage> ConversationMessages { get; set; }
 

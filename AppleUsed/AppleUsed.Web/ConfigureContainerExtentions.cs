@@ -89,8 +89,11 @@ namespace AppleUsed.Web
                     new ProductModelService(dbContext),
                     new AdUpService(dbContext))));
 
+            serviceCollection.AddTransient<IServiecActiveTimeService>(
+                s => new ServiecActiveTimeService(dbContext));
+
             serviceCollection.AddTransient<IServicesService>(
-                s => new ServicesService(new AppDbContext(optionsBuilder.Options)));
+                s => new ServicesService(dbContext, new ServiecActiveTimeService(dbContext)));
         }
 
         /// <summary>

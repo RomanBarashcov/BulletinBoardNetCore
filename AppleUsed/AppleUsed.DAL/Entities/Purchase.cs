@@ -17,6 +17,7 @@ namespace AppleUsed.DAL.Entities
         public bool IsActive { get; set; }
 
         public int ServicesId { get; set; }
+        public int ServiceActiveTimeId { get; set; }
         public int AdId { get; set; }
 
     }

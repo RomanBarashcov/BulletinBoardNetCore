@@ -25,6 +25,7 @@ namespace AppleUsed.BLL.DTO
 
         [Required]
         public int ServicesId { get; set; }
+        public int ServiceActiveTimeId { get; set; }
 
         [Required]
         public int AdId { get; set; }

@@ -16,15 +16,18 @@ namespace AppleUsed.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         public readonly IPurchasesService _purchasesService;
         public readonly IServicesService _servicesService;
+        public readonly IServiecActiveTimeService _serviecActiveTimeService;
 
         public ManagePurchasesController(
             UserManager<ApplicationUser> userManager,
             IPurchasesService purchasesService,
-            IServicesService servicesService)
+            IServicesService servicesService,
+            IServiecActiveTimeService serviecActiveTimeService)
         {
             _userManager = userManager;
             _purchasesService = purchasesService;
             _servicesService = servicesService;
+            _serviecActiveTimeService = serviecActiveTimeService;
         }
 
         [HttpGet]
@@ -92,23 +95,25 @@ namespace AppleUsed.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreatePurchase(int adId, int serviceId)
+        public async Task<IActionResult> CreatePurchase(int adId, int serviceId, int serviceActiveId)
         {
             var model = new PurchaseDetailsViewModel()
             {
                 PurhcaseDetail = new PurchaseDTO(), SelectedService = new ServiceDTO()
             };
 
-            var operationDetails = await _servicesService.GetServiceById(serviceId);
-            if (!operationDetails.Succedeed)
-                return View("Details", model.StatusMessage = operationDetails.Message);
+            var serviceActiveTimes = await _serviecActiveTimeService.GetServiceActiveTimesById(serviceActiveId);
+            if (!serviceActiveTimes.Succedeed)
+                return View("Details", model.StatusMessage = serviceActiveTimes.Message);
+
+            var service = await _servicesService.GetServiceById(serviceActiveTimes.Property.ServiceId);
 
             model.PurhcaseDetail.AdId = adId;
             model.PurhcaseDetail.StartDateService = DateTime.Now;
-            model.PurhcaseDetail.EndDateService = DateTime.Now.AddDays(operationDetails.Property.DaysOfActiveService);
+            model.PurhcaseDetail.EndDateService = DateTime.Now.AddDays(serviceActiveTimes.Property.DaysOfActiveService);
             model.PurhcaseDetail.ServicesId = serviceId;
-            model.PurhcaseDetail.TotalCost = operationDetails.Property.Cost;
-            model.SelectedService = operationDetails.Property;
+            model.PurhcaseDetail.TotalCost = serviceActiveTimes.Property.Cost;
+            model.SelectedService = service.Property;
 
             return View("Details", model);
         }
