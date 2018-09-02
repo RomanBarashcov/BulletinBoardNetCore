@@ -18,7 +18,7 @@ namespace AppleUsed.Web.Helpers
             _prepearingModel = prepearingModel;
         }
 
-        public async Task<IQueryable<AdDTO>> FilteringData(string titleFilter, string adType, IQueryable<AdDTO> adQueryResult, AdIndexViewModel model)
+        public async Task<IQueryable<AdDTO>> FilteringData(string titleFilter, string productState, IQueryable<AdDTO> adQueryResult, AdIndexViewModel model)
         {
             if (!string.IsNullOrEmpty(titleFilter))
             {
@@ -34,9 +34,26 @@ namespace AppleUsed.Web.Helpers
                 adQueryResult = new SelectedOptionFilter(model.SortViewModel.SelectedOptionValue, adQueryResult).SelectedOptionChanged();
 
             adQueryResult = await new CheckBoxFilter(model, adQueryResult).GetFilteredAdsData();
-            adQueryResult = new ButtonAreaFilter(adType, adQueryResult).GetFilteredAdsData();
+            adQueryResult = new ButtonAreaFilter(productState, adQueryResult).GetFilteredAdsData();
 
             return adQueryResult;
+        }
+
+        public async Task<AdIndexViewModel> PrepearingFilter(IQueryable<AdDTO> adQueryResult, AdIndexViewModel model)
+        {
+            if (model.Filter == null)
+            {
+                model = await _prepearingModel.PrepearingAdIndexViewModel(adQueryResult, model.SearchFilter.SelectedProductTypeId);
+            }
+            else
+            {
+                model.SortViewModel.SortOptionList = _prepearingModel.GetSerachSelectionOptionsList();
+                model.SearchFilter.ProductTypesOptionList = _prepearingModel.GetProductTypeSelectionOptionsList();
+                model.Filter.SelectedProductTypeId = model.SearchFilter.SelectedProductTypeId;
+                model.AdList = adQueryResult.ToList();
+            }
+
+            return model;
         }
     }
 }

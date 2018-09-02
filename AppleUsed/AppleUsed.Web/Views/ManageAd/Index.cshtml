@@ -19,10 +19,10 @@
     <hr />
 
     <div>
-        <div class="btn-group" role="group" aria-label="...">
-            <a class="btn btn-default" asp-controller="ManageAd" asp-action="Index" asp-route-adStatusId="1">Aктивные</a>
-            <a class="btn btn-default" asp-controller="ManageAd" asp-action="Index" asp-route-adStatusId="2">Ожидающие</a>
-            <a class="btn btn-default" asp-controller="ManageAd" asp-action="Index" asp-route-adStatusId="3">Неактивные</a>
+        <div class="btn-group" role="group">
+            <a class="btn btn-default" asp-controller="ManageAd" asp-action="Index" asp-route-adStatusId="1" id="Active">Aктивные</a>
+            <a class="btn btn-default" asp-controller="ManageAd" asp-action="Index" asp-route-adStatusId="2" id="InProgress">Ожидающие</a>
+            <a class="btn btn-default" asp-controller="ManageAd" asp-action="Index" asp-route-adStatusId="3" id="Deactivated">Неактивные</a>
         </div>
     </div>
 
@@ -148,3 +148,26 @@
     }
 
 </div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+            let selectedNavVal = @Model.FirstOrDefault().AdStatusId
+
+            switch (selectedNavVal) {
+                case 1:
+                    $('#Active').addClass('active');
+                    break;
+                case 2:
+                    $('#InProgress').addClass('active');
+                    break;
+                case 3:
+                    $('#Deactivated').addClass('active');
+                    break;
+                default:
+                    break;
+
+            }
+    });
+
+</script>

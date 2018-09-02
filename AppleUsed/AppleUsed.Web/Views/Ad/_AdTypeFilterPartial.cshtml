@@ -8,12 +8,12 @@
     <div class="row">
 
         <div class="col-lg-3">
-            <input type="hidden" name="adType" id="FilteringValue" />
+            <input type="hidden" name="productState" id="FilteringValue" />
             <div class="btn-group" role="group">
 
-                <button onclick="FilteringByAllProducts()" class="btn btn-default">Все</button>
-                <button onclick="FilteringByUsedProducts()" class="btn btn-default">Б/У</button>
-                <button onclick="FilteringByNewProducts()" class="btn btn-default">Новые</button>
+                <button onclick="FilteringByAllProducts()" class="btn btn-default" id="All">Все</button>
+                <button onclick="FilteringByUsedProducts()" class="btn btn-default" id="Used">Б/У</button>
+                <button onclick="FilteringByNewProducts()" class="btn btn-default" id="New">Новые</button>
 
             </div>
         </div>
@@ -35,12 +35,32 @@
 
 <script type="text/javascript">
 
-    var All = "Все";
-    var Used = "Б/У";
-    var New = "Новые";
+    let All = "Все";
+    let Used = "Б/У";
+    let New = "Новые";
+
+    @*$(document).ready(function () {
+
+
+        let selectedNavVal = @Model.SelectedProductState
+
+        switch (selectedNavVal) {
+            case All:
+                $('#All').addClass('active');
+                break;
+            case Used:
+                $('#Used').addClass('active');
+                break;
+            case New:
+                $('#New').addClass('active');
+                break;
+            default:
+                break;
+
+        }
+    });*@
 
     function FilteringByAllProducts() {
-
         $('#page').val("");
         $('#FilteringValue').val(All);
         $.get("/Index", { model: @Model });

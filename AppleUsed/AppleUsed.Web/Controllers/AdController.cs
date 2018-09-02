@@ -38,7 +38,7 @@ namespace AppleUsed.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string titleFilter, string cityFilter, string adType, AdIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(string titleFilter, string cityFilter, string productState, AdIndexViewModel model, int page = 1)
         {
             int pageSize = 5;
 
@@ -47,19 +47,9 @@ namespace AppleUsed.Web.Controllers
                 return View(model);
 
             IQueryable<AdDTO> adQueryResult = result.Property;
-            adQueryResult = await _adFilter.FilteringData(titleFilter, adType, adQueryResult, model);
+            adQueryResult = await _adFilter.FilteringData(titleFilter, productState, adQueryResult, model);
+            model = await _adFilter.PrepearingFilter(adQueryResult, model);
 
-            if (model.Filter == null)
-            {
-                model = await _prepearingModel.PrepearingAdIndexViewModel(adQueryResult, model.SearchFilter.SelectedProductTypeId);
-            }
-            else
-            {
-                model.SortViewModel.SortOptionList = _prepearingModel.GetSerachSelectionOptionsList();
-                model.SearchFilter.ProductTypesOptionList = _prepearingModel.GetProductTypeSelectionOptionsList();
-                model.Filter.SelectedProductTypeId = model.SearchFilter.SelectedProductTypeId;
-                model.AdList = adQueryResult.ToList();
-            }
 
             int count = model.AdList.Count();
             PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);

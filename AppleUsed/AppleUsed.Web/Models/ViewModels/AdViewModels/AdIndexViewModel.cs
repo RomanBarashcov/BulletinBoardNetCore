@@ -21,5 +21,6 @@ namespace AppleUsed.Web.Models.ViewModels.AdViewModels
 
         public PageViewModel PageViewModel { get; set; }
 
+        public string SelectedProductState { get; set; }
     }
 }

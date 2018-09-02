@@ -2,7 +2,7 @@
 <nav class="nav_menu">
     <ul>
         <li class="nav_menu_item iphone">
-            <a asp-controller="Ad" asp-action="Index" asp-route-titleFilter="iphone">
+            <a asp-controller="Ad" asp-action="Index" asp-route-model.SearchFilter.SelectedProductTypeId="1">
                 <span class="inner_block">
                     <span>iPhone</span>
                 </span>
@@ -10,7 +10,7 @@
         </li>
 
         <li class="nav_menu_item ipad">
-            <a asp-controller="Ad" asp-action="Index" asp-route-titleFilter="ipad">
+            <a asp-controller="Ad" asp-action="Index" asp-route-model.SearchFilter.SelectedProductTypeId="2">
                 <span class="inner_block">
                     <span>iPad</span>
                 </span>
@@ -18,7 +18,7 @@
         </li>
 
         <li class="nav_menu_item imac_macbook">
-            <a asp-controller="Ad" asp-action="Index" asp-route-titleFilter="mac">
+            <a asp-controller="Ad" asp-action="Index" asp-route-model.SearchFilter.SelectedProductTypeId="3">
                 <span class="inner_block">
                     <span>Mac и Macbook</span>
 
@@ -26,7 +26,7 @@
             </a>
         </li>
         <li class="nav_menu_item apple">
-            <a asp-controller="Ad" asp-action="Index">
+            <a asp-controller="Ad" asp-route-model.SearchFilter.SelectedProductTypeId="7">
                 <span class="inner_block">
                     <span>Apple товары</span>
 
