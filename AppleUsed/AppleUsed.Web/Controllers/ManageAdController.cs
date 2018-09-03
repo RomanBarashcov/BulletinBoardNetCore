@@ -19,7 +19,7 @@ namespace AppleUsed.Web.Controllers
         private readonly IAdViewsService _adViewsService;
         private readonly ICityService _cityService;
         private readonly IProductModelsService _productModelsService;
-        private readonly PrepearingModel _prepearingModel;
+        private readonly PrepearingModelHelper _prepearingModel;
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -36,7 +36,7 @@ namespace AppleUsed.Web.Controllers
             _adViewsService = adViewsService;
             _cityService = cityService;
             _productModelsService = productModelsService;
-            _prepearingModel = new PrepearingModel(_adService);
+            _prepearingModel = new PrepearingModelHelper(_adService);
         }
 
         [HttpGet]

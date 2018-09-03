@@ -83,10 +83,13 @@
                     <div class="col-lg-4">
                         <p><b>Название : </b>@item.Name</p>
                         <p>
-                            <b>Стоимость : </b>@item.Cost <span class="glyphicon glyphicon-usd"></span>
+                            @*<b>Стоимость : </b>@item.Cost <span class="glyphicon glyphicon-usd"></span>*@
                         </p>
                         <p>
-                            <b>Время действия : </b> @item.DaysOfActiveService дней. <span class="glyphicon glyphicon-calendar"></span>
+                            <b>Время действия дней : </b><span class="glyphicon glyphicon-calendar"></span>
+                            <select asp-for="Service" asp-items="item.SelectListServiceActiveDays" class="form-control">
+                                <option selected="selected" disabled="disabled"> </option>
+                            </select>
                         </p>
                     </div>
 

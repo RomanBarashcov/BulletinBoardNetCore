@@ -1,4 +1,5 @@
 ﻿using AppleUsed.DAL.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,5 +20,8 @@ namespace AppleUsed.BLL.DTO
         public string Description { get; set; }
 
         public List<ServiceActiveTime> ServiceActiveTimes { get; set; }
+
+        public int SelectedServiceActiveDaysId { get; set; }
+        public SelectList SelectListServiceActiveDays { get; set; }
     }
 }

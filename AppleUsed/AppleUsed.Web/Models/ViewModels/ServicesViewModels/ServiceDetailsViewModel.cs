@@ -10,5 +10,8 @@ namespace AppleUsed.Web.Models.ViewModels.ServicesViewModels
     public class ServiceDetailsViewModel : BaseServicesViewModel
     {
         public ServiceDTO ServiceDetail { get; set; }
+        public ServiceActiveTimesDTO ServiceActiveSevenDays { get; set; }
+        public ServiceActiveTimesDTO ServiceActiveTwoWeeks { get; set; }
+        public ServiceActiveTimesDTO ServiceActiveMonth { get; set; }
     }
 }

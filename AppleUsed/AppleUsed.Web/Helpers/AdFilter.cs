@@ -11,9 +11,9 @@ namespace AppleUsed.Web.Helpers
 {
     public class AdFilter
     {
-        private readonly PrepearingModel _prepearingModel;
+        private readonly PrepearingModelHelper _prepearingModel;
 
-        public AdFilter(PrepearingModel prepearingModel)
+        public AdFilter(PrepearingModelHelper prepearingModel)
         {
             _prepearingModel = prepearingModel;
         }

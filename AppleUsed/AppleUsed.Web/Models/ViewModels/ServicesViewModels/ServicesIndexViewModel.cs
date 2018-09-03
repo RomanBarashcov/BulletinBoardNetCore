@@ -1,4 +1,5 @@
 ﻿using AppleUsed.BLL.DTO;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace AppleUsed.Web.Models.ViewModels.ServicesViewModels
     public class ServicesIndexViewModel : BaseServicesViewModel
     {
         public AdDTO Ad { get; set; }
-        public IEnumerable<ServiceDTO> Services { get; set; }
+        public List<ServiceDTO> Services { get; set; }
         public int SelectedAdId { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace AppleUsed.Web.Controllers
     public class AdController : Controller
     {
         private readonly IAdService _adService;
-        private readonly PrepearingModel _prepearingModel;
+        private readonly PrepearingModelHelper _prepearingModel;
         private readonly AdFilter _adFilter;
         private readonly ICityService _cityService;
         private readonly IProductModelsService _productModelsService;
@@ -30,7 +30,7 @@ namespace AppleUsed.Web.Controllers
             IAdViewsService adViewsService)
         {
             _adService = adService;
-            _prepearingModel = new PrepearingModel(_adService);
+            _prepearingModel = new PrepearingModelHelper(_adService);
             _adFilter = new AdFilter(_prepearingModel);
             _cityService = cityService;
             _productModelsService = productModelsService;

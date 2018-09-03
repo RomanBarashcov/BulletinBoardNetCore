@@ -2,6 +2,7 @@
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Models.ViewModels.AccountViewModels;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
+using AppleUsed.Web.Models.ViewModels.ServicesViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.Web.Helpers
 {
-    public class PrepearingModel 
+    public class PrepearingModelHelper 
     {
         private readonly IAdService _adService;
 
-        public PrepearingModel(IAdService adService)
+        public PrepearingModelHelper(IAdService adService)
         {
             _adService = adService;
         }
@@ -146,6 +147,61 @@ namespace AppleUsed.Web.Helpers
             };
 
             return new SelectList(searchOptions, "ValueOption", "Name");
+        }
+
+
+        public ServiceDetailsViewModel ConfigServiceDetailsViewModel(ServiceDetailsViewModel model)
+        {
+            model.ServiceActiveSevenDays = new ServiceActiveTimesDTO();
+            model.ServiceActiveTwoWeeks = new ServiceActiveTimesDTO();
+            model.ServiceActiveMonth = new ServiceActiveTimesDTO();
+
+            model.ServiceActiveSevenDays = GetServiceActiveTimeDTOByDayActiveFromList(7, model);
+            model.ServiceActiveTwoWeeks = GetServiceActiveTimeDTOByDayActiveFromList(14, model);
+            model.ServiceActiveMonth = GetServiceActiveTimeDTOByDayActiveFromList(30, model);
+
+            return model;
+        }
+
+        private ServiceActiveTimesDTO GetServiceActiveTimeDTOByDayActiveFromList(int serviceActiveDay, ServiceDetailsViewModel model)
+        {
+            var serviceActiveTimeList = model.ServiceDetail.ServiceActiveTimes;
+            var serviceActiveTimeDto = serviceActiveTimeList.Where(x => x.DaysOfActiveService == serviceActiveDay)
+                    .Select(x => new ServiceActiveTimesDTO
+                    {
+
+                        ServiceActiveTimeId = x.ServiceActiveTimeId,
+                        Cost = x.Cost,
+                        DaysOfActiveService = x.DaysOfActiveService,
+                        ServiceId = x.ServiceId
+
+                    }).FirstOrDefault();
+
+            return serviceActiveTimeDto;
+        }
+
+        public ServicesIndexViewModel ConfigServicesIndexViewModel(ServicesIndexViewModel model)
+        {
+
+            for(int s = 0; s <= model.Services.Count() - 1; s++)
+            {
+                List<SelectOption> serviceActiveDaysOptions = new List<SelectOption>();
+
+                for (int sa = 0; sa <= model.Services[s].ServiceActiveTimes.Count() - 1; sa++)
+                {
+                    serviceActiveDaysOptions.Add(
+                    new SelectOption
+                    {
+                        Name = model.Services[s].ServiceActiveTimes[sa].DaysOfActiveService.ToString(),
+                        ValueOption = model.Services[s].ServiceActiveTimes[sa].ServiceActiveTimeId
+                    });
+                }
+
+                model.Services[s].SelectListServiceActiveDays = new SelectList(serviceActiveDaysOptions, "ValueOption", "Name");
+            }
+
+            return model;
+            
         }
 
     }
