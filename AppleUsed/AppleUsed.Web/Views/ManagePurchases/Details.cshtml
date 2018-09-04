@@ -28,10 +28,10 @@
         <div class="col-lg-4">
             <p><b>Название : </b>@Model.SelectedService.Name</p>
             <p>
-                <b>Сумма к оплате : </b>@Model.SelectedService.Cost <span class="glyphicon glyphicon-usd"></span>
+                <b>Сумма к оплате : </b>@Model.SelectedService.ServiceActiveTimes.Where(x => x.ServiceActiveTimeId == Model.SelectedService.SelectedServiceActiveDaysId).FirstOrDefault().Cost <span class="glyphicon glyphicon-usd"></span>
             </p>
             <p>
-                <b>Время действия : </b> @Model.SelectedService.DaysOfActiveService дней. <span class="glyphicon glyphicon-calendar"></span>
+                <b>Время действия : </b> @Model.SelectedService.ServiceActiveTimes.Where(x => x.ServiceActiveTimeId == Model.SelectedService.SelectedServiceActiveDaysId).FirstOrDefault().DaysOfActiveService дней. <span class="glyphicon glyphicon-calendar"></span>
             </p>
         </div>
 

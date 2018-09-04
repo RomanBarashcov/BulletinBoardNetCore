@@ -83,11 +83,11 @@
                     <div class="col-lg-4">
                         <p><b>Название : </b>@item.Name</p>
                         <p>
-                            @*<b>Стоимость : </b>@item.Cost <span class="glyphicon glyphicon-usd"></span>*@
+                            <b>Стоимость : </b><span id="cost"></span> <span class="glyphicon glyphicon-usd"></span>
                         </p>
                         <p>
                             <b>Время действия дней : </b><span class="glyphicon glyphicon-calendar"></span>
-                            <select asp-for="Service" asp-items="item.SelectListServiceActiveDays" class="form-control">
+                            <select asp-for="Services.Where(x=>x.ServicesId == item.ServicesId).FirstOrDefault().SelectedServiceActiveDaysId" asp-items="item.SelectListServiceActiveDays" onchange="SelectedDayChanged()" class="form-control">
                                 <option selected="selected" disabled="disabled"> </option>
                             </select>
                         </p>
@@ -121,3 +121,15 @@
     </div>
 
 </div>
+
+<script type="text/javascript">
+
+    function SelectedDayChanged() {
+
+        let selectedActiveServiceDayValue = this.value;
+
+
+        alert(selectedActiveServiceDayValue);
+    }
+
+</script>
