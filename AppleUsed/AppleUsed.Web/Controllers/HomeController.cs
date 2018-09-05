@@ -12,21 +12,21 @@ namespace AppleUsed.Web.Controllers.Home
 {
     public class HomeController : Controller
     {
-        //private readonly ISeedService _seedService;
-        //private readonly IAdService _adService;
-
-        //public HomeController(ISeedService seedService, IAdService adService)
-        //{
-        //    _seedService = seedService;
-        //    _adService = adService;
-        //}
-
+        private readonly ISeedService _seedService;
         private readonly IAdService _adService;
 
-        public HomeController(IAdService adService)
+        public HomeController(ISeedService seedService, IAdService adService)
         {
+            _seedService = seedService;
             _adService = adService;
         }
+
+        //private readonly IAdService _adService;
+
+        //public HomeController(IAdService adService)
+        //{
+        //    _adService = adService;
+        //}
 
         public async Task<IActionResult> Index()
         {

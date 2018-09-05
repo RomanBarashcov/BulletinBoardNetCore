@@ -83,13 +83,32 @@
                     <div class="col-lg-4">
                         <p><b>Название : </b>@item.Name</p>
                         <p>
-                            <b>Стоимость : </b><span id="cost"></span> <span class="glyphicon glyphicon-usd"></span>
+                            @if (item.Name == "Поднять вверх списка" || item.Name == "Выделить объявление")
+                            {
+                                <b>Стоимость : </b> @item.ServiceActiveTimes.Where(x=>x.ServiceId == item.ServicesId).FirstOrDefault().Cost <span>.грн </span><span id="cost"></span> <span class="glyphicon glyphicon-usd"></span>
+                            }
+                            else
+                            {
+                                <b>Стоимость : </b><span id="cost.@item.ServicesId"></span> <span class="glyphicon glyphicon-usd"></span>
+                            }
                         </p>
                         <p>
-                            <b>Время действия дней : </b><span class="glyphicon glyphicon-calendar"></span>
-                            <select asp-for="Services.Where(x=>x.ServicesId == item.ServicesId).FirstOrDefault().SelectedServiceActiveDaysId" asp-items="item.SelectListServiceActiveDays" onchange="SelectedDayChanged()" class="form-control">
-                                <option selected="selected" disabled="disabled"> </option>
-                            </select>
+                            @if (item.Name == "Поднять вверх списка" || item.Name == "Выделить объявление")
+                            {
+                                <b>Время действия : </b> <span>единоразовая услуга. </span><span class="glyphicon glyphicon-calendar"></span>
+                            }
+                            else
+                            {
+
+                                <b>Время действия дней : </b><span class="glyphicon glyphicon-calendar"></span>
+                                <div class="col-lg-6">
+                                    <select asp-for="Services.Where(x => x.ServicesId == item.ServicesId).FirstOrDefault().SelectedServiceActiveDaysId" asp-items="item.SelectListServiceActiveDays" id="@item.ServicesId" onchange="SelectedDayChanged(@item.ServicesId)" class="form-control">
+                                        <option selected="selected" disabled="disabled"> </option>
+                                    </select>
+                                </div>
+
+                            }
+
                         </p>
                     </div>
 
@@ -124,12 +143,31 @@
 
 <script type="text/javascript">
 
-    function SelectedDayChanged() {
+    function SelectedDayChanged(itemId) {
 
-        let selectedActiveServiceDayValue = this.value;
+        var seletorId = "#" + itemId;
+        let selectedActiveServiceDayValue = parseInt($(seletorId).val());
 
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetServicePriceById")",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: { selectedServiceActiveTimeId: selectedActiveServiceDayValue } ,
+            success: function (data) {
 
-        alert(selectedActiveServiceDayValue);
+                var costId = "#cost." + itemId;
+                $(costId).append('<b>' + data + ' .грн </b>');
+                
+                alert(data);
+            },
+            failure: function (errMsg) {
+                alert(errMsg);
+            }
+        });
+
     }
 
 </script>

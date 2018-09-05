@@ -61,7 +61,12 @@ namespace AppleUsed.DAL.EF
                 AddCitiesToChernovetckayaArea();
             }
 
-        }
+            if (!appDbContext.Services.Any())
+            {
+                InitServices();
+            }
+
+    }
 
         private void InitAdStatuses()
         {
@@ -183,7 +188,7 @@ namespace AppleUsed.DAL.EF
 
                 for (int i = 0; i <= memoryArr.Length - 1; i++)
                 {
-                    productMemories.Add( new ProductMemories { Name = memoryArr[i].ToString() });
+                    productMemories.Add(new ProductMemories { Name = memoryArr[i].ToString() });
                 }
 
                 appDbContext.AddRange(productMemories);
@@ -193,7 +198,7 @@ namespace AppleUsed.DAL.EF
 
         private void ProductIphoneModelsInit()
         {
-                string[] iPhonesArr = new string[] {
+            string[] iPhonesArr = new string[] {
                     iPhones.iPhone2G,
                     iPhones.iPhone3G,
                     iPhones.iPhone3GS,
@@ -214,16 +219,16 @@ namespace AppleUsed.DAL.EF
                     iPhones.iPhoneX
                 };
 
-                ProductTypes iPhoneProductTypeModel = appDbContext.ProductTypes.Where(x => x.Name == ProductType.iPhone).FirstOrDefault();
-                List<ProductModels> productModels = new List<ProductModels>();
+            ProductTypes iPhoneProductTypeModel = appDbContext.ProductTypes.Where(x => x.Name == ProductType.iPhone).FirstOrDefault();
+            List<ProductModels> productModels = new List<ProductModels>();
 
-                for (int i = 0; i <= iPhonesArr.Length - 1; i++)
-                {
-                    productModels.Add(new ProductModels { Name = iPhonesArr[i], ProductTypes = iPhoneProductTypeModel });
-                }
+            for (int i = 0; i <= iPhonesArr.Length - 1; i++)
+            {
+                productModels.Add(new ProductModels { Name = iPhonesArr[i], ProductTypes = iPhoneProductTypeModel });
+            }
 
-                appDbContext.AddRange(productModels);
-                appDbContext.SaveChanges();
+            appDbContext.AddRange(productModels);
+            appDbContext.SaveChanges();
         }
 
         public void ProductMacModelsInit()
@@ -1445,5 +1450,108 @@ namespace AppleUsed.DAL.EF
             appDbContext.SaveChanges();
         }
 
+        public void InitServices()
+        {
+            var pickUpToList = new Services { Name = "Поднять вверх списка", Description = "Объявление единоразово поднимается в верх списка обычных объявлений рубрики, в которой опубликовано, дата меняется на дату предоставления услуги, при этом период жизни объявления остается прежний - 30 дней. После чего объявление снова начинает опускаться вниз, когда новые объявления поступают в рубрику." };
+            var highlightAd = new Services { Name = "Выделить объявление", Description = "Объявление визуально выделится в списке рубрики ярким цветом фона на все время размещения объявления." };
+            var upToTopAds = new Services { Name = "Поднять в топ объявлений", Description = "Объявления находятся вверху страницы рубрики над списком Обычные объявления. Топ-объявление может быть заказано на 7 дней или 14 дней или 30 дней. В списке Топ-объявления одновременно доступно не более 5-ти оплаченных объявлений, которые отображаются в случайном порядке." };
+            var upToVipAds = new Services { Name = "Поднять" , Description = "VIP-объявления находятся на главной странице OLX, которую просматривают 1 500 000 раз в день. Это лучший способ привлечь максимальное количество откликов и продаж - в 20 раз больше по сравнению с обычными объявлениями. VIP-объявление можно заказать на 7 дней или 14 дней." };
+
+            appDbContext.Services.Add(pickUpToList);
+            appDbContext.SaveChanges();
+
+            List<ServiceActiveTime> serviceActiveTimesPickUpToList = new List<ServiceActiveTime>
+            {
+                new ServiceActiveTime
+                {
+                    Cost = 7,
+                    DaysOfActiveService = 0,
+                    ServiceId = pickUpToList.ServicesId
+                }
+            };
+
+            appDbContext.ServiceActiveTimes.AddRange(serviceActiveTimesPickUpToList);
+            appDbContext.SaveChanges();
+
+            appDbContext.Services.Add(highlightAd);
+            appDbContext.SaveChanges();
+
+            List<ServiceActiveTime> serviceActiveTimeshighlightAd = new List<ServiceActiveTime>
+            {
+                new ServiceActiveTime
+                {
+                    Cost = 9,
+                    DaysOfActiveService = 7,
+                    ServiceId = highlightAd.ServicesId
+                },
+                new ServiceActiveTime
+                {
+                    Cost = 15,
+                    DaysOfActiveService = 14,
+                    ServiceId = highlightAd.ServicesId
+                },
+
+                new ServiceActiveTime
+                {
+                    Cost = 24,
+                    DaysOfActiveService = 30,
+                    ServiceId = highlightAd.ServicesId
+                },
+            };
+
+            appDbContext.ServiceActiveTimes.AddRange(serviceActiveTimeshighlightAd);
+            appDbContext.SaveChanges();
+
+            appDbContext.Services.Add(upToTopAds);
+            appDbContext.SaveChanges();
+
+            List<ServiceActiveTime> serviceActiveTimesUpToTopAds = new List<ServiceActiveTime>
+            {
+                new ServiceActiveTime
+                {
+                    Cost = 24,
+                    DaysOfActiveService = 7,
+                    ServiceId = upToTopAds.ServicesId
+                },
+                new ServiceActiveTime
+                {
+                    Cost = 46,
+                    DaysOfActiveService = 14,
+                    ServiceId = upToTopAds.ServicesId
+                },
+
+                new ServiceActiveTime
+                {
+                    Cost = 78,
+                    DaysOfActiveService = 30,
+                    ServiceId = upToTopAds.ServicesId
+                },
+            };
+
+            appDbContext.ServiceActiveTimes.AddRange(serviceActiveTimesUpToTopAds);
+            appDbContext.SaveChanges();
+
+            appDbContext.Services.Add(upToVipAds);
+            appDbContext.SaveChanges();
+
+            List<ServiceActiveTime> serviceActiveTimesUpToVipAds = new List<ServiceActiveTime>
+            {
+                new ServiceActiveTime
+                {
+                    Cost = 44,
+                    DaysOfActiveService = 7,
+                    ServiceId = upToVipAds.ServicesId
+                },
+                new ServiceActiveTime
+                {
+                    Cost = 67,
+                    DaysOfActiveService = 14,
+                    ServiceId = upToVipAds.ServicesId
+                }
+            };
+
+            appDbContext.ServiceActiveTimes.AddRange(serviceActiveTimesUpToVipAds);
+            appDbContext.SaveChanges();
+        }
     }
 }

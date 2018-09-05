@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AppleUsed.BLL.DTO;
 using AppleUsed.BLL.Interfaces;
+using AppleUsed.Web.Helpers;
 using AppleUsed.Web.Models.ViewModels.ServicesViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +14,19 @@ namespace AppleUsed.Web.Controllers
     public class ManageServicesController : Controller
     {
         public readonly IServicesService _servicesService;
+        public readonly IServiecActiveTimeService _serviecActiveTimeService;
         public readonly IAdService _adService;
+        private readonly PrepearingModelHelper _prepearingModelHelper;
 
-        public ManageServicesController(IServicesService servicesService, IAdService adService)
+        public ManageServicesController(
+            IServicesService servicesService,
+            IServiecActiveTimeService serviecActiveTimeService, 
+            IAdService adService)
         {
             _servicesService = servicesService;
             _adService = adService;
+            _prepearingModelHelper = new PrepearingModelHelper(null);
+            _serviecActiveTimeService = serviecActiveTimeService;
         }
 
         [HttpGet]
@@ -33,8 +41,20 @@ namespace AppleUsed.Web.Controllers
             model.Ad = operationDetails.Property;
             model.SelectedAdId = id;
             model.Services = await _servicesService.GetAllServices().ToListAsync();
+            model = _prepearingModelHelper.ConfigServicesIndexViewModel(model);
 
             return View("Index", model);
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<JsonResult> GetServicePriceById(int selectedServiceActiveTimeId)
+        {
+            var operationDetails = await _serviecActiveTimeService.GetServiceActiveTimesById(selectedServiceActiveTimeId);
+            if (!operationDetails.Succedeed)
+                return Json(null);
+
+            return Json(operationDetails.Property.Cost);
         }
 
         public async Task<IActionResult> GetService(int id)
