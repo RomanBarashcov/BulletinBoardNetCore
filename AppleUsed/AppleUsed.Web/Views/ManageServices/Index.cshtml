@@ -80,49 +80,76 @@
             {
                 <div class="row">
 
-                    <div class="col-lg-4">
-                        <p><b>Название : </b>@item.Name</p>
-                        <p>
+                    <div class="col-lg-6"><p><b>Описание : </b>@item.Description</p></div>
+
+                    <div class="col-lg-6">
+                        <div>
+                            <p>
+                                <b>Название : </b>@item.Name
+                            </p>
+                        </div>
+                        <div>
+
                             @if (item.Name == "Поднять вверх списка" || item.Name == "Выделить объявление")
                             {
-                                <b>Стоимость : </b> @item.ServiceActiveTimes.Where(x=>x.ServiceId == item.ServicesId).FirstOrDefault().Cost <span>.грн </span><span id="cost"></span> <span class="glyphicon glyphicon-usd"></span>
+                                <p>
+                                    <b>Стоимость : </b> @item.ServiceActiveTimes.Where(x => x.ServiceId == item.ServicesId).FirstOrDefault().Cost <span>.грн </span><span id="cost"></span> <span class="glyphicon glyphicon-usd"></span>
+                                </p>
                             }
                             else
                             {
-                                <b>Стоимость : </b><span id="cost.@item.ServicesId"></span> <span class="glyphicon glyphicon-usd"></span>
+                                <p>
+                                    <b>Стоимость : </b><span id="costId_@item.ServicesId"></span> <span class="glyphicon glyphicon-usd"></span>
+                                </p>
                             }
-                        </p>
-                        <p>
-                            @if (item.Name == "Поднять вверх списка" || item.Name == "Выделить объявление")
-                            {
-                                <b>Время действия : </b> <span>единоразовая услуга. </span><span class="glyphicon glyphicon-calendar"></span>
-                            }
-                            else
-                            {
+                        </div>
+                        <div>
+                            <div class="row">
 
-                                <b>Время действия дней : </b><span class="glyphicon glyphicon-calendar"></span>
-                                <div class="col-lg-6">
-                                    <select asp-for="Services.Where(x => x.ServicesId == item.ServicesId).FirstOrDefault().SelectedServiceActiveDaysId" asp-items="item.SelectListServiceActiveDays" id="@item.ServicesId" onchange="SelectedDayChanged(@item.ServicesId)" class="form-control">
-                                        <option selected="selected" disabled="disabled"> </option>
-                                    </select>
-                                </div>
+                                @if (item.Name == "Поднять вверх списка" || item.Name == "Выделить объявление")
+                                {
+                                    <div class="col-lg-12">
+                                        <p>
+                                            <b>Время действия : </b> <span>единоразовая услуга. </span><span class="glyphicon glyphicon-calendar"></span>
+                                        </p>
+                                    </div>
 
-                            }
+                                }
+                                else
+                                {
+                                    <div class="col-lg-6">
+                                        <p>
+                                            <b>Время действия дней : </b>
+                                        </p>
+                                    </div>
 
-                        </p>
+
+                                    <div class="col-lg-4">
+                                        <p>
+
+                                            <select asp-for="Services.Find(@item.ServicesId).SelectedServiceActiveDaysId" asp-items="item.SelectListServiceActiveDays" id="@item.ServicesId" onchange="SelectedDayChanged(@item.ServicesId)" class="form-control">
+                                                <option selected="selected" disabled="disabled"> </option>
+                                            </select>
+                                        </p>
+
+                                    </div>
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                }
+
+
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div class="col-lg-8"><p><b>Описание : </b>@item.Description</p></div>
+
 
                     @if (Model.SelectedAdId > 0)
                     {
                         <div class="btn-group col-lg-offset-10">
                             <p>
-                                <a asp-controller="ManagePurchases"
-                                   asp-action="CreatePurchase"
-                                   asp-route-adId="@Model.SelectedAdId"
-                                   asp-route-serviceId="@item.ServicesId"
-                                   class="btn btn-warning">Выбрать <span class="glyphicon glyphicon-plus"></span></a>
+                                <a onclick="SelectedItemChanged(@Model.SelectedAdId, @item.ServicesId)"
+                                   class="btn btn-warning">Выбрать</a>
                             </p>
                         </div>
                     }
@@ -158,16 +185,23 @@
             data: { selectedServiceActiveTimeId: selectedActiveServiceDayValue } ,
             success: function (data) {
 
-                var costId = "#cost." + itemId;
-                $(costId).append('<b>' + data + ' .грн </b>');
-                
-                alert(data);
+                var costId = "#costId_" + itemId;
+                $(costId).empty();
+                $(costId).append('<span>' + data + ' .грн </span>');
+
             },
             failure: function (errMsg) {
                 alert(errMsg);
             }
         });
 
+    }
+
+    function SelectedItemChanged(adId, serviceId) {
+
+        var seletorId = "#" + serviceId;
+        let selectedActiveServiceDayValue = parseInt($(seletorId).val());
+        $(location).attr('href', "/ManagePurchases/CreatePurchase?adId=" + adId + "&serviceId=" + serviceId + "&serviceActiveId=" + selectedActiveServiceDayValue);
     }
 
 </script>

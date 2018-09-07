@@ -102,18 +102,17 @@ namespace AppleUsed.Web.Controllers
                 PurhcaseDetail = new PurchaseDTO(), SelectedService = new ServiceDTO()
             };
 
-            var serviceActiveTimes = await _serviecActiveTimeService.GetServiceActiveTimesById(serviceActiveId);
-            if (!serviceActiveTimes.Succedeed)
-                return View("Details", model.StatusMessage = serviceActiveTimes.Message);
-
-            var service = await _servicesService.GetServiceById(serviceActiveTimes.Property.ServiceId);
+            var service = await _servicesService.GetServiceById(serviceId);
+            var serviceActiveTimes = service.Property.ServiceActiveTimes.Where(x => x.ServiceActiveTimeId == serviceActiveId).FirstOrDefault();
 
             model.PurhcaseDetail.AdId = adId;
             model.PurhcaseDetail.StartDateService = DateTime.Now;
-            model.PurhcaseDetail.EndDateService = DateTime.Now.AddDays(serviceActiveTimes.Property.DaysOfActiveService);
+            model.PurhcaseDetail.EndDateService = DateTime.Now.AddDays(serviceActiveTimes.DaysOfActiveService);
             model.PurhcaseDetail.ServicesId = serviceId;
-            model.PurhcaseDetail.TotalCost = serviceActiveTimes.Property.Cost;
+            model.PurhcaseDetail.TotalCost = serviceActiveTimes.Cost;
+            model.PurhcaseDetail.ServiceActiveTimeId = serviceActiveId;
             model.SelectedService = service.Property;
+            model.SelectedService.SelectedServiceActiveDaysId = serviceActiveId;
 
             return View("Details", model);
         }
