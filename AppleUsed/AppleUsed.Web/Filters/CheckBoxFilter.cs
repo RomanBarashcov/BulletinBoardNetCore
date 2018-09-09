@@ -46,7 +46,7 @@ namespace AppleUsed.Web.Filters
         {
             var ads = new List<AdDTO>();
 
-            int selectedProductId = _model.Filter.SelectedProductTypeId == 0 ? _model.SearchFilter.SelectedProductTypeId : 0;
+            int selectedProductId = _model.SearchFilter.SelectedProductTypeId != 0 ? _model.SearchFilter.SelectedProductTypeId : _model.Filter.SelectedProductTypeId;
             var selectedByModels = _model.Filter.ProductsModelFilters.Where(x => x.Selected).AsQueryable();
             var selectedByMemories = _model.Filter.ProductMemmories.Where(x => x.Selected).AsQueryable();
             var selectedByColors = _model.Filter.ProductsColors.Where(x => x.Selected).AsQueryable();

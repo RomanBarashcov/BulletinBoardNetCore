@@ -225,6 +225,9 @@ a {
     list-style: none;
 }
 
+.top_ad {
+    background-color: #e8f9e8;
+}
 /*Ad list start*/
 .ad-list {
     margin-bottom: 20px;

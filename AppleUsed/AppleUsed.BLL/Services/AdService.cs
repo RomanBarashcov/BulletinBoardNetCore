@@ -103,6 +103,161 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
+        public async Task<OperationDetails<IQueryable<AdDTO>>> GetActiveRandomVIPAds()
+        {
+            OperationDetails<IQueryable<AdDTO>> operationDetails =
+                new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+
+            try
+            {
+                var ads = (from ad in _db.Ads.Where(x => x.AdStatusId == (int)AdStatuses.Activated && x.IsModerate)
+                           join au in _db.AdUps on ad.AdId equals au.AdId
+                           join c in _db.Cities on ad.City.CityId equals c.CityId
+                           join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
+                           join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.Ad.AdId into aPhotos
+                           join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
+                           join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
+                           join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
+                           join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
+                           join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
+                           join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
+                           join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
+                           join sp in _db.Purchases on ad.AdId equals sp.AdId into servicePurchses
+                           join u in _db.Users on ad.ApplicationUser.Id equals u.Id
+                           select new AdDTO
+                           {
+                               AdId = ad.AdId,
+                               Title = ad.Title,
+                               Description = ad.Description,
+                               Price = ad.Price,
+                               DateCreated = ad.DateCreated,
+                               DateUpdated = ad.DateUpdated,
+                               SelectedCityArea = ca.Name,
+                               SelectedCity = c.Name,
+                               PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),
+                               AdViews = av.SumViews,
+                               SelectedProductType = pt.Name,
+                               SelectedProductTypeId = pt.ProductTypesId,
+                               SelectedProductModel = pm.Name,
+                               SelectedProductModelId = pm.ProductModelsId,
+                               SelectedProductMemory = prm.Name,
+                               SelectedProductMemoryId = prm.ProductMemoriesId,
+                               SelectedProductColor = pc.Name,
+                               SelectedProductColorId = pc.ProductColorsId,
+                               SelectedProductStates = prs.Name,
+                               SelectedProductStatesId = prs.ProductStatesId,
+                               LastUpAd = au.LastUp,
+                               AdStatusId = ad.AdStatusId,
+                               IsModerate = ad.IsModerate,
+                               Purhcases = servicePurchses.Select(x => 
+                               new PurchaseDTO {
+                                   PurchaseId = x.PurchaseId,
+                                   TotalCost = x.TotalCost,
+                                   DateOfPayment = x.DateOfPayment,
+                                   StartDateService = x.StartDateService,
+                                   EndDateService = x.EndDateService,
+                                   IsPayed  = x.IsActive,
+                                   IsActive = x.IsPayed,
+                                   ServicesId = x.ServicesId,
+                                   ServiceActiveTimeId = x.ServiceActiveTimeId,
+                                   AdId = x.AdId
+                                }).ToList(),
+                               User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
+
+                           }).Where(x => x.Purhcases.Where(p => p.ServicesId == (int)AdPurchaseTypes.VipAd && p.IsActive)
+                           .Count() > 0)
+                           .OrderBy(x => Guid.NewGuid())
+                           .Take(5);
+
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+            }
+            catch (Exception ex)
+            {
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+            }
+
+
+            return operationDetails;
+        }
+
+        public async Task<OperationDetails<IQueryable<AdDTO>>> GetActiveRandomTopAds()
+        {
+            OperationDetails<IQueryable<AdDTO>> operationDetails =
+                new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+
+            try
+            {
+                var ads = (from ad in _db.Ads.Where(x => x.AdStatusId == (int)AdStatuses.Activated && x.IsModerate)
+                           join au in _db.AdUps on ad.AdId equals au.AdId
+                           join c in _db.Cities on ad.City.CityId equals c.CityId
+                           join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
+                           join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.Ad.AdId into aPhotos
+                           join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
+                           join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
+                           join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
+                           join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
+                           join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
+                           join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
+                           join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
+                           join sp in _db.Purchases on ad.AdId equals sp.AdId into servicePurchses
+                           join u in _db.Users on ad.ApplicationUser.Id equals u.Id
+                           select new AdDTO
+                           {
+                               AdId = ad.AdId,
+                               Title = ad.Title,
+                               Description = ad.Description,
+                               Price = ad.Price,
+                               DateCreated = ad.DateCreated,
+                               DateUpdated = ad.DateUpdated,
+                               SelectedCityArea = ca.Name,
+                               SelectedCity = c.Name,
+                               PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),
+                               AdViews = av.SumViews,
+                               SelectedProductType = pt.Name,
+                               SelectedProductTypeId = pt.ProductTypesId,
+                               SelectedProductModel = pm.Name,
+                               SelectedProductModelId = pm.ProductModelsId,
+                               SelectedProductMemory = prm.Name,
+                               SelectedProductMemoryId = prm.ProductMemoriesId,
+                               SelectedProductColor = pc.Name,
+                               SelectedProductColorId = pc.ProductColorsId,
+                               SelectedProductStates = prs.Name,
+                               SelectedProductStatesId = prs.ProductStatesId,
+                               LastUpAd = au.LastUp,
+                               AdStatusId = ad.AdStatusId,
+                               IsModerate = ad.IsModerate,
+                               Purhcases = servicePurchses.Select(x =>
+                               new PurchaseDTO
+                               {
+                                   PurchaseId = x.PurchaseId,
+                                   TotalCost = x.TotalCost,
+                                   DateOfPayment = x.DateOfPayment,
+                                   StartDateService = x.StartDateService,
+                                   EndDateService = x.EndDateService,
+                                   IsPayed = x.IsActive,
+                                   IsActive = x.IsPayed,
+                                   ServicesId = x.ServicesId,
+                                   ServiceActiveTimeId = x.ServiceActiveTimeId,
+                                   AdId = x.AdId
+                               }).ToList(),
+                               User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
+
+                           }).Where(x => x.Purhcases.Where(p => p.ServicesId == (int)AdPurchaseTypes.TopAd && p.IsActive)
+                           .Count() > 0)
+                           .OrderBy(x => Guid.NewGuid())
+                           .Take(5);
+
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+            }
+            catch (Exception ex)
+            {
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+            }
+
+
+            return operationDetails;
+        }
+
         public async Task<OperationDetails<AdDTO>> GetAdById(int id)
         {
             

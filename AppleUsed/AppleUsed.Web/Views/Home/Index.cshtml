@@ -1,4 +1,4 @@
-﻿@model List<AppleUsed.BLL.DTO.AdDTO>
+﻿@model AppleUsed.Web.Models.ViewModels.HomeViewModels.HomeIndexViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -11,12 +11,13 @@
 <div class="ad-list col-lg-12">
     <hr />
     <blockquote style="border-left:5px solid #5cb85c">
-        <strong> Новые объявления</strong>
+        <strong> VIP объявления</strong>
     </blockquote>
     <hr />
 
-
-    @{ foreach (var item in Model)
+    @if(Model.VipAds != null)
+    {
+        foreach (var item in Model.VipAds)
         {
 
             <ul>
@@ -71,6 +72,41 @@
             <hr />
 
         }
+    
+        }
+    <hr />
+    <blockquote style="border-left:5px solid #5cb85c">
+        <strong> Новые объявления</strong>
+    </blockquote>
+    <hr />
 
-    }
+    <div class="row">
+        @foreach (var ad in Model.LatestAds)
+        {
+            <div class="col-sm-3 col-md-3">
+                <div class="thumbnail text-center">
+                    @if (ad.Title.Length > 20)
+                    {
+                        <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a></b></p>
+                    }
+                    else
+                    {
+                        <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a></b></p>
+                    }
+                    <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
+                        <img src="@ad.PhotosSmallSizeList.FirstOrDefault()" />
+                    </a>
+                    <div class="caption">
+                        <p>
+                            <b>Цена : @ad.Price .грн</b>
+                        </p>
+                        <small><span class="glyphicon glyphicon-repeat"></span> @ad.DateUpdated</small> |
+                        <small><span class="glyphicon glyphicon-eye-open"></span> @ad.AdViews</small>
+                        <br />
+                        <small><span class="glyphicon glyphicon-map-marker"></span> @ad.SelectedCity, @ad.SelectedCityArea область</small>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

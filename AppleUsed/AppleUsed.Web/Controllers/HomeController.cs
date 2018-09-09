@@ -7,6 +7,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using AppleUsed.BLL.DTO;
+using AppleUsed.Web.Models.ViewModels.HomeViewModels;
 
 namespace AppleUsed.Web.Controllers.Home
 {
@@ -30,13 +31,14 @@ namespace AppleUsed.Web.Controllers.Home
 
         public async Task<IActionResult> Index()
         {
-            List<AdDTO> model = new List<AdDTO>();
+            HomeIndexViewModel model = new HomeIndexViewModel() { LatestAds = new List<AdDTO>(), VipAds = new List<AdDTO>() };
 
-            var getAdsResult = await _adService.GetActiveAds();
-            if(!getAdsResult.Succedeed)
-                return View(model);
+            var latestAdsResult = await _adService.GetActiveAds();
+            var vipAds = await _adService.GetActiveRandomVIPAds();
 
-            model = getAdsResult.Property.OrderByDescending(x=>x.AdId).Take(5).ToList();
+            model.LatestAds = latestAdsResult.Property.OrderByDescending(x=>x.AdId).Take(12).ToList();
+            model.VipAds = vipAds.Property.ToList();
+
             return View(model);
         }
 

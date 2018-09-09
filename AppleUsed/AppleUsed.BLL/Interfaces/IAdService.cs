@@ -13,6 +13,8 @@ namespace AppleUsed.BLL.Interfaces
     public interface IAdService
     {
         Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAds();
+        Task<OperationDetails<IQueryable<AdDTO>>> GetActiveRandomVIPAds();
+        Task<OperationDetails<IQueryable<AdDTO>>> GetActiveRandomTopAds();
         Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByProductTypeId(int productTypeId);
         OperationDetails<IQueryable<AdDTO>> GetActiveAdsByUserId(string userId);
         Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUserId(string userId);

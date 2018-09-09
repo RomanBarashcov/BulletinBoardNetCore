@@ -7,7 +7,7 @@
 <br />
 
 <div class="row">
-    <div class="col-lg-3">
+    <div class="col-lg-4">
         <ul class="breadcrumb">
             <li><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductType"> <span class="glyphicon glyphicon-home"></span> Назад </a></li>
             <li><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductType"> @Model.AddDetails.SelectedProductType</a></li>
@@ -17,168 +17,164 @@
 </div>
 <br />
 
-    <div class="row">
+<div class="row">
 
-        <div class="col-lg-3 col-lg-push-8">
-            <div>
-                <blockquote class="ad-price" style="border-left:5px solid #5cb85c">
-                    <strong> @Model.AddDetails.Price .грн</strong>
-                </blockquote>
-            </div>
-            <div class="btn-block">
-                @if (User.Identity.Name != Model.AddDetails.User.UserName)
-                {
-                    <p>
-                        <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
-                        @if (!User.Identity.IsAuthenticated)
-                        {
-                            @Html.ActionLink("Написать владельцу", "Login", "Account", null, new { @class = "btn btn-lg btn-success btn-block" })
-                        }
-                        else
-                        {
-                            @Html.ActionLink("Написать владельцу", "ConversationByAdIdAndContactId", "Chat", new { adId = Model.AddDetails.AdId, contactId = Model.AddDetails.User.Id }, new { @class = "btn btn-lg btn-success btn-block" })
-                        }
-                    </p>
-                }
-                else
-                {
-                    <p>
-                        <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
-                    </p>
-                }
-            </div>
-            <div class="btn-block">
-                <div class="thumbnail photo">
-                    <div class="ad_location">
-                        <p><b><small class="ad_location_info"><span class="glyphicon glyphicon-map-marker"></span> г. @Model.AddDetails.SelectedCity @Model.AddDetails.SelectedCityArea  обл.</small></b></p>
-                    </div>
-                    <div class="caption">
-                        <div class="col-lg-offset-4 user_img no_photo"></div>
-                        <p>@Model.AddDetails.User.UserName</p>
-                        <p><small> на AU с @Model.AddDetails.User.RegistrationDate.Day / @Model.AddDetails.User.RegistrationDate.Month / @Model.AddDetails.User.RegistrationDate.Year </small> </p>
-                        <p><a class="btn btn-success" asp-controller="Ad" asp-action="GetActiveAdsByUserId" asp-route-id="@Model.AddDetails.User.Id">Другие объявления автора</a></p>
-                    </div>
+    <div class="col-lg-3 col-lg-push-8">
+        <div>
+            <blockquote class="ad-price" style="border-left:5px solid #5cb85c">
+                <strong> @Model.AddDetails.Price .грн</strong>
+            </blockquote>
+        </div>
+        <div class="btn-block">
+            @if (User.Identity.Name != Model.AddDetails.User.UserName)
+            {
+                <p>
+                    <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        @Html.ActionLink("Написать владельцу", "Login", "Account", null, new { @class = "btn btn-lg btn-success btn-block" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Написать владельцу", "ConversationByAdIdAndContactId", "Chat", new { adId = Model.AddDetails.AdId, contactId = Model.AddDetails.User.Id }, new { @class = "btn btn-lg btn-success btn-block" })
+                    }
+                </p>
+            }
+            else
+            {
+                <p>
+                    <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
+                </p>
+            }
+        </div>
+        <div class="btn-block">
+            <div class="thumbnail photo">
+                <div class="ad_location">
+                    <p><b><small class="ad_location_info"><span class="glyphicon glyphicon-map-marker"></span> г. @Model.AddDetails.SelectedCity @Model.AddDetails.SelectedCityArea  обл.</small></b></p>
+                </div>
+                <div class="caption">
+                    <div class="col-lg-offset-4 user_img no_photo"></div>
+                    <p>@Model.AddDetails.User.UserName</p>
+                    <p><small> на AU с @Model.AddDetails.User.RegistrationDate.Day / @Model.AddDetails.User.RegistrationDate.Month / @Model.AddDetails.User.RegistrationDate.Year </small> </p>
+                    <p><a class="btn btn-success" asp-controller="Ad" asp-action="GetActiveAdsByUserId" asp-route-id="@Model.AddDetails.User.Id">Другие объявления автора</a></p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-lg-8 col-lg-pull-3">
+    <div class="col-lg-8 col-lg-pull-3">
 
-            <blockquote style="border-left:5px solid #5cb85c">
-                <strong class="ad-title-details"> @Model.AddDetails.Title</strong>
-            </blockquote>
+        <blockquote style="border-left:5px solid #5cb85c">
+            <strong class="ad-title-details"> @Model.AddDetails.Title</strong>
+        </blockquote>
 
-            <div class="photo">
-                <img style='max-width:640px; max-height:480px;' src="@Model.AddDetails.PhotosAvgSizeList.FirstOrDefault()" />
-            </div>
-
-            <br />
-
-            <div class="ad-simple-info">
-                <table>
-                    <thead>
-                        <tr>
-                            <th><span class="glyphicon glyphicon-repeat"></span> Обновленно : </th>
-                            <td>@Model.AddDetails.DateUpdated</td>
-                            <th><span class="glyphicon glyphicon-map-marker"></span> Город : </th>
-                            <td>@Model.AddDetails.SelectedCity, @Model.AddDetails.SelectedCityArea область</td>
-                            <th>Просмотров : </th>
-                            <td>@Model.AddDetails.AdViews <span class="glyphicon glyphicon-eye-open"></span> </td>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-
-            <hr />
-
-            <div class="ad-base-info">
-                <table>
-                    <thead>
-                        <tr>
-                            <th> Тип : </th>
-                            <td>@Model.AddDetails.SelectedProductType</td>
-                            <th>
-                                Память :
-                            </th>
-                            <td>
-                                @Model.AddDetails.SelectedProductMemory
-                            </td>
-                        </tr>
-                        <tr>
-                            <th> Модель : </th>
-                            <td>@Model.AddDetails.SelectedProductModel</td>
-                            <th>
-                                Цвет :
-                            </th>
-                            <td>
-                                @Model.AddDetails.SelectedProductColor
-                            </td>
-                        </tr>
-                        <tr>
-                            <th> Состояние :</th>
-                            <td>@Model.AddDetails.SelectedProductStates</td>
-                        </tr>
-
-                    </thead>
-                </table>
-            </div>
-
-            <hr />
-
-            <div class="ad-full-description">
-                <p> @Model.AddDetails.Description </p>
-            </div>
-
-            <hr />
-
-            <div class="Ad-Photos">
-
-                @foreach (var photo in Model.AddDetails.PhotosAvgSizeList)
-                {
-                    <img style='max-width:640px; max-height:480px;' src="@photo" />
-                }
-
-            </div>
+        <div class="photo">
+            <img style='max-width:640px; max-height:480px;' src="@Model.AddDetails.PhotosAvgSizeList.FirstOrDefault()" />
         </div>
 
-     
-        <div class="col-lg-8">
-            <br />
-            <blockquote style="border-left:5px solid #5cb85c">
-                <strong>  Другие объявления</strong>
-            </blockquote>
+        <br />
 
-            <div class="row">
-                @foreach (var ad in Model.SimilarAds)
-                {
-                    <div class="col-sm-4 col-md-4">
-                        <div class="thumbnail photo">
-                            @if (ad.Title.Length > 20)
-                            {
-                                <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a></b></p>
-                            }
-                            else
-                            {
-                                <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a></b></p>
-                            }
-                            <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
-                                <img src="@ad.PhotosSmallSizeList.FirstOrDefault()" />
-                            </a>
-                            <div class="caption">
-                                <p>
-                                    <b>Цена : @ad.Price .грн</b>
-                                </p>
-                                <small><span class="glyphicon glyphicon-repeat"></span> @ad.DateUpdated</small> |
-                                <small><span class="glyphicon glyphicon-eye-open"></span> @ad.AdViews</small>
-                                <br />
-                                <small><span class="glyphicon glyphicon-map-marker"></span> @ad.SelectedCity, @ad.SelectedCityArea область</small>
-                            </div>
-                        </div>
+        <div class="ad-simple-info">
+            <table>
+                <thead>
+                    <tr>
+                        <th><span class="glyphicon glyphicon-repeat"></span> Обновленно : </th>
+                        <td>@Model.AddDetails.DateUpdated</td>
+                        <th><span class="glyphicon glyphicon-map-marker"></span> Город : </th>
+                        <td>@Model.AddDetails.SelectedCity, @Model.AddDetails.SelectedCityArea область</td>
+                        <th>Просмотров : </th>
+                        <td>@Model.AddDetails.AdViews <span class="glyphicon glyphicon-eye-open"></span> </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <hr />
+
+        <div class="ad-base-info">
+            <table>
+                <thead>
+                    <tr>
+                        <th> Тип : </th>
+                        <td>@Model.AddDetails.SelectedProductType</td>
+                        <th>
+                            Память :
+                        </th>
+                        <td>
+                            @Model.AddDetails.SelectedProductMemory
+                        </td>
+                    </tr>
+                    <tr>
+                        <th> Модель : </th>
+                        <td>@Model.AddDetails.SelectedProductModel</td>
+                        <th>
+                            Цвет :
+                        </th>
+                        <td>
+                            @Model.AddDetails.SelectedProductColor
+                        </td>
+                    </tr>
+                    <tr>
+                        <th> Состояние :</th>
+                        <td>@Model.AddDetails.SelectedProductStates</td>
+                    </tr>
+
+                </thead>
+            </table>
+        </div>
+
+        <hr />
+
+        <div class="ad-full-description">
+            <p> @Model.AddDetails.Description </p>
+        </div>
+
+        <hr />
+
+        <div class="Ad-Photos">
+
+            @foreach (var photo in Model.AddDetails.PhotosAvgSizeList)
+            {
+                <img style='max-width:640px; max-height:480px;' src="@photo" />
+            }
+
+        </div>
+    </div>
+
+</div>
+<br />
+<blockquote style="border-left:5px solid #5cb85c">
+    <strong>  Другие объявления</strong>
+</blockquote>
+
+    <div class="row">
+        @foreach (var ad in Model.SimilarAds)
+        {
+            <div class="col-sm-3 col-md-3">
+                <div class="thumbnail text-center">
+                    @if (ad.Title.Length > 20)
+                    {
+                        <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title.Substring(0, 20)</a></b></p>
+                    }
+                    else
+                    {
+                        <p><b><a class="ad-title-text" style="font-size:14px" href="~/Ad/AdDetails/@ad.AdId">@ad.Title</a></b></p>
+                    }
+                    <a asp-controller="Ad" asp-action="AdDetails" asp-route-id="@ad.AdId">
+                        <img src="@ad.PhotosSmallSizeList.FirstOrDefault()" />
+                    </a>
+                    <div class="caption">
+                        <p>
+                            <b>Цена : @ad.Price .грн</b>
+                        </p>
+                        <small><span class="glyphicon glyphicon-repeat"></span> @ad.DateUpdated</small> |
+                        <small><span class="glyphicon glyphicon-eye-open"></span> @ad.AdViews</small>
+                        <br />
+                        <small><span class="glyphicon glyphicon-map-marker"></span> @ad.SelectedCity, @ad.SelectedCityArea область</small>
                     </div>
-                }
+                </div>
             </div>
-
-        </div>
+        }
     </div>
 
 

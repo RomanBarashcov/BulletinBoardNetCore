@@ -24,13 +24,11 @@ namespace AppleUsed.Web.Filters
 
             if (_model.SearchFilter != null)
             {
-                int selectedProductType = _model.SearchFilter.SelectedProductTypeId;
-                string filteredByCity = _model.SearchFilter.SearchByCity;
+                if(_model.SearchFilter.SelectedProductTypeId > 0)
+                    queryResult = _query.Where(x => x.SelectedProductTypeId == _model.SearchFilter.SelectedProductTypeId);
 
-                queryResult = _query.Where(x => x.SelectedProductTypeId == selectedProductType);
-
-                if (!String.IsNullOrEmpty(filteredByCity))
-                    queryResult = queryResult.Where(x => x.SelectedCity.ToLower().Contains(filteredByCity.ToLower()));
+                if (!String.IsNullOrEmpty(_model.SearchFilter.SearchByCity))
+                    queryResult = queryResult.Where(x => x.SelectedCity.ToLower().Contains(_model.SearchFilter.SearchByCity.ToLower()));  
             }
            
             return queryResult;

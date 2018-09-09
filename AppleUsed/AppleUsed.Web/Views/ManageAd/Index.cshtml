@@ -152,7 +152,7 @@
 
     $(document).ready(function () {
 
-            let selectedNavVal = @Model.FirstOrDefault().AdStatusId
+            let selectedNavVal = @Model.Count == 0 ?? 1 : Model.FirstOrDefault().AdStatusId
 
             switch (selectedNavVal) {
                 case 1:

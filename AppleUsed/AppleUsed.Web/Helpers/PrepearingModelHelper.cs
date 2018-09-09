@@ -40,7 +40,7 @@ namespace AppleUsed.Web.Helpers
 
         public async Task<AdIndexViewModel> PrepearingAdIndexViewModel(IQueryable<AdDTO> ads, int selectedProductTypeId)
         {
-            AdIndexViewModel adIndexViewModel = new AdIndexViewModel { AdList = ads.ToList() };
+            AdIndexViewModel adIndexViewModel = new AdIndexViewModel { SimpleAds = ads.ToList() };
             AdDTO dataForFilter = await _adService.GetDataForCreatingAdOrDataForFilter();
 
             adIndexViewModel.SearchFilter = new SearchFilterViewModel();
@@ -57,6 +57,7 @@ namespace AppleUsed.Web.Helpers
 
             adIndexViewModel.SortViewModel.SortOptionList = GetSerachSelectionOptionsList();
             adIndexViewModel.SearchFilter.ProductTypesOptionList = GetProductTypeSelectionOptionsList();
+            adIndexViewModel.SearchFilter.SelectedProductTypeId = selectedProductTypeId;
 
             adIndexViewModel.Filter.SelectedProductTypeId = adIndexViewModel.SearchFilter.SelectedProductTypeId;
 

@@ -50,7 +50,7 @@ namespace AppleUsed.Web.Helpers
                 model.SortViewModel.SortOptionList = _prepearingModel.GetSerachSelectionOptionsList();
                 model.SearchFilter.ProductTypesOptionList = _prepearingModel.GetProductTypeSelectionOptionsList();
                 model.Filter.SelectedProductTypeId = model.SearchFilter.SelectedProductTypeId;
-                model.AdList = adQueryResult.ToList();
+                model.SimpleAds = adQueryResult.ToList();
             }
 
             return model;

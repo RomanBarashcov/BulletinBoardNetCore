@@ -46,15 +46,17 @@ namespace AppleUsed.Web.Controllers
             if (!result.Succedeed)
                 return View(model);
 
+
+            var topAds = await _adService.GetActiveRandomTopAds();
             IQueryable<AdDTO> adQueryResult = result.Property;
             adQueryResult = await _adFilter.FilteringData(titleFilter, productState, adQueryResult, model);
             model = await _adFilter.PrepearingFilter(adQueryResult, model);
+            model.TopAds = topAds.Property.ToList();
 
-
-            int count = model.AdList.Count();
+            int count = model.SimpleAds.Count();
             PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
             model.PageViewModel = pageViewModel;
-            model.AdList = model.AdList.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            model.SimpleAds = model.SimpleAds.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
             return View(model);
         }
@@ -96,6 +98,7 @@ namespace AppleUsed.Web.Controllers
         {
             if (!ModelState.IsValid)
                 return View("CreateAd", model);
+                
 
             string userName = User.Identity.Name;
 
@@ -126,7 +129,7 @@ namespace AppleUsed.Web.Controllers
                 return View(model);
 
             var similarAds = similarAdsResult.Property;
-            model.SimilarAds = await similarAds.Take(4).ToListAsync();
+            model.SimilarAds = await similarAds.OrderBy(x => Guid.NewGuid()).Take(4).ToListAsync();
 
             var otherAdsByAuthorResult = await _adService.GetAdsByUserId(model.AddDetails.User.Id);
 
