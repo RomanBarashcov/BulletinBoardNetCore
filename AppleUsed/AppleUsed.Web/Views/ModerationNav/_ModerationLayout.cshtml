@@ -1,0 +1,20 @@
+﻿@{ 
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+        <h3>Панель управления</h3>
+    <div class="row">
+        <div class="col-md-3">
+            @await Html.PartialAsync("~/Views/ModerationNav/_ModerationNav.cshtml")
+        </div>
+        <div class="col-md-9">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}
+        

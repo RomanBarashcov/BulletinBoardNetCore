@@ -13,6 +13,8 @@ namespace AppleUsed.BLL.Interfaces
     public interface IAdService
     {
         Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAds();
+        Task<OperationDetails<IQueryable<AdDTO>>> GetInProgressAds();
+        Task<OperationDetails<IQueryable<AdDTO>>> GetDeactivatedAds();
         Task<OperationDetails<IQueryable<AdDTO>>> GetActiveRandomVIPAds();
         Task<OperationDetails<IQueryable<AdDTO>>> GetActiveRandomTopAds();
         Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByProductTypeId(int productTypeId);
@@ -22,7 +24,6 @@ namespace AppleUsed.BLL.Interfaces
         Task<OperationDetails<AdDTO>> GetAdById(int id);
         Task<AdDTO> GetDataForCreatingAdOrDataForFilter();
         Task<OperationDetails<int>> SaveAd(string userName, AdDTO ad, IFormFileCollection productPhotos);
-        Task<OperationDetails<int>> ActivationAd(int id);
-        Task<OperationDetails<int>> DeactivationAd(int id);
+        Task<OperationDetails<int>> SetStatusAd(int id, int adStatus);
     }
 }

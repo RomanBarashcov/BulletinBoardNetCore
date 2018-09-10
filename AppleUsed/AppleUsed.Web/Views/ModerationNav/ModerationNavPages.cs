@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AppleUsed.Web.Views
+namespace AppleUsed.Web.Views.ModerationNav
 {
-    public static class AdministrationNavPages
+    public static class ModerationNavPages
     {
         public static string ActivePageKey => "ActivePage";
 
@@ -15,17 +15,9 @@ namespace AppleUsed.Web.Views
 
         public static string Ads => "Объявления";
 
-        public static string Purchases => "Покупки";
-
-        public static string Services => "Сервисы";
-
         public static string UsersNavClass(ViewContext viewContext) => PageNavClass(viewContext, Users);
 
         public static string AdsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Ads);
-
-        public static string PurchasesNavClass(ViewContext viewContext) => PageNavClass(viewContext, Purchases);
-
-        public static string ServicesNavClass(ViewContext viewContext) => PageNavClass(viewContext, Services);
 
         public static string PageNavClass(ViewContext viewContext, string page)
         {

@@ -148,7 +148,7 @@ namespace AppleUsed.Web.Controllers
             int id = adId ?? 0;
             if (id > 0)
             {
-                var result = await _adService.ActivationAd(id);
+                var result = await _adService.SetStatusAd(id, (int)AdStatuses.Activated);
                 if (!result.Succedeed)
                 {
                     ModelState.AddModelError("", result.Message);
@@ -164,7 +164,7 @@ namespace AppleUsed.Web.Controllers
             int id = adId ?? 0;
             if (id > 0)
             {
-                var result = await _adService.DeactivationAd(id);
+                var result = await _adService.SetStatusAd(id, (int)AdStatuses.Deactivated);
                 if (!result.Succedeed)
                 {
                     ModelState.AddModelError("", result.Message);

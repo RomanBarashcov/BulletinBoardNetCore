@@ -1,0 +1,7 @@
+﻿@using AppleUsed.Web.Views.ModerationNav
+
+<ul class="nav nav-pills nav-stacked">
+    <li class="@ModerationNavPages.UsersNavClass(ViewContext)"><a asp-controller="ModerationUser" asp-action="Index">Пользователи</a></li>
+    <li class="@ModerationNavPages.AdsNavClass(ViewContext)"><a asp-controller="ModerationAd" asp-action="Index">Объявления</a></li>
+</ul>
+
