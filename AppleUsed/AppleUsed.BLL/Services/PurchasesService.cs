@@ -112,7 +112,7 @@ namespace AppleUsed.BLL.Services
                 return operationDetails;
 
             var ads = await _adService.GetAdsByUser(user.UserName);
-            if(ads == null)
+            if(ads.Property == null)
                 return operationDetails;
 
             var purchasesDTO = GetPurchaseDTOQueryJoinWithUserAds(ads.Property);

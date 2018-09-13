@@ -52,7 +52,7 @@ namespace AppleUsed.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPurchasesByUser()
         {
-            var model = new PurchasesIndexViewModel();
+            var model = new PurchasesIndexViewModel() { StatusMessage = ""};
             string userId = _userManager.GetUserId(User);
 
             var operationDetails = await _purchasesService.GetPurchaseByUserId(userId);

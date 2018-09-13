@@ -4,7 +4,6 @@ using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Models.ViewModels;
 using System.Threading.Tasks;
 using System.Linq;
-using System;
 using System.Collections.Generic;
 using AppleUsed.BLL.DTO;
 using AppleUsed.Web.Models.ViewModels.HomeViewModels;

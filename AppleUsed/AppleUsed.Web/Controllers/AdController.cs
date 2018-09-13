@@ -148,7 +148,7 @@ namespace AppleUsed.Web.Controllers
             if(String.IsNullOrEmpty(id))
                 return RedirectToAction("Index");
 
-            var operationDetails = _adService.GetActiveAdsByUserId(id);
+            var operationDetails = await _adService.GetActiveAdsByUserId(id);
             if(!operationDetails.Succedeed)
                 return RedirectToAction("Index");
 

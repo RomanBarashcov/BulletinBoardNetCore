@@ -68,14 +68,14 @@
                                 </div>
                                 <div>
                                     <p>
-                                        <a class="btn btn-success btn-block" asp-controller="ModerationAd" asp-action="SetAdStatus" asp-route-adId="@item.AdId" asp-route-adStatus="@{(int)AdStatuses.Activated}">
+                                        <a class="btn btn-success btn-block" asp-controller="ModerationAd" asp-action="SetAdStatus" asp-route-adId="@item.AdId" asp-route-adStatus="@AdStatuses.Activated">
                                             <span class="glyphicon glyphicon-envelope"></span> Активировать
                                         </a>
                                     </p>
                                 </div>
                                 <div>
                                     <p>
-                                        <a class="btn btn-warning btn-block" asp-controller="ModerationAd" asp-action="SetAdStatus" asp-route-adId="@item.AdId" asp-route-adStatus="@{(int)AdStatuses.InProgress}">
+                                        <a class="btn btn-warning btn-block" asp-controller="ModerationAd" asp-action="SetAdStatus" asp-route-adId="@item.AdId" asp-route-adStatus="@AdStatuses.InProgress">
                                             В ожидающие
                                             <span class="glyphicon glyphicon-envelope"></span>
                                         </a>
@@ -83,7 +83,7 @@
                                 </div>
                                 <div>
                                     <p>
-                                        <a class="btn btn-primary btn-block" asp-controller="ModerationAd" asp-action="SetAdStatus" asp-route-adId="@item.AdId" asp-route-adStatus="@{(int)AdStatuses.Deactivated}">
+                                        <a class="btn btn-primary btn-block" asp-controller="ModerationAd" asp-action="SetAdStatus" asp-route-adId="@item.AdId" asp-route-adStatus="@AdStatuses.Deactivated">
                                             Деактивировать
                                             <span class="glyphicon glyphicon-envelope"></span>
                                         </a>
