@@ -6,6 +6,7 @@ using AppleUsed.BLL.DTO;
 using AppleUsed.BLL.Enums;
 using AppleUsed.BLL.Infrastructure;
 using AppleUsed.BLL.Interfaces;
+using AppleUsed.Web.Models.ViewModels.AdViewModels;
 using AppleUsed.Web.Models.ViewModels.ModerationAdViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,17 +14,21 @@ namespace AppleUsed.Web.Controllers
 {
     public class ModerationAdController : Controller
     {
-        private readonly IAdService _adService;
+        private IAdService _adService;
 
         public ModerationAdController(IAdService adService)
         {
             _adService = adService;
         }
 
-        public async Task<IActionResult> Index(int adStatus = 2)
+        public async Task<IActionResult> Index(int adStatus = 2, int page = 1)
         {
-            ModerationAdIndexViewModel model = 
-                new ModerationAdIndexViewModel { AdList = new List<AdDTO>() };
+            int pageSize = 5;
+            ModerationAdIndexViewModel model = new ModerationAdIndexViewModel
+            {
+                AdList = new List<AdDTO>(),
+                SelectedAdStatus = adStatus
+            };
 
             if (adStatus == (int)AdStatuses.Activated)
             {
@@ -41,6 +46,10 @@ namespace AppleUsed.Web.Controllers
                 model.AdList = getDeactivatedAds.Property.ToList();
             }
 
+            int count = model.AdList.Count();
+            model.PageViewModel = new PageViewModel(count, page, pageSize);
+            model.AdList = model.AdList.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
             return View(model);
         }
 
@@ -57,6 +66,26 @@ namespace AppleUsed.Web.Controllers
                 return View("Index", model.StatusMessage = operationDetails.Message);
 
             return RedirectToAction("Index", adStatus);
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _adService = null;
+                }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

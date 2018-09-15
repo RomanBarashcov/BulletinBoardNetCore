@@ -14,9 +14,9 @@ namespace AppleUsed.Web.Controllers
 {
     public class ChatController : Controller
     {
-        private readonly IConversationService _conversationService;
-        private readonly IAdService _adService;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private IConversationService _conversationService;
+        private IAdService _adService;
+        private UserManager<ApplicationUser> _userManager;
 
         public ChatController(IConversationService conversationService, IAdService adService, UserManager<ApplicationUser> userManager)
         {
@@ -103,6 +103,28 @@ namespace AppleUsed.Web.Controllers
                 return "private-chat-" + contact_id + "-" + user_id;
             }
             return "private-chat-" + user_id + "-" + contact_id;
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _adService = null;
+                    _conversationService = null;
+                    _userManager.Dispose();
+                }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

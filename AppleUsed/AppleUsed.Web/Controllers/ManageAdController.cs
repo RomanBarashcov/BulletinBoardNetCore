@@ -7,6 +7,7 @@ using AppleUsed.BLL.Enums;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Helpers;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
+using AppleUsed.Web.Models.ViewModels.ManageAdViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -14,12 +15,12 @@ namespace AppleUsed.Web.Controllers
 {
     public class ManageAdController : Controller
     {
-        private readonly IAdService _adService;
-        private readonly IAdUpService _adUpService;
-        private readonly IAdViewsService _adViewsService;
-        private readonly ICityService _cityService;
-        private readonly IProductModelsService _productModelsService;
-        private readonly PrepearingModelHelper _prepearingModel;
+        private IAdService _adService;
+        private IAdUpService _adUpService;
+        private IAdViewsService _adViewsService;
+        private ICityService _cityService;
+        private IProductModelsService _productModelsService;
+        private PrepearingModelHelper _prepearingModel;
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -40,26 +41,31 @@ namespace AppleUsed.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int adStatusId = 1)
+        public async Task<IActionResult> Index(int adStatusId = 1, int page = 1)
         {
+            int pageSize = 5;
             string userName = User.Identity.Name;
+            ManageAdIndexViewModel model = new ManageAdIndexViewModel
+            { AdList = new List<AdDTO>(), SelectedAdStatus = adStatusId };
 
             var getAdsByUserResult = await _adService.GetAdsByUser(userName);
             if (!getAdsByUserResult.Succedeed)
                 return View(new List<AdDTO>());
 
-            List<AdDTO> ads = new List<AdDTO>();
-
             if(adStatusId == (int)AdStatuses.InProgress || adStatusId == (int)AdStatuses.Deactivated)
             {
-                ads = getAdsByUserResult.Property.Where(x => x.AdStatusId == adStatusId).ToList();
+                model.AdList = getAdsByUserResult.Property.Where(x => x.AdStatusId == adStatusId).ToList();
             }
             else
             {
-                ads = getAdsByUserResult.Property.Where(x => x.AdStatusId == adStatusId && x.IsModerate).ToList();
+                model.AdList = getAdsByUserResult.Property.Where(x => x.AdStatusId == adStatusId && x.IsModerate).ToList();
             }
 
-            return View(ads);
+            int count = model.AdList.Count();
+            model.PageViewModel = new PageViewModel(count, page, pageSize);
+            model.AdList = model.AdList.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            return View(model);
         }
 
         [HttpGet]
@@ -172,6 +178,32 @@ namespace AppleUsed.Web.Controllers
             }
 
             return RedirectToActionPermanent("Index");
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _adService = null;
+                    _adService = null;
+                    _adUpService = null;
+                    _adViewsService = null;
+                    _cityService = null;
+                    _productModelsService = null;
+                    _prepearingModel = null;
+                 }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

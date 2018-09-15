@@ -16,14 +16,14 @@ namespace AppleUsed.BLL.Services
 {
     public class AdService : IAdService, IDisposable
     {
-        private readonly AppDbContext _db;
-        private readonly IDataService _dataService;
-        private readonly IImageService _imageService;
-        private readonly IConversationService _conversationService;
-        private readonly ICityAreasService _cityAreasService;
-        private readonly ICityService _cityService;
-        private readonly IProductModelsService _productModelService;
-        private readonly IAdUpService _adUpService;
+        private AppDbContext _db;
+        private IDataService _dataService;
+        private IImageService _imageService;
+        private IConversationService _conversationService;
+        private ICityAreasService _cityAreasService;
+        private ICityService _cityService;
+        private IProductModelsService _productModelService;
+        private IAdUpService _adUpService;
 
         public AdService(AppDbContext context,
             IDataService dataService,
@@ -589,20 +589,32 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
+
         private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _db = null;
+                    _dataService = null;
+                    _imageService = null;
+                    _conversationService = null;
+                    _cityAreasService = null;
+                    _cityService = null;
+                    _productModelService = null;
+                    _adUpService = null;
+    }
+                this.disposed = true;
+            }
+        }
 
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                disposed = true;
-            }
         }
 
     }

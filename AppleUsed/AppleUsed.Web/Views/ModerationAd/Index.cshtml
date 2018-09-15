@@ -19,11 +19,12 @@
         </div>
     </div>
 
+    <br />
 
     @{ foreach (var item in Model.AdList)
         {
 
-            <ul>
+            <ul class="ad-list">
                 <li>
                     <div class="row">
 
@@ -69,7 +70,8 @@
                                 <div>
                                     <p>
                                         <a class="btn btn-success btn-block" asp-controller="ModerationAd" asp-action="SetAdStatus" asp-route-adId="@item.AdId" asp-route-adStatus="@AdStatuses.Activated">
-                                            <span class="glyphicon glyphicon-envelope"></span> Активировать
+                                            Активировать
+                                            <span class="glyphicon glyphicon-arrow-up"></span>
                                         </a>
                                     </p>
                                 </div>
@@ -77,15 +79,15 @@
                                     <p>
                                         <a class="btn btn-warning btn-block" asp-controller="ModerationAd" asp-action="SetAdStatus" asp-route-adId="@item.AdId" asp-route-adStatus="@AdStatuses.InProgress">
                                             В ожидающие
-                                            <span class="glyphicon glyphicon-envelope"></span>
+                                            <span class="glyphicon glyphicon-arrow-right"></span>
                                         </a>
                                     </p>
                                 </div>
                                 <div>
                                     <p>
-                                        <a class="btn btn-primary btn-block" asp-controller="ModerationAd" asp-action="SetAdStatus" asp-route-adId="@item.AdId" asp-route-adStatus="@AdStatuses.Deactivated">
+                                        <a class="btn btn-danger btn-block" asp-controller="ModerationAd" asp-action="SetAdStatus" asp-route-adId="@item.AdId" asp-route-adStatus="@AdStatuses.Deactivated">
                                             Деактивировать
-                                            <span class="glyphicon glyphicon-envelope"></span>
+                                            <span class="glyphicon glyphicon-arrow-down"></span>
                                         </a>
                                     </p>
                                 </div>
@@ -102,6 +104,51 @@
     }
 
 </div>
+
+
+<div class="ad-list col-lg-12">
+
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous">
+
+                @if (Model.PageViewModel != null && Model.PageViewModel.HasPreviousPage)
+                {
+                    @using (Html.BeginForm("Index", "ModerationAd", FormMethod.Get, new { @id = "BackPage" }))
+                    {
+                        <div class="col-sm-2">
+                            <input type="hidden" name="adStatus" value="@(Model.SelectedAdStatus)" />
+                            <input type="hidden" name="page" id="page" value="@(Model.PageViewModel.PageNumber - 1)" />
+                            <input type="submit" class="btn btn-default btn" value="&larr; Новее" />
+                        </div>
+
+                    }
+                }
+
+
+            </li>
+
+            <li class="next">
+
+                @if (Model.PageViewModel != null && Model.PageViewModel.HasNextPage)
+                {
+
+                    @using (Html.BeginForm("Index", "ModerationAd", FormMethod.Get, new { @id = "NextPage" }))
+                    {
+
+                        <div class="col-sm-2">
+                            <input type="hidden" name="adStatus" value="@(Model.SelectedAdStatus)" />
+                            <input type="hidden" name="page" id="page" value="@(Model.PageViewModel.PageNumber + 1)" />
+                            <input type="submit" class="btn btn-default btn" value="Старее &rarr;" />
+                        </div>
+                    }
+                }
+
+            </li>
+        </ul>
+    </nav>
+</div>
+
 <script type="text/javascript">
 
     $(document).ready(function () {

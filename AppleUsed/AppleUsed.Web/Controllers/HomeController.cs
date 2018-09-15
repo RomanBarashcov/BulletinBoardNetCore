@@ -7,13 +7,14 @@ using System.Linq;
 using System.Collections.Generic;
 using AppleUsed.BLL.DTO;
 using AppleUsed.Web.Models.ViewModels.HomeViewModels;
+using System;
 
 namespace AppleUsed.Web.Controllers.Home
 {
     public class HomeController : Controller
     {
-        private readonly ISeedService _seedService;
-        private readonly IAdService _adService;
+        private ISeedService _seedService;
+        private IAdService _adService;
 
         public HomeController(ISeedService seedService, IAdService adService)
         {
@@ -58,6 +59,28 @@ namespace AppleUsed.Web.Controllers.Home
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _adService = null;
+                    _seedService = null;
+                }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

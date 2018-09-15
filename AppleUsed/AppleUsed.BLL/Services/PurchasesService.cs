@@ -211,21 +211,22 @@ namespace AppleUsed.BLL.Services
 
         private IQueryable<PurchaseDTO> GetPurchaseDTOQueryJoinWithUserAds(IQueryable<AdDTO> adsQuery)
         {
-            var purchasesDTO = (from p in _db.Purchases
-                                join a in adsQuery on p.AdId equals a.AdId
-                                select new PurchaseDTO
-                                {
-                                    PurchaseId = p.PurchaseId,
-                                    TotalCost = p.TotalCost,
-                                    DateOfPayment = p.DateOfPayment,
-                                    StartDateService = p.StartDateService,
-                                    EndDateService = p.EndDateService,
-                                    IsPayed = p.IsPayed,
-                                    ServicesId = p.ServicesId,
-                                    AdId = p.AdId
-                                });
 
-
+                var purchasesDTO = (from ads in adsQuery
+                                    join p in _db.Purchases on ads.AdId equals p.AdId
+                                    select new PurchaseDTO
+                                    {
+                                        PurchaseId = p.PurchaseId,
+                                        TotalCost = p.TotalCost,
+                                        DateOfPayment = p.DateOfPayment,
+                                        StartDateService = p.StartDateService,
+                                        EndDateService = p.EndDateService,
+                                        IsPayed = p.IsPayed,
+                                        ServicesId = p.ServicesId,
+                                        ServiceActiveTimeId = p.ServiceActiveTimeId,
+                                        AdId = p.AdId
+                                    });
+            
             return purchasesDTO;
         }
     }

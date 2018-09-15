@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AppleUsed.Web.Controllers
 {
-    public class ManagePurchasesController : Controller
+    public class ManagePurchasesController : Controller , IDisposable
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        public readonly IPurchasesService _purchasesService;
-        public readonly IServicesService _servicesService;
-        public readonly IServiecActiveTimeService _serviecActiveTimeService;
+        private UserManager<ApplicationUser> _userManager;
+        private IPurchasesService _purchasesService;
+        private IServicesService _servicesService;
+        private IServiecActiveTimeService _serviecActiveTimeService;
 
         public ManagePurchasesController(
             UserManager<ApplicationUser> userManager,
@@ -129,6 +129,29 @@ namespace AppleUsed.Web.Controllers
                 return View("Details", model.StatusMessage = operationDetails.Message);
 
             return RedirectToAction("Index");
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _userManager = null;
+                    _purchasesService = null;
+                    _servicesService = null;
+                    _serviecActiveTimeService = null;
+                }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

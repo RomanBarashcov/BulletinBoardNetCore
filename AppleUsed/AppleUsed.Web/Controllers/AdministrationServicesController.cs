@@ -15,12 +15,13 @@ namespace AppleUsed.Web.Controllers
 {
     public class AdministrationServicesController : Controller
     {
-        public readonly IServicesService _servicesService;
-        private readonly PrepearingModelHelper _prepearingModelHelper;
+        public IServicesService _servicesService;
+        private PrepearingModelHelper _prepearingModelHelper;
 
         public AdministrationServicesController(IServicesService servicesService)
         {
             _servicesService = servicesService;
+            _prepearingModelHelper = new PrepearingModelHelper();
         }
 
         [HttpGet]
@@ -158,6 +159,27 @@ namespace AppleUsed.Web.Controllers
             model.Services = getAllServicesResult.ToList();
 
             return View("Index", model);
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _servicesService = null;
+                    _prepearingModelHelper = null;
+                }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

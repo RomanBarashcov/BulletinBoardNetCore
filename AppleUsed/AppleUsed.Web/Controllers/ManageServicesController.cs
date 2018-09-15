@@ -13,10 +13,10 @@ namespace AppleUsed.Web.Controllers
 {
     public class ManageServicesController : Controller
     {
-        public readonly IServicesService _servicesService;
-        public readonly IServiecActiveTimeService _serviecActiveTimeService;
-        public readonly IAdService _adService;
-        private readonly PrepearingModelHelper _prepearingModelHelper;
+        private IServicesService _servicesService;
+        private IServiecActiveTimeService _serviecActiveTimeService;
+        private IAdService _adService;
+        private PrepearingModelHelper _prepearingModelHelper;
 
         public ManageServicesController(
             IServicesService servicesService,
@@ -68,6 +68,29 @@ namespace AppleUsed.Web.Controllers
             model.ServiceDetail = operationDetails.Property;
 
             return View("Details", model);
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _adService = null;
+                    _prepearingModelHelper = null;
+                    _servicesService = null;
+                    _serviecActiveTimeService = null;
+                }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

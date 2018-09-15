@@ -11,14 +11,16 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.Web.Helpers
 {
-    public class PrepearingModelHelper 
+    public class PrepearingModelHelper : IDisposable
     {
-        private readonly IAdService _adService;
+        private IAdService _adService;
 
         public PrepearingModelHelper(IAdService adService)
         {
             _adService = adService;
         }
+
+        public PrepearingModelHelper() { }
 
         public AdViewModel PrepearingAdViewModel(AdDTO dataForSelectList, AdDTO ad)
         {
@@ -205,5 +207,24 @@ namespace AppleUsed.Web.Helpers
             
         }
 
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _adService = null;
+                }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

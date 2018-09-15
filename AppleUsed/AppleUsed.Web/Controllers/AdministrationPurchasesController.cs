@@ -12,8 +12,8 @@ namespace AppleUsed.Web.Controllers
 {
     public class AdministrationPurchasesController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        public readonly IPurchasesService _purchasesService;
+        private UserManager<ApplicationUser> _userManager;
+        public IPurchasesService _purchasesService;
 
         public AdministrationPurchasesController(
             UserManager<ApplicationUser> userManager, 
@@ -135,6 +135,27 @@ namespace AppleUsed.Web.Controllers
                 return View("Details", model.StatusMessage = operationDetails.Message);
 
             return RedirectToAction("Index");
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _purchasesService = null;
+                    _userManager.Dispose();
+                }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
     }

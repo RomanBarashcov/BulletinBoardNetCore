@@ -3,6 +3,8 @@ using AppleUsed.BLL.Interfaces;
 using AppleUsed.BLL.Services;
 using AppleUsed.DAL;
 using AppleUsed.DAL.Identity;
+using AppleUsed.DAL.Interfaces;
+using AppleUsed.DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
@@ -28,10 +30,10 @@ namespace AppleUsed.Web
             }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
         }
 
-        //public static void AddRepository(this IServiceCollection serviceCollection)
-        //{
-        //    serviceCollection.AddScoped(typeof(IUnitOfWork), typeof(DataRepository<>));
-        //}
+        public static void AddRepository(this IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IUserRepository, UserRepository>();
+        }
 
         public static void AddTransientServices(this IServiceCollection serviceCollection)
         {
@@ -94,6 +96,9 @@ namespace AppleUsed.Web
 
             serviceCollection.AddTransient<IServicesService>(
                 s => new ServicesService(dbContext, new ServiecActiveTimeService(dbContext)));
+
+            serviceCollection.AddTransient<IUserService>(
+                s => new UserService(new UserRepository(dbContext)));
         }
 
         /// <summary>

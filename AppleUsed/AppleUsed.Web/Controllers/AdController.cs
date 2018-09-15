@@ -16,12 +16,12 @@ namespace AppleUsed.Web.Controllers
 {
     public class AdController : Controller
     {
-        private readonly IAdService _adService;
-        private readonly PrepearingModelHelper _prepearingModel;
-        private readonly AdFilter _adFilter;
-        private readonly ICityService _cityService;
-        private readonly IProductModelsService _productModelsService;
-        private readonly IAdViewsService _adViewsService;
+        private IAdService _adService;
+        private PrepearingModelHelper _prepearingModel;
+        private AdFilter _adFilter;
+        private ICityService _cityService;
+        private IProductModelsService _productModelsService;
+        private IAdViewsService _adViewsService;
 
         public AdController(
             IAdService adService, 
@@ -166,6 +166,31 @@ namespace AppleUsed.Web.Controllers
             };
 
             return View("UserActiveAds", model);
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _adService = null;
+                    _prepearingModel = null;
+                    _adFilter = null;
+                    _cityService = null;
+                    _productModelsService = null;
+                    _adViewsService = null;
+    }
+                this.disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
     }
