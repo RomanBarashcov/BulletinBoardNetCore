@@ -1,0 +1,77 @@
+﻿@model AppleUsed.Web.Models.ViewModels.UserViewModels.UserIndexViewModel
+@using AppleUsed.Web.Views.AdministrationNav
+@{
+    ViewData.AddActivePage(AdministrationNavPages.Users);
+    Layout = "/Views/AdministrationNav/_AdministrationLayout.cshtml";
+    ViewData["Title"] = "Пользователи";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th> Email </th>
+            <th>Имя пользователя</th>
+            <th>Номер телефона</th>
+            <th>Дата регистрации</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.UserList)
+        {
+        <tr>
+            <th scope="row">@item.Id.Substring(0, 10)</th>
+            <td>@item.Email</td>
+            <td>@item.UserName</td>
+            <td>@item.PhoneNumber</td>
+            <td>@item.RegistrationDate</td>
+            <td><a  asp-controller="Ad" asp-action="GetActiveAdsByUserId" asp-route-id="@item.Id">Объявления автора</a></td>
+        </tr>
+        }
+
+    </tbody>
+</table>
+
+<div class="ad-list col-lg-12">
+
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous">
+
+                @if (Model.PageViewModel != null && Model.PageViewModel.HasPreviousPage)
+                {
+                    @using (Html.BeginForm("Index", "AdministrationUsers", FormMethod.Get, new { @id = "BackPage" }))
+                    {
+                        <div class="col-sm-2">
+                            <input type="hidden" name="page" id="page" value="@(Model.PageViewModel.PageNumber - 1)" />
+                            <input type="submit" class="btn btn-default btn" value="&larr; Назад" />
+                        </div>
+
+                    }
+                }
+
+
+            </li>
+            <li class="next">
+
+                @if (Model.PageViewModel != null && Model.PageViewModel.HasNextPage)
+                {
+
+                    @using (Html.BeginForm("Index", "AdministrationUsers", FormMethod.Get, new { @id = "NextPage" }))
+                    {
+
+                        <div class="col-sm-2">
+                            <input type="hidden" name="page" id="page" value="@(Model.PageViewModel.PageNumber + 1)" />
+                            <input type="submit" class="btn btn-default btn" value="Далее &rarr;" />
+                        </div>
+                    }
+                }
+
+            </li>
+        </ul>
+    </nav>
+</div>

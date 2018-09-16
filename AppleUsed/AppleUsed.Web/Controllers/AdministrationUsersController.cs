@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AppleUsed.BLL.DTO;
 using AppleUsed.BLL.Interfaces;
+using AppleUsed.Web.Models.ViewModels.AdViewModels;
+using AppleUsed.Web.Models.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppleUsed.Web.Controllers
 {
@@ -16,10 +20,17 @@ namespace AppleUsed.Web.Controllers
             _userService = userService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var users = _userService.GetUsers();
-            return View(users);
+            int pageSize = 5;
+            UserIndexViewModel model = new UserIndexViewModel() { UserList = new List<UserDTO>() };
+            model.UserList = await _userService.GetUsers().ToListAsync();
+
+            int count = model.UserList.Count();
+            model.PageViewModel = new PageViewModel(count, page, pageSize);
+            model.UserList = model.UserList.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            return View(model);
         }
 
         private bool disposed = false;

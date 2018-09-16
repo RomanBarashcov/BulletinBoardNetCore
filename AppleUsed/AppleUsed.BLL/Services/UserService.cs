@@ -1,6 +1,7 @@
 ﻿using AppleUsed.BLL.DTO;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Interfaces;
+using AppleUsed.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +11,16 @@ namespace AppleUsed.BLL.Services
 {
     public class UserService : IUserService
     {
-        private IUserRepository _userRepository { get; set; }
+        private UnityOfWork _unitOfWork { get; set; }
 
-        public UserService(IUserRepository userRepository)
+        public UserService(UnityOfWork unitOfWork)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public IQueryable<UserDTO> GetUsers()
         {
-            var users = _userRepository.GetUsers().Select(u =>
+            var users = _unitOfWork.UserRepository.GetUsers().Select(u =>
             new UserDTO
             {
                 Id = u.Id,

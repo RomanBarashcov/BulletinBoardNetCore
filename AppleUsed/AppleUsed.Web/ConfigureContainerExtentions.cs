@@ -33,6 +33,7 @@ namespace AppleUsed.Web
         public static void AddRepository(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IUserRepository, UserRepository>();
+            serviceCollection.AddScoped<IUnityOfWork, UnityOfWork>();
         }
 
         public static void AddTransientServices(this IServiceCollection serviceCollection)
@@ -40,6 +41,8 @@ namespace AppleUsed.Web
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlServer(GetDataConnectionStringFromConfig());
             var dbContext = new AppDbContext(optionsBuilder.Options);
+            var unitOfWork = new UnityOfWork(new UserRepository(dbContext));
+
 
             serviceCollection.AddTransient<IEmailSender, EmailSender>();
             serviceCollection.AddTransient<IImageCompressorService, ImageCompressorService>();
@@ -63,8 +66,8 @@ namespace AppleUsed.Web
 
             serviceCollection.AddTransient<IAdService>(
                 s => new AdService(dbContext,
-                new DataService(dbContext), 
-                new ImageService(new ImageCompressorService()), 
+                new DataService(dbContext),
+                new ImageService(new ImageCompressorService()),
                 new ConversationService(dbContext),
                 new CityAreasService(dbContext),
                 new CityService(dbContext),
@@ -97,10 +100,12 @@ namespace AppleUsed.Web
             serviceCollection.AddTransient<IServicesService>(
                 s => new ServicesService(dbContext, new ServiecActiveTimeService(dbContext)));
 
-            serviceCollection.AddTransient<IUserService>(
-                s => new UserService(new UserRepository(dbContext)));
-        }
+            serviceCollection.AddTransient<IUserService, UserService>();
 
+            serviceCollection.AddTransient<IUserService>(
+              s => new UserService(unitOfWork));
+
+        }
         /// <summary>
         /// Adds rules to the <see cref="RazorViewEngineOptions"/> for dealing with Feature Folders
         /// </summary>
