@@ -1,9 +1,9 @@
 ﻿@using AppleUsed.Web.Views.AdministrationNav
 
 <ul class="nav nav-pills nav-stacked">
-    <li class="@AdministrationNavPages.AdsNavClass(ViewContext)"><a asp-controller="Manage" asp-action="ManageAdsByUser">Объявления</a></li>
-    <li class="@AdministrationNavPages.UsersNavClass(ViewContext)"><a asp-controller="AdministrationUsers" asp-action="Index">Пользователи</a></li>
-    <li class="@AdministrationNavPages.PurchasesNavClass(ViewContext)"><a asp-controller="AdministrationPurchases" asp-action="Index">Покупки</a></li>
-    <li class="@AdministrationNavPages.ServicesNavClass(ViewContext)"><a asp-controller="AdministrationServices" asp-action="Index">Cервисы</a></li>
+    <li class="@AdministrationNavPages.AdsNavClass(ViewContext)"><a asp-controller="AdministrationAd" asp-action="ManageAdsByUser">Объявления</a></li>
+    <li class="@AdministrationNavPages.UsersNavClass(ViewContext)"><a asp-controller="AdministrationUser" asp-action="Index">Пользователи</a></li>
+    <li class="@AdministrationNavPages.PurchasesNavClass(ViewContext)"><a asp-controller="AdministrationPurchase" asp-action="Index">Покупки</a></li>
+    <li class="@AdministrationNavPages.ServicesNavClass(ViewContext)"><a asp-controller="AdministrationService" asp-action="Index">Cервисы</a></li>
 </ul>
 

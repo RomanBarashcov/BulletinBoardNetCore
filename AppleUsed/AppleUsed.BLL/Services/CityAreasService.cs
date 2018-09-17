@@ -3,32 +3,22 @@ using AppleUsed.DAL.Identity;
 using System.Linq;
 using AppleUsed.DAL.Entities;
 using System;
+using AppleUsed.DAL.Interfaces;
 
 namespace AppleUsed.BLL.Services
 {
     public class CityAreasService : ICityAreasService, IDisposable
     {
-        private readonly AppDbContext _db;
+        private ICityAreasRepository _cityAreasRepository;
 
-        public CityAreasService(AppDbContext db)
+        public CityAreasService(ICityAreasRepository cityAreasRepository)
         {
-            _db = db;
+            _cityAreasRepository = cityAreasRepository;
         }
 
         public IQueryable<CityArea> GetCityAreas()
         {
-            var cityAreas = (from ca in _db.CityAreas
-                                        join c in _db.Cities on ca.CityAreaId equals c.CityArea.CityAreaId
-                                        into citiesResult
-                                        select new CityArea
-                                        {
-                                            CityAreaId = ca.CityAreaId,
-                                            Name = ca.Name,
-                                            Cities = citiesResult.ToList()
-
-                                        });
-
-            return cityAreas;
+            return _cityAreasRepository.GetCityAreas();
         }
 
         private bool disposed = false;
@@ -44,6 +34,8 @@ namespace AppleUsed.BLL.Services
             if (!disposed)
             {
                 disposed = true;
+                _cityAreasRepository.Dispose();
+                _cityAreasRepository = null;
             }
         }
 

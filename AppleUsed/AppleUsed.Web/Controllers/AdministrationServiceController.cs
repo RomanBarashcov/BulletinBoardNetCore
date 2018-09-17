@@ -13,12 +13,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppleUsed.Web.Controllers
 {
-    public class AdministrationServicesController : Controller
+    public class AdministrationServiceController : Controller
     {
         public IServicesService _servicesService;
         private PrepearingModelHelper _prepearingModelHelper;
 
-        public AdministrationServicesController(IServicesService servicesService)
+        public AdministrationServiceController(IServicesService servicesService)
         {
             _servicesService = servicesService;
             _prepearingModelHelper = new PrepearingModelHelper();

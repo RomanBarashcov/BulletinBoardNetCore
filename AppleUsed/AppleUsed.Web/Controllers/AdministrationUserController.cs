@@ -11,11 +11,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppleUsed.Web.Controllers
 {
-    public class AdministrationUsersController : Controller
+    public class AdministrationUserController : Controller
     {
         private IUserService _userService;
 
-        public AdministrationUsersController(IUserService userService)
+        public AdministrationUserController(IUserService userService)
         {
             _userService = userService;
         }

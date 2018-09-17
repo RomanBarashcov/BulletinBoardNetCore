@@ -2,6 +2,7 @@
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
+using AppleUsed.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,35 +14,27 @@ namespace AppleUsed.BLL.Services
 {
     public class AdUpService : IAdUpService, IDisposable
     {
-        private readonly AppDbContext _db;
+        private IAdRepository _adRepository;
 
-        public AdUpService(AppDbContext db)
+        public AdUpService(IAdRepository adRepository)
         {
-            _db = db;
+            _adRepository = adRepository;
         }
 
         public async Task<OperationDetails<int>> UpAd(int adId)
         {
             OperationDetails<int> operationDetails = new OperationDetails<int>(false, "Вы не можете больше поднимать объявление вверх списка, ваш лимит исчерпан. Каждый месяц предоставляется 10 поднятий, если вы исчерпали лимит, вы можете приобрести еще в разделе покупки.", 0);
 
-            var adUp = await _db.AdUps.Where(x=>x.AdId == adId).FirstOrDefaultAsync();
+            var adUp = await _adRepository.FindByAdIdAsync(adId);
 
             if(adUp.CurrentRaisedUpCount < adUp.LimitUp)
             {
                 adUp.CurrentRaisedUpCount += 1;
                 adUp.LastUp = DateTime.Now;
 
-                try
-                {
-                    _db.AdUps.Update(adUp);
-                    await _db.SaveChangesAsync();
-
-                    operationDetails = new OperationDetails<int>(true, "", adUp.CurrentRaisedUpCount);
-                }
-                catch(Exception ex)
-                {
-                    operationDetails = new OperationDetails<int>(true, ex.Message, adUp.CurrentRaisedUpCount);
-                }
+                var result = await _adRepository.Update(adUp);
+                if (result == adUp.AdId)
+                    operationDetails = new OperationDetails<int>(true, "", 0);
             }
 
             return operationDetails;
@@ -51,7 +44,7 @@ namespace AppleUsed.BLL.Services
         {
             OperationDetails<int> operationDetail = new OperationDetails<int>(false, "", 0);
 
-            var ad = await _db.Ads.FindAsync(adId);
+            var ad = await _adRepository.FindByAdIdAsync(adId);
 
             if(ad != null)
             {
@@ -64,17 +57,10 @@ namespace AppleUsed.BLL.Services
                     AdId = ad.AdId
                 };
 
-                try
-                {
-                    await _db.AdUps.AddAsync(adUp);
-                    await _db.SaveChangesAsync();
+                 var result = await _adRepository.AddAsync(adUp);
+                 if(result != 0)
+                    operationDetail = new OperationDetails<int>(true, "", result);
 
-                    operationDetail = new OperationDetails<int>(true, "", adUp.AdUpId);
-                }
-                catch (Exception ex)
-                {
-                    operationDetail = new OperationDetails<int>(false, ex.Message, 0);
-                }
             }
 
             return operationDetail;
@@ -98,6 +84,8 @@ namespace AppleUsed.BLL.Services
             if (!disposed)
             {
                 disposed = true;
+                _adRepository.Dispose();
+                _adRepository = null;
             }
         }
     }

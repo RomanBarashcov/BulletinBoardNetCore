@@ -606,7 +606,7 @@ namespace AppleUsed.BLL.Services
                     _cityService = null;
                     _productModelService = null;
                     _adUpService = null;
-    }
+                }
                 this.disposed = true;
             }
         }

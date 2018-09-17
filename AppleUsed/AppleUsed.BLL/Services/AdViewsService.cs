@@ -1,32 +1,27 @@
 ﻿using AppleUsed.BLL.Interfaces;
-using AppleUsed.DAL.Entities;
-using AppleUsed.DAL.Identity;
+using AppleUsed.DAL.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
     public class AdViewsService : IAdViewsService, IDisposable
     {
-        private readonly AppDbContext _db;
+        private IAdViewsRepository _adViewsReposiotry;
 
-        public AdViewsService(AppDbContext db)
+        public AdViewsService(IAdViewsRepository adViewsReposiotry)
         {
-            _db = db;
+            _adViewsReposiotry = adViewsReposiotry;
         }
 
         public async Task UpdateViewsAd(int adId)
         {
-            var adViews = _db.AdViews.Where(x => x.AdId == adId).FirstOrDefault();
-
+            var adViews = await _adViewsReposiotry.FindByAdIdAsync(adId);
             adViews.SumViews += 1;
+
             try
             {
-                _db.AdViews.Update(adViews);
-                await _db.SaveChangesAsync();
+                await _adViewsReposiotry.Update(adViews);
             }
             catch(Exception ex)
             {
@@ -36,13 +31,11 @@ namespace AppleUsed.BLL.Services
 
         public async Task ResetViews(int adId)
         {
-            var adViews = _db.AdViews.Where(x => x.AdId == adId).FirstOrDefault();
-
+            var adViews = await _adViewsReposiotry.FindByAdIdAsync(adId);
             adViews.SumViews = 0;
             try
             {
-                _db.AdViews.Update(adViews);
-                await _db.SaveChangesAsync();
+                await _adViewsReposiotry.Update(adViews);
             }
             catch (Exception ex)
             {
@@ -63,6 +56,8 @@ namespace AppleUsed.BLL.Services
             if (!disposed)
             {
                 disposed = true;
+                _adViewsReposiotry.Dispose();
+                _adViewsReposiotry = null;
             }
         }
     }

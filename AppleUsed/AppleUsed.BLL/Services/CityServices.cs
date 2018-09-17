@@ -1,6 +1,7 @@
 ﻿using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
+using AppleUsed.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,43 +12,21 @@ namespace AppleUsed.BLL.Services
 {
     public class CityService : ICityService, IDisposable
     {
-        private readonly AppDbContext _db;
+        private ICityRepository _cityRepository;
 
-        public CityService(AppDbContext db)
+        public CityService(ICityRepository cityRepository)
         {
-            _db = db;
+            _cityRepository = cityRepository;
         }
 
         public IQueryable<City> GetCities()
         {
-            var cities = (from c in _db.Cities
-                          join ca in _db.CityAreas
-                          on c.CityArea.CityAreaId equals ca.CityAreaId
-                          select new City
-                          {
-                              CityId = c.CityId,
-                              Name = c.Name,
-                              CityArea = ca
-
-                          });
-
-            return cities;
+            return _cityRepository.GetCities();
         }
 
         public IQueryable<City> GetCitiesByCityAreaId(int cityAreaId)
         {
-            var cities = (from c in _db.Cities where c.CityArea.CityAreaId == cityAreaId
-                          join ca in _db.CityAreas
-                          on c.CityArea.CityAreaId equals ca.CityAreaId
-                          select new City
-                          {
-                              CityId = c.CityId,
-                              Name = c.Name,
-                              CityArea = ca
-
-                          });
-
-            return cities;
+            return _cityRepository.GetCitiesByCityAreaId(cityAreaId);
         }
 
         private bool disposed = false;
