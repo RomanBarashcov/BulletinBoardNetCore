@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Interfaces
 {
-    public interface IAdViewsService
+    public interface IAdViewsService : IDisposable
     {
         Task UpdateViewsAd(int adId);
         Task ResetViews(int adId);

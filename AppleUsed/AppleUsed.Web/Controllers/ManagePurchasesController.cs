@@ -16,13 +16,13 @@ namespace AppleUsed.Web.Controllers
         private UserManager<ApplicationUser> _userManager;
         private IPurchasesService _purchasesService;
         private IServicesService _servicesService;
-        private IServiecActiveTimeService _serviecActiveTimeService;
+        private IServiceActiveTimeService _serviecActiveTimeService;
 
         public ManagePurchasesController(
             UserManager<ApplicationUser> userManager,
             IPurchasesService purchasesService,
             IServicesService servicesService,
-            IServiecActiveTimeService serviecActiveTimeService)
+            IServiceActiveTimeService serviecActiveTimeService)
         {
             _userManager = userManager;
             _purchasesService = purchasesService;

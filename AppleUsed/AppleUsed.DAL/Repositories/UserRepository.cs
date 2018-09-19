@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AppleUsed.DAL.Repositories
 {
-    public class UserRepository : IUserRepository , IDisposable
+    public class UserRepository : IUserRepository
     {
         private AppDbContext _db { get; set; }
 
@@ -20,6 +21,12 @@ namespace AppleUsed.DAL.Repositories
         {
             var users = _db.Users;
             return users;
+        }
+
+        public async Task<ApplicationUser> FindByIdAsync(string userId)
+        {
+            var user = await _db.Users.FindAsync(userId);
+            return user;
         }
 
         private bool disposed = false;

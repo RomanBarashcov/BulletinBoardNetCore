@@ -10,23 +10,23 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class CityService : ICityService, IDisposable
+    public class CityService : ICityService
     {
-        private ICityRepository _cityRepository;
+        private IUnityOfWork _uof;
 
-        public CityService(ICityRepository cityRepository)
+        public CityService(IUnityOfWork uof)
         {
-            _cityRepository = cityRepository;
+            _uof = uof;
         }
 
         public IQueryable<City> GetCities()
         {
-            return _cityRepository.GetCities();
+            return _uof.CityRepository.GetCities();
         }
 
         public IQueryable<City> GetCitiesByCityAreaId(int cityAreaId)
         {
-            return _cityRepository.GetCitiesByCityAreaId(cityAreaId);
+            return _uof.CityRepository.GetCitiesByCityAreaId(cityAreaId);
         }
 
         private bool disposed = false;
@@ -42,6 +42,8 @@ namespace AppleUsed.BLL.Services
             if (!disposed)
             {
                 disposed = true;
+                _uof.Dispose();
+                _uof = null;
             }
         }
     }

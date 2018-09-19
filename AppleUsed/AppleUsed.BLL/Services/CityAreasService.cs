@@ -7,18 +7,18 @@ using AppleUsed.DAL.Interfaces;
 
 namespace AppleUsed.BLL.Services
 {
-    public class CityAreasService : ICityAreasService, IDisposable
+    public class CityAreasService : ICityAreasService
     {
-        private ICityAreasRepository _cityAreasRepository;
+        private IUnityOfWork _uof;
 
-        public CityAreasService(ICityAreasRepository cityAreasRepository)
+        public CityAreasService(IUnityOfWork uof)
         {
-            _cityAreasRepository = cityAreasRepository;
+            _uof = uof;
         }
 
         public IQueryable<CityArea> GetCityAreas()
         {
-            return _cityAreasRepository.GetCityAreas();
+            return _uof.CityAreasRepository.GetCityAreas();
         }
 
         private bool disposed = false;
@@ -34,8 +34,8 @@ namespace AppleUsed.BLL.Services
             if (!disposed)
             {
                 disposed = true;
-                _cityAreasRepository.Dispose();
-                _cityAreasRepository = null;
+                _uof.Dispose();
+                _uof = null;
             }
         }
 

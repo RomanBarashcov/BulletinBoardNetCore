@@ -8,7 +8,6 @@ namespace AppleUsed.DAL.Interfaces
 {
     public interface ICityRepository : IDisposable
     {
-
         IQueryable<City> GetCities();
 
         IQueryable<City> GetCitiesByCityAreaId(int cityAreaId);

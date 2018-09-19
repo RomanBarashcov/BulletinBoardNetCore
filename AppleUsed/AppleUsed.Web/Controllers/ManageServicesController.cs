@@ -14,13 +14,13 @@ namespace AppleUsed.Web.Controllers
     public class ManageServicesController : Controller
     {
         private IServicesService _servicesService;
-        private IServiecActiveTimeService _serviecActiveTimeService;
+        private IServiceActiveTimeService _serviecActiveTimeService;
         private IAdService _adService;
         private PrepearingModelHelper _prepearingModelHelper;
 
         public ManageServicesController(
             IServicesService servicesService,
-            IServiecActiveTimeService serviecActiveTimeService, 
+            IServiceActiveTimeService serviecActiveTimeService, 
             IAdService adService)
         {
             _servicesService = servicesService;

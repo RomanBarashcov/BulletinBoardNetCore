@@ -12,27 +12,27 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class AdUpService : IAdUpService, IDisposable
+    public class AdUpService : IAdUpService
     {
-        private IAdRepository _adRepository;
+        private IUnityOfWork _uof;
 
-        public AdUpService(IAdRepository adRepository)
+        public AdUpService(IUnityOfWork uof)
         {
-            _adRepository = adRepository;
+            _uof = uof;
         }
 
         public async Task<OperationDetails<int>> UpAd(int adId)
         {
             OperationDetails<int> operationDetails = new OperationDetails<int>(false, "Вы не можете больше поднимать объявление вверх списка, ваш лимит исчерпан. Каждый месяц предоставляется 10 поднятий, если вы исчерпали лимит, вы можете приобрести еще в разделе покупки.", 0);
 
-            var adUp = await _adRepository.FindByAdIdAsync(adId);
+            var adUp = await _uof.AdUpRepository.FindByAdIdAsync(adId);
 
             if(adUp.CurrentRaisedUpCount < adUp.LimitUp)
             {
                 adUp.CurrentRaisedUpCount += 1;
                 adUp.LastUp = DateTime.Now;
 
-                var result = await _adRepository.Update(adUp);
+                var result = await _uof.AdUpRepository.Update(adUp);
                 if (result == adUp.AdId)
                     operationDetails = new OperationDetails<int>(true, "", 0);
             }
@@ -44,7 +44,7 @@ namespace AppleUsed.BLL.Services
         {
             OperationDetails<int> operationDetail = new OperationDetails<int>(false, "", 0);
 
-            var ad = await _adRepository.FindByAdIdAsync(adId);
+            var ad = await _uof.AdUpRepository.FindByAdIdAsync(adId);
 
             if(ad != null)
             {
@@ -57,7 +57,7 @@ namespace AppleUsed.BLL.Services
                     AdId = ad.AdId
                 };
 
-                 var result = await _adRepository.AddAsync(adUp);
+                 var result = await _uof.AdUpRepository.AddAsync(adUp);
                  if(result != 0)
                     operationDetail = new OperationDetails<int>(true, "", result);
 
@@ -84,8 +84,8 @@ namespace AppleUsed.BLL.Services
             if (!disposed)
             {
                 disposed = true;
-                _adRepository.Dispose();
-                _adRepository = null;
+                _uof.Dispose();
+                _uof = null;
             }
         }
     }

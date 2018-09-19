@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Interfaces
 {
-    public interface IServiecActiveTimeService
+    public interface IServiceActiveTimeService
     {
 
         OperationDetails<IQueryable<ServiceActiveTimesDTO>> GetAllActiveServiceTimesByServiceId(int sericeId);

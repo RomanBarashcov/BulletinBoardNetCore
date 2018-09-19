@@ -7,7 +7,7 @@ using System.Text;
 
 namespace AppleUsed.BLL.Interfaces
 {
-    public interface ICityAreasService
+    public interface ICityAreasService : IDisposable
     {
         IQueryable<CityArea> GetCityAreas();
     }

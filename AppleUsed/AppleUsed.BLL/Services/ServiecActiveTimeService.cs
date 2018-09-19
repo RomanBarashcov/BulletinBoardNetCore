@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class ServiecActiveTimeService : IServiecActiveTimeService
+    public class ServiceActiveTimeService : IServiceActiveTimeService
     {
         private readonly AppDbContext _db;
 
-        public ServiecActiveTimeService(AppDbContext db)
+        public ServiceActiveTimeService(AppDbContext db)
         {
             _db = db;
         }

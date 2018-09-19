@@ -5,23 +5,23 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class AdViewsService : IAdViewsService, IDisposable
+    public class AdViewsService : IAdViewsService
     {
-        private IAdViewsRepository _adViewsReposiotry;
+        private IUnityOfWork _uof;
 
-        public AdViewsService(IAdViewsRepository adViewsReposiotry)
+        public AdViewsService(IUnityOfWork uof)
         {
-            _adViewsReposiotry = adViewsReposiotry;
+            _uof = uof;
         }
 
         public async Task UpdateViewsAd(int adId)
         {
-            var adViews = await _adViewsReposiotry.FindByAdIdAsync(adId);
+            var adViews = await _uof.AdViewsRepository.FindByAdIdAsync(adId);
             adViews.SumViews += 1;
 
             try
             {
-                await _adViewsReposiotry.Update(adViews);
+                await _uof.AdViewsRepository.Update(adViews);
             }
             catch(Exception ex)
             {
@@ -31,11 +31,11 @@ namespace AppleUsed.BLL.Services
 
         public async Task ResetViews(int adId)
         {
-            var adViews = await _adViewsReposiotry.FindByAdIdAsync(adId);
+            var adViews = await _uof.AdViewsRepository.FindByAdIdAsync(adId);
             adViews.SumViews = 0;
             try
             {
-                await _adViewsReposiotry.Update(adViews);
+                await _uof.AdViewsRepository.Update(adViews);
             }
             catch (Exception ex)
             {
@@ -56,8 +56,8 @@ namespace AppleUsed.BLL.Services
             if (!disposed)
             {
                 disposed = true;
-                _adViewsReposiotry.Dispose();
-                _adViewsReposiotry = null;
+                _uof.Dispose();
+                _uof = null;
             }
         }
     }

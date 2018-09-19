@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Interfaces
 {
-    public interface IAdUpService
+    public interface IAdUpService : IDisposable
     {
         Task<OperationDetails<int>> UpdateUpAd(int adId);
         Task<OperationDetails<int>> UpAd(int adId);

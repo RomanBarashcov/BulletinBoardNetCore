@@ -3,6 +3,7 @@ using AppleUsed.BLL.Infrastructure;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
+using AppleUsed.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +14,17 @@ namespace AppleUsed.BLL.Services
 {
     public class PurchasesService : IPurchasesService
     {
-        private readonly AppDbContext _db;
-        private readonly IAdService _adService;
+        private IUnityOfWork _uof;
 
-        public PurchasesService(AppDbContext db, IAdService adService)
+        public PurchasesService(IUnityOfWork uof)
         {
-            _db = db;
-            _adService = adService;
+            _uof = uof;
+        }
+
+        public IQueryable<Purchase> GetPurchases()
+        {
+            var purchases = _uof.PurchaseRepository.GetAllPurchase();
+            return purchases;
         }
 
         public async Task<OperationDetails<int>> DiactivationAllPurchaseWhereEndDateServiceIsOut()
@@ -39,8 +44,7 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                _db.UpdateRange(deactivationPurchases);
-                await _db.SaveChangesAsync();
+                await _uof.PurchaseRepository.UpdatePurchaseRange(deactivationPurchases);
                 operationDetails = new OperationDetails<int>(true, "", 0);
             }
             catch(Exception ex)
@@ -51,24 +55,6 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
-        public IQueryable<PurchaseDTO> GetPurchases()
-        {
-            var purchases = _db.Purchases.Select(x => new PurchaseDTO
-            { 
-                PurchaseId = x.PurchaseId,
-                TotalCost = x.TotalCost,
-                DateOfPayment = x.DateOfPayment,
-                StartDateService = x.StartDateService,
-                EndDateService = x.EndDateService,
-                IsPayed = x.IsPayed,
-                ServicesId = x.ServicesId,
-                AdId = x.AdId
-                
-            });
-
-            return purchases;
-        }
-
         public async Task<OperationDetails<PurchaseDTO>> GetPurchaseById(int purchaseId)
         {
             OperationDetails<PurchaseDTO> operationDetails = 
@@ -77,7 +63,7 @@ namespace AppleUsed.BLL.Services
             if (purchaseId <= 0)
                 return operationDetails;
 
-            var purchase = await _db.Purchases.FindAsync(purchaseId);
+            var purchase = await _uof.PurchaseRepository.FindPurchaseByIdAsync(purchaseId);
 
             if (purchase == null)
                 return operationDetails;
@@ -107,7 +93,7 @@ namespace AppleUsed.BLL.Services
             if (string.IsNullOrEmpty(userId))
                 return operationDetails;
 
-            var user = await _db.Users.FindAsync(userId);
+            var user = await _uof.UserRepository.FindByIdAsync(userId);
             if (user == null)
                 return operationDetails;
 
@@ -115,7 +101,7 @@ namespace AppleUsed.BLL.Services
             if(ads.Property == null)
                 return operationDetails;
 
-            var purchasesDTO = GetPurchaseDTOQueryJoinWithUserAds(ads.Property);
+            var purchasesDTO = GetPurchaseDTOQueryJoinWithUserAds(ads);
 
 
             operationDetails = new OperationDetails<IQueryable<PurchaseDTO>>(true, "", purchasesDTO);
@@ -135,7 +121,7 @@ namespace AppleUsed.BLL.Services
             if (ad == null)
                 return operationDetails;
 
-            var service = await _db.Services.FindAsync(purchase.ServicesId);
+            var service = await _uof.ServiceRepository.FindServiceByIdAsync(purchase.ServicesId);
             if (service == null)
                 return operationDetails;
 
@@ -152,9 +138,7 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                await _db.Purchases.AddAsync(newPurchase);
-                await _db.SaveChangesAsync();
-
+                newPurchase.PurchaseId = await _uof.PurchaseRepository.AddPurchaseAsync(newPurchase);
                 operationDetails = new OperationDetails<int>(true, "", newPurchase.PurchaseId);
             }
             catch (Exception ex)
@@ -177,11 +161,11 @@ namespace AppleUsed.BLL.Services
             if (ad == null)
                 return operationDetails;
 
-            var oldService = await _db.Services.FindAsync(purchase.ServicesId);
+            var oldService = await _uof.ServiceRepository.FindServiceByIdAsync(purchase.ServicesId);
             if (oldService == null)
                 return operationDetails;
 
-            var oldPurchase = await _db.Purchases.FindAsync(purchase.PurchaseId);
+            var oldPurchase = await _uof.PurchaseRepository.FindPurchaseByIdAsync(purchase.PurchaseId);
             if (oldPurchase == null)
                 return operationDetails;
 
@@ -196,9 +180,7 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                _db.Purchases.Update(oldPurchase);
-                await _db.SaveChangesAsync();
-
+                await _uof.PurchaseRepository.UpdatePurchase(oldPurchase);
                 operationDetails = new OperationDetails<int>(true, "", oldPurchase.PurchaseId);
             }
             catch (Exception ex)
@@ -209,25 +191,12 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
-        private IQueryable<PurchaseDTO> GetPurchaseDTOQueryJoinWithUserAds(IQueryable<AdDTO> adsQuery)
+        private IQueryable<Purchase> GetAllUserPurchaseByAds(IQueryable<Ad> adsQuery)
         {
-
-                var purchasesDTO = (from ads in adsQuery
-                                    join p in _db.Purchases on ads.AdId equals p.AdId
-                                    select new PurchaseDTO
-                                    {
-                                        PurchaseId = p.PurchaseId,
-                                        TotalCost = p.TotalCost,
-                                        DateOfPayment = p.DateOfPayment,
-                                        StartDateService = p.StartDateService,
-                                        EndDateService = p.EndDateService,
-                                        IsPayed = p.IsPayed,
-                                        ServicesId = p.ServicesId,
-                                        ServiceActiveTimeId = p.ServiceActiveTimeId,
-                                        AdId = p.AdId
-                                    });
-            
-            return purchasesDTO;
+            var purchases = _uof.PurchaseRepository.GetAllUserPurchaseByAds(adsQuery);
+            return purchases;
         }
+
+
     }
 }

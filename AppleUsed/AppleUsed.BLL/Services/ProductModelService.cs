@@ -2,6 +2,7 @@
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
+using AppleUsed.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,42 +13,43 @@ namespace AppleUsed.BLL.Services
 {
     public class ProductModelService : IProductModelsService
     {
-        private readonly AppDbContext _db;
+        private IUnityOfWork _uof;
 
-        public ProductModelService(AppDbContext db)
+        public ProductModelService(IUnityOfWork uof)
         {
-            _db = db;
+            _uof = uof;
         }
 
         public IQueryable<ProductModels> GetProductModels()
         {
-            var porductModels = (from m in _db.ProductModels
-                                 join t in _db.ProductTypes on m.ProductTypes.ProductTypesId equals t.ProductTypesId
-                                 select new ProductModels
-                                 {
-                                     ProductModelsId = m.ProductModelsId,
-                                     Name = m.Name,
-                                     ProductTypes = t
-
-                                 });
-
+            var porductModels = _uof.ProductModelRepository.GetProductModels();
             return porductModels;
         }
 
         public IQueryable<ProductModels> GetProductModelsByProductTypeId(int productTypeId)
         {
-            var porductModels = (from m in _db.ProductModels where m.ProductModelsId == productTypeId
-                                join t in _db.ProductTypes on m.ProductTypes.ProductTypesId                    equals t.ProductTypesId
-                                select new ProductModels
-                                {
-                                    ProductModelsId = m.ProductModelsId,
-                                    Name = m.Name,
-                                    ProductTypes = t
-
-                                });
+            var porductModels = _uof.ProductModelRepository
+                .FindProductModelsByProductTypeId(productTypeId);
 
             return porductModels;
         }
 
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                disposed = true;
+                _uof.Dispose();
+                _uof = null;
+            }
+        }
     }
 }

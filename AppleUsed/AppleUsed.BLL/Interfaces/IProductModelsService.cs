@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Interfaces
 {
-    public interface IProductModelsService
+    public interface IProductModelsService : IDisposable
     {
         IQueryable<ProductModels> GetProductModels();
         IQueryable<ProductModels> GetProductModelsByProductTypeId(int productTypeId);

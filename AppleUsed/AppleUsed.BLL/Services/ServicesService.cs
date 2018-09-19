@@ -2,6 +2,7 @@
 using AppleUsed.BLL.Infrastructure;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Identity;
+using AppleUsed.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -11,26 +12,22 @@ namespace AppleUsed.BLL.Services
 {
     public class ServicesService : IServicesService
     {
-        private readonly AppDbContext _db;
-        private readonly IServiecActiveTimeService _serviecActiveTimeService;
+        private IUnityOfWork _uof;
 
-        public ServicesService(AppDbContext db, IServiecActiveTimeService serviecActiveTimeService)
+        public ServicesService(IUnityOfWork uof)
         {
-            _db = db;
-            _serviecActiveTimeService = serviecActiveTimeService;
+            _uof = uof;
         }
 
         public IQueryable<ServiceDTO> GetAllServices()
         {
-            var services = (from s in _db.Services
-                                join sa in _db.ServiceActiveTimes on s.ServicesId equals sa.ServiceId into result
-                                select new ServiceDTO
-                                {
-                                    ServicesId = s.ServicesId,
-                                    Name = s.Name,
-                                    Description = s.Description,
-                                    ServiceActiveTimes = result.ToList()
-                                }); 
+            var services = _uof.ServiceRepository.GetAllServices().Select(s => new ServiceDTO
+            {
+                ServicesId = s.ServicesId,
+                Name = s.Name,
+                Description = s.Description,
+                ServiceActiveTimes = s.ServiceActiveTimes
+            });
 
             return services;
         }
@@ -43,17 +40,16 @@ namespace AppleUsed.BLL.Services
             if (id <= 0)
                 return operationDetails;
 
-            var service = await (from s in _db.Services.Where(x => x.ServicesId == id)
-                            join sa in _db.ServiceActiveTimes on s.ServicesId equals sa.ServiceId into result
-                            select new ServiceDTO
+            var service = await _uof.ServiceRepository.FindServiceByIdAsync(id);
+            var serviceDTO = new ServiceDTO
                             {
-                                ServicesId = s.ServicesId,
-                                Name = s.Name,
-                                Description = s.Description,
-                                ServiceActiveTimes = result.ToList()
-                            }).FirstOrDefaultAsync();
+                                ServicesId = service.ServicesId,
+                                Name = service.Name,
+                                Description = service.Description,
+                                ServiceActiveTimes = service.ServiceActiveTimes
+                             };
 
-            operationDetails = new OperationDetails<ServiceDTO>(true, "", service);
+            operationDetails = new OperationDetails<ServiceDTO>(true, "", serviceDTO);
 
             return operationDetails;
         }
@@ -75,17 +71,17 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                await _db.AddAsync(newServices);
-                await _db.SaveChangesAsync();
+                service.ServicesId = await _uof.ServiceRepository.AddServiceAsync(newServices);
                 operationDetails = new OperationDetails<int>(true, "", newServices.ServicesId);
-                service.ServicesId = newServices.ServicesId;
             }
             catch(Exception ex)
             {
                 operationDetails = new OperationDetails<int>(false, ex.Message, 0);
             }
 
-            var createServiceActiveTimeResult = await _serviecActiveTimeService.CreateServiceActiveTime(service);
+            newServices.ServiceActiveTimes = service.ServiceActiveTimes;
+
+            var createServiceActiveTimeResult = _uof.ServiceActiveTimeRepository.AddServiceActiveTimeRange(newServices.ServiceActiveTimes);
             if (!createServiceActiveTimeResult.Succedeed)
                 return createServiceActiveTimeResult;
 
@@ -100,7 +96,7 @@ namespace AppleUsed.BLL.Services
             if (service == null)
                 return operationDetails;
 
-            var oldServices = await _db.Services.FindAsync(service.ServicesId);
+            var oldServices = await _uof.ServiceRepository.FindServiceByIdAsync(service.ServicesId);
             if (oldServices == null)
                 return operationDetails;
 
