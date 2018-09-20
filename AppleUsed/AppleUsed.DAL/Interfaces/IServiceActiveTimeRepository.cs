@@ -19,6 +19,8 @@ namespace AppleUsed.DAL.Interfaces
 
         Task<int> UpdateServiceActiveTime(ServiceActiveTime serviceActiveTime);
 
+        Task UpdateServiceActiveTimeRange(List<ServiceActiveTime> serviceActiveTime);
+
         Task DeleteServiceActiveTime(int id);
     }
 }

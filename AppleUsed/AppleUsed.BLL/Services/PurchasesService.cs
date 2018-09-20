@@ -21,7 +21,26 @@ namespace AppleUsed.BLL.Services
             _uof = uof;
         }
 
-        public IQueryable<Purchase> GetPurchases()
+        public IQueryable<PurchaseDTO> GetPurchases()
+        {
+            var purchases = _uof.PurchaseRepository.GetAllPurchase().Select(p => new PurchaseDTO
+            {
+                 PurchaseId = p.PurchaseId,
+                 TotalCost = p.TotalCost,
+                 DateOfPayment = p.DateOfPayment,
+                 StartDateService = p.StartDateService,
+                 EndDateService = p.EndDateService,
+                 IsPayed = p.IsPayed,
+                 IsActive = p. IsActive,
+                 ServicesId = p.ServicesId,
+                 ServiceActiveTimeId = p.ServiceActiveTimeId,
+                 AdId = p.AdId
+             });
+
+            return purchases;
+        }
+
+        private IQueryable<Purchase> GetPurchaseQuery()
         {
             var purchases = _uof.PurchaseRepository.GetAllPurchase();
             return purchases;
@@ -32,7 +51,7 @@ namespace AppleUsed.BLL.Services
             OperationDetails<int> operationDetails =
               new OperationDetails<int>(false, "", 0);
 
-            var purchases = GetPurchases();
+            var purchases = GetPurchaseQuery();
             if (purchases == null) return operationDetails;
 
             var deactivationPurchases = purchases.Where(x => x.IsActive == true && x.EndDateService >= DateTime.Now.Date);

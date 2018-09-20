@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AppleUsed.BLL.Interfaces
 {
-    public interface IImageService
+    public interface IImageService : IDisposable
     {
         List<AdPhotos> GetPhotosHashList(IFormFileCollection productPhotos);
         List<string> CreatingImageSrcForSmallSize(List<AdPhotos> photoList);

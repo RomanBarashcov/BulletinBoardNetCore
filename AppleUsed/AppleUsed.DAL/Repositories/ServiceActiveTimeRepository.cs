@@ -48,6 +48,12 @@ namespace AppleUsed.DAL.Repositories
             return serviceActiveTime.ServiceActiveTimeId;
         }
 
+        public async Task UpdateServiceActiveTimeRange(List<ServiceActiveTime> serviceActiveTime)
+        {
+            _db.ServiceActiveTimes.UpdateRange(serviceActiveTime);
+            await _db.SaveChangesAsync();
+        }
+
         public async Task DeleteServiceActiveTime(int id)
         {
             var oldPurchase = await FindServiceActiveTimeByIdAsync(id);
@@ -74,6 +80,5 @@ namespace AppleUsed.DAL.Repositories
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
     }
 }

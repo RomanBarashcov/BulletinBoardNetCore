@@ -72,18 +72,15 @@ namespace AppleUsed.BLL.Services
             try
             {
                 service.ServicesId = await _uof.ServiceRepository.AddServiceAsync(newServices);
+                newServices.ServiceActiveTimes = service.ServiceActiveTimes;
+                await _uof.ServiceActiveTimeRepository.AddServiceActiveTimeRange(newServices.ServiceActiveTimes);
+
                 operationDetails = new OperationDetails<int>(true, "", newServices.ServicesId);
             }
             catch(Exception ex)
             {
                 operationDetails = new OperationDetails<int>(false, ex.Message, 0);
             }
-
-            newServices.ServiceActiveTimes = service.ServiceActiveTimes;
-
-            var createServiceActiveTimeResult = _uof.ServiceActiveTimeRepository.AddServiceActiveTimeRange(newServices.ServiceActiveTimes);
-            if (!createServiceActiveTimeResult.Succedeed)
-                return createServiceActiveTimeResult;
 
             return operationDetails;
         }
@@ -100,17 +97,14 @@ namespace AppleUsed.BLL.Services
             if (oldServices == null)
                 return operationDetails;
 
-            var updateServiceActiveTimeResult = await _serviecActiveTimeService.UpdateServiceActiveTime(service);
-            if (!updateServiceActiveTimeResult.Succedeed)
-                return updateServiceActiveTimeResult;
-
+         
             oldServices.Name = service.Name;
             oldServices.Description = service.Description;
           
             try
             {
-                _db.Update(oldServices);
-                await _db.SaveChangesAsync();
+                oldServices.ServicesId = await _uof.ServiceRepository.UpdateService(oldServices);
+                await _uof.ServiceActiveTimeRepository.UpdateServiceActiveTimeRange(service.ServiceActiveTimes);
                 operationDetails = new OperationDetails<int>(true, "", oldServices.ServicesId);
             }
             catch (Exception ex)
@@ -126,14 +120,13 @@ namespace AppleUsed.BLL.Services
             OperationDetails<int> operationDetails =
                 new OperationDetails<int>(false, "", 0);
 
-            var oldServices = await _db.Services.FindAsync(id);
+            var oldServices = await _uof.ServiceRepository.FindServiceByIdAsync(id);
             if (oldServices == null)
                 return operationDetails;
 
             try
             {
-                _db.Remove(oldServices);
-                await _db.SaveChangesAsync();
+                await _uof.ServiceRepository.DeleteService(id);
                 operationDetails = new OperationDetails<int>(true, "", 0);
             }
             catch(Exception ex)

@@ -9,9 +9,9 @@ using System.Text;
 
 namespace AppleUsed.BLL.Services
 {
-    public class ImageService : IImageService , IDisposable
+    public class ImageService : IImageService
     {
-        private readonly IImageCompressorService _imageCompressor;
+        private IImageCompressorService _imageCompressor;
 
         public ImageService(IImageCompressorService imageCompressor)
         {
@@ -92,6 +92,7 @@ namespace AppleUsed.BLL.Services
             if (!disposed)
             {
                 disposed = true;
+                _imageCompressor = null;
             }
         }
     }
