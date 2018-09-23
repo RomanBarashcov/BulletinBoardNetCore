@@ -8,6 +8,7 @@ namespace AppleUsed.DAL.Repositories
     public class UnityOfWork : IUnityOfWork
     {
         private IAdRepository _adRepository { get; set; }
+        private IAdPhotoRepository _adPhotoRepository { get; set; }
         private IAdUpRepository _adUpRepository { get; set; }
         private IAdViewsRepository _adViewsRepository { get; set; }
         private ICityAreasRepository _cityAreasRepository { get; set; }
@@ -21,6 +22,7 @@ namespace AppleUsed.DAL.Repositories
 
         public UnityOfWork(
             IAdRepository adRepository,
+            IAdPhotoRepository adPhotoRepository,
             IAdUpRepository adUpRepository,
             IAdViewsRepository adViewsRepository,
             ICityAreasRepository cityAreasRepository,
@@ -33,6 +35,7 @@ namespace AppleUsed.DAL.Repositories
 
         {
             _adRepository = adRepository;
+            _adPhotoRepository = adPhotoRepository;
             _adUpRepository = adUpRepository;
             _adViewsRepository = adViewsRepository;
             _cityAreasRepository = cityAreasRepository;
@@ -49,6 +52,12 @@ namespace AppleUsed.DAL.Repositories
         {
             get { return _adRepository; }
             set { _adRepository = value; }
+        }
+
+        public IAdPhotoRepository AdPhotoRepository
+        {
+            get { return _adPhotoRepository; }
+            set { _adPhotoRepository = value; }
         }
 
         public IAdUpRepository AdUpRepository

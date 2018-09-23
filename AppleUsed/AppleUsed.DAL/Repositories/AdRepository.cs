@@ -229,175 +229,102 @@ namespace AppleUsed.DAL.Repositories
             return ads;
         }
 
-        //public async Task<AdDTO> GetDataForCreatingAdOrDataForFilter()
-        //{
-        //    AdDTO adDto = new AdDTO();
-
-        //    adDto.CityesList = await _cityService.GetCities().ToListAsync();
-        //    adDto.CityAreasList = await _cityAreasService.GetCityAreas().ToListAsync();
-        //    adDto.ProductTypesList = await _db.ProductTypes.ToListAsync();
-        //    adDto.ProductModelsList = await _productModelService.GetProductModels().ToListAsync();
-        //    adDto.ProductMemoriesList = await _db.ProductMemories.ToListAsync();
-        //    adDto.ProductColorsList = await _db.ProductColors.ToListAsync();
-        //    adDto.ProductStatesList = await _db.ProductStates.ToListAsync();
-
-        //    return adDto;
-        //}
-
-        public async Task<OperationDetails<int>> SaveAd(string userName, AdDTO ad, IFormFileCollection productPhotos)
+        public async Task<int> AddAd(ApplicationUser user, Ad ad)
         {
-            OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
-            ApplicationUser user = new ApplicationUser();
-
-            if (ad == null)
-                return new OperationDetails<int>(false, "new Ad can't be null or empty", 0);
-
-            if (String.IsNullOrEmpty(userName))
-                return operationDetails;
-
-            user = await _db.Users.Where(x => x.UserName == userName).FirstOrDefaultAsync();
-
-            if (user == null)
-                return operationDetails;
+            var FindedUser = await _db.Users.Where(x => x.UserName == user.UserName).FirstOrDefaultAsync();
 
             ad.AdStatusId = (int)AdStatuses.Activated;
             ad.IsModerate = true;
 
-            var newAd = _dataService.TransformingAdDTOToAdEntities(ad);
-            newAd.ApplicationUser = user;
-
-            if (newAd.AdId == 0)
-            {
-                operationDetails = await CreateAd(user, newAd, productPhotos);
-            }
-            else
-            {
-                ad.AdStatusId = (int)AdStatuses.InProgress;
-                ad.IsModerate = false;
-
-                operationDetails = await UpdateAd(user, newAd, productPhotos);
-            }
-
-            return operationDetails;
-
-        }
-
-        private async Task<OperationDetails<int>> CreateAd(ApplicationUser user, Ad newAd, IFormFileCollection productPhotos)
-        {
-            OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
+            ad.ApplicationUser = FindedUser;
 
             try
             {
-                var addResult = await _db.Ads.AddAsync(newAd);
+                var addResult = await _db.Ads.AddAsync(ad);
                 var saveChangesResult = await _db.SaveChangesAsync();
-                operationDetails = new OperationDetails<int>(true, "", newAd.AdId);
             }
             catch (Exception ex)
             {
-                operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
+                Console.WriteLine(ex.Message);
             }
 
-            newAd.AdViews = new AdViews { AdId = newAd.AdId, SumViews = 0 };
+            ad.AdViews = new AdViews { AdId = ad.AdId, SumViews = 0 };
 
-            if (productPhotos != null)
-            {
-                operationDetails = await AddPhotosToAd(newAd, productPhotos);
-            }
+            //if (ad.Photos != null && ad.Photos.Count > 0)
+            //{
+            //    await AddPhotosToAd(ad);
+            //}
 
-            operationDetails = await _adUpService.InitUpAd(newAd.AdId);
-
-            return operationDetails;
+            return ad.AdId;
         }
 
-        private async Task<OperationDetails<int>> UpdateAd(ApplicationUser user, Ad updatedAd, IFormFileCollection productPhotos)
+        public async Task<int> UpdateAd(Ad ad)
         {
-            OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
-
-            if (updatedAd.AdId > 0)
-            {
-                var oldAd = await _db.Ads.Where(x => x.AdId == updatedAd.AdId).FirstOrDefaultAsync();
-
-                oldAd.Title = updatedAd.Title;
-                oldAd.Description = updatedAd.Description;
-                oldAd.Price = updatedAd.Price;
-                oldAd.DateUpdated = DateTime.Now.Date;
-                oldAd.Characteristics.ProductTypesId = updatedAd.Characteristics.ProductTypesId;
-                oldAd.Characteristics.ProductModelsId = updatedAd.Characteristics.ProductModelsId;
-                oldAd.Characteristics.ProductMemoriesId = updatedAd.Characteristics.ProductMemoriesId;
-                oldAd.Characteristics.ProductColorsId = updatedAd.Characteristics.ProductColorsId;
-                oldAd.Characteristics.ProductStatesId = updatedAd.Characteristics.ProductStatesId;
-                oldAd.City = updatedAd.City;
-
-                if (productPhotos != null)
-                {
-                    var oldPhotos = await _db.AdPhotos.Where(x => x.Ad.AdId == oldAd.AdId).ToListAsync();
-
-                    try
-                    {
-                        _db.RemoveRange(oldPhotos);
-                    }
-                    catch (Exception ex)
-                    {
-                        operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
-                    }
-
-                    operationDetails = await AddPhotosToAd(oldAd, productPhotos);
-                }
-            }
-
-            return operationDetails;
-        }
-
-        private async Task<OperationDetails<int>> AddPhotosToAd(Ad ad, IFormFileCollection productPhotos)
-        {
-            OperationDetails<int> operationDetails = new OperationDetails<int>(true, "", 0);
-
-            var binaryPhotoList = _imageService.GetPhotosHashList(productPhotos);
-            binaryPhotoList.ForEach(x => x.Ad = ad);
-            ad.Characteristics.Ad = ad;
+            var oldPhotos = await _db.AdPhotos.Where(x => x.Ad.AdId == ad.AdId).ToListAsync();
+            ad.AdStatusId = (int)AdStatuses.InProgress;
+            ad.IsModerate = false;
 
             try
             {
-                await _db.AdPhotos.AddRangeAsync(binaryPhotoList);
-                ad.Photos = binaryPhotoList;
+                _db.RemoveRange(oldPhotos);
                 _db.Update(ad);
+                //await AddPhotosToAd(ad);
                 await _db.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
+                Console.WriteLine(ex.Message);
             }
 
-            return operationDetails;
+            return ad.AdId;
         }
 
-        public async Task<OperationDetails<int>> SetStatusAd(int id, int adStatus)
-        {
-            OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
+        //private async Task AddPhotosToAd(Ad ad)
+        //{
+        //    var binaryPhotoList = ad.Photos.ToList();
+        //    binaryPhotoList.ForEach(x => x.Ad = ad);
+        //    ad.Characteristics.Ad = ad;
 
-            if (id > 0)
-            {
-                var ad = await _db.Ads.FindAsync(id);
-                if (ad == null)
-                    return new OperationDetails<int>(false, "Невозможно найти объявление , с таким идентификатором", 0);
+        //    try
+        //    {
+        //        await _db.AdPhotos.AddRangeAsync(binaryPhotoList);
+        //        ad.Photos = binaryPhotoList;
+        //        _db.Update(ad);
+        //        await _db.SaveChangesAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
+        //}
+
+        //public async Task<OperationDetails<int>> SetStatusAd(int id, int adStatus)
+        //{
+        //    OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
+
+        //    if (id > 0)
+        //    {
+        //        var ad = await _db.Ads.FindAsync(id);
+        //        if (ad == null)
+        //            return new OperationDetails<int>(false, "Невозможно найти объявление , с таким идентификатором", 0);
 
 
-                ad.AdStatusId = adStatus;
-                ad.IsModerate = false;
+        //        ad.AdStatusId = adStatus;
+        //        ad.IsModerate = false;
 
-                try
-                {
-                    _db.Update(ad);
-                    await _db.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
-                }
-            }
+        //        try
+        //        {
+        //            _db.Update(ad);
+        //            await _db.SaveChangesAsync();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
+        //        }
+        //    }
 
-            return operationDetails;
-        }
+        //    return operationDetails;
+        //}
 
         private bool disposed = false;
 

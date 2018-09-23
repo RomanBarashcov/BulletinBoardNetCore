@@ -8,6 +8,8 @@ namespace AppleUsed.DAL.Interfaces
     {
         IAdRepository AdRepository { get; set; }
 
+        IAdPhotoRepository AdPhotoRepository { get; set; }
+
         IAdUpRepository AdUpRepository { get; set; }
 
         IAdViewsRepository AdViewsRepository { get; set; }
