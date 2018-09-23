@@ -20,7 +20,7 @@ namespace AppleUsed.BLL.Interfaces
         Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByProductTypeId(int productTypeId);
         Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAdsByUserId(string userId);
         Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUserId(string userId);
-        Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUser(string userName);
+        Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUserName(string userName);
         Task<OperationDetails<AdDTO>> GetAdById(int id);
         Task<AdDTO> GetDataForCreatingAdOrDataForFilter();
         Task<OperationDetails<int>> SaveAd(string userName, AdDTO ad, IFormFileCollection productPhotos);

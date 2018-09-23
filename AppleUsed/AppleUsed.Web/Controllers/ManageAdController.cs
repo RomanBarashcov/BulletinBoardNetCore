@@ -48,7 +48,7 @@ namespace AppleUsed.Web.Controllers
             ManageAdIndexViewModel model = new ManageAdIndexViewModel
             { AdList = new List<AdDTO>(), SelectedAdStatus = adStatusId };
 
-            var getAdsByUserResult = await _adService.GetAdsByUser(userName);
+            var getAdsByUserResult = await _adService.GetAdsByUserName(userName);
             if (!getAdsByUserResult.Succedeed)
                 return View(new List<AdDTO>());
 

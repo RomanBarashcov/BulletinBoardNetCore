@@ -4,106 +4,32 @@ using AppleUsed.BLL.Infrastructure;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
+using AppleUsed.DAL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
     public class AdService : IAdService, IDisposable
     {
-        private AppDbContext _db;
-        private IDataService _dataService;
+        private IUnityOfWork _uof;
         private IImageService _imageService;
-        private IConversationService _conversationService;
-        private ICityAreasService _cityAreasService;
-        private ICityService _cityService;
-        private IProductModelsService _productModelService;
+        private IDataService _dataService;
         private IAdUpService _adUpService;
 
-        public AdService(AppDbContext context,
+        public AdService(
+            IUnityOfWork uof, 
+            IImageService imageService, 
             IDataService dataService,
-            IImageService imageService,
-            IConversationService conversationService,
-            ICityAreasService cityAreasService,
-            ICityService cityService,
-            IProductModelsService productModelsService,
             IAdUpService adUpService)
         {
-            _db = context;
-            _dataService = dataService;
+            _uof = uof;
             _imageService = imageService;
-            _conversationService = conversationService;
-            _cityAreasService = cityAreasService;
-            _cityService = cityService;
-            _productModelService = productModelsService;
+            _dataService = dataService;
             _adUpService = adUpService;
-        }
-
-        private IQueryable<AdDTO> GetAdQuery(Expression<Func<Ad, bool>> adExpression)
-        {
-            var ads = (from ad in  adExpression == null ? _db.Ads : _db.Ads.Where(adExpression)
-                       join au in _db.AdUps on ad.AdId equals au.AdId
-                       join c in _db.Cities on ad.City.CityId equals c.CityId
-                       join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
-                       join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.Ad.AdId into aPhotos
-                       join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
-                       join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
-                       join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
-                       join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
-                       join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
-                       join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
-                       join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
-                       join sp in _db.Purchases on ad.AdId equals sp.AdId into servicePurchses
-                       join u in _db.Users on ad.ApplicationUser.Id equals u.Id
-                       select new AdDTO
-                       {
-                           AdId = ad.AdId,
-                           Title = ad.Title,
-                           Description = ad.Description,
-                           Price = ad.Price,
-                           DateCreated = ad.DateCreated,
-                           DateUpdated = ad.DateUpdated,
-                           SelectedCityArea = ca.Name,
-                           SelectedCity = c.Name,
-                           PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),
-                           AdViews = av.SumViews,
-                           SelectedProductType = pt.Name,
-                           SelectedProductTypeId = pt.ProductTypesId,
-                           SelectedProductModel = pm.Name,
-                           SelectedProductModelId = pm.ProductModelsId,
-                           SelectedProductMemory = prm.Name,
-                           SelectedProductMemoryId = prm.ProductMemoriesId,
-                           SelectedProductColor = pc.Name,
-                           SelectedProductColorId = pc.ProductColorsId,
-                           SelectedProductStates = prs.Name,
-                           SelectedProductStatesId = prs.ProductStatesId,
-                           LastUpAd = au.LastUp,
-                           AdStatusId = ad.AdStatusId,
-                           IsModerate = ad.IsModerate,
-                           Purhcases = servicePurchses.Select(x =>
-                              new PurchaseDTO
-                              {
-                                  PurchaseId = x.PurchaseId,
-                                  TotalCost = x.TotalCost,
-                                  DateOfPayment = x.DateOfPayment,
-                                  StartDateService = x.StartDateService,
-                                  EndDateService = x.EndDateService,
-                                  IsPayed = x.IsActive,
-                                  IsActive = x.IsPayed,
-                                  ServicesId = x.ServicesId,
-                                  ServiceActiveTimeId = x.ServiceActiveTimeId,
-                                  AdId = x.AdId
-                              }).ToList(),
-                           User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
-
-                       }).OrderByDescending(x => x.LastUpAd);
-
-            return ads;
         }
 
         public async Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAds()
@@ -113,7 +39,12 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = GetAdQuery(x => x.AdStatusId == (int)AdStatuses.Activated && x.IsModerate);
+                var ads = _uof.AdRepository.GetAdQuery(
+                    x => x.AdStatusId == (int)AdStatuses.Activated && x.IsModerate,
+                    ptExpression: null, 
+                    auExpression: null,
+                    pExpression: null);
+
                 operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
             }
             catch(Exception ex)
@@ -132,7 +63,12 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = GetAdQuery(x => x.AdStatusId == (int)AdStatuses.InProgress);
+                var ads = _uof.AdRepository.GetAdQuery(
+                    x => x.AdStatusId == (int)AdStatuses.InProgress,
+                    ptExpression: null, 
+                    auExpression: null,
+                    pExpression: null);
+
                 operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
             }
             catch (Exception ex)
@@ -151,7 +87,12 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = GetAdQuery(x => x.AdStatusId == (int)AdStatuses.Deactivated);
+                var ads = _uof.AdRepository.GetAdQuery(
+                        x => x.AdStatusId == (int)AdStatuses.Deactivated,
+                        ptExpression: null,
+                        auExpression: null,
+                        pExpression: null);
+
                 operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
             }
             catch (Exception ex)
@@ -170,13 +111,15 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var activeAds = await GetActiveAds();
-                var vipAds = activeAds.Property.Where(x => x.Purhcases.Where(p => p.ServicesId == (int)AdPurchaseTypes.VipAd && p.IsActive)
-                             .Count() > 0)
-                             .OrderBy(x => Guid.NewGuid())
-                             .Take(12);
+                var ads = _uof.AdRepository.GetAdQuery(
+                       x => x.AdStatusId == (int)AdStatuses.Deactivated,
+                       ptExpression: null,
+                       auExpression: null,
+                       p => p.ServicesId == (int)AdPurchaseTypes.VipAd && p.IsActive)
+                       .OrderBy(x => Guid.NewGuid())
+                       .Take(12);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", vipAds);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
             }
             catch (Exception ex)
             {
@@ -194,13 +137,15 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var activeAds = await GetActiveAds();
-                var topAds = activeAds.Property.Where(x => x.Purhcases.Where(p => p.ServicesId == (int)AdPurchaseTypes.TopAd && p.IsActive)
-                             .Count() > 0)
-                             .OrderBy(x => Guid.NewGuid())
-                             .Take(5);
+                var ads = _uof.AdRepository.GetAdQuery(
+                      x => x.AdStatusId == (int)AdStatuses.Deactivated,
+                      ptExpression: null,
+                      auExpression: null,
+                      p => p.ServicesId == (int)AdPurchaseTypes.TopAd && p.IsActive)
+                      .OrderBy(x => Guid.NewGuid())
+                      .Take(5);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", topAds);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
             }
             catch (Exception ex)
             {
@@ -222,60 +167,7 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var adById = await (from ad in _db.Ads
-                                    where ad.AdId == id
-                                    join au in _db.AdUps on ad.AdId equals au.AdId
-                                    join c in _db.Cities on ad.City.CityId equals c.CityId
-                                    join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
-                                    join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
-                                    join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.Ad.AdId into aPhotos
-                                    join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
-                                    join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
-                                    join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
-                                    join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
-                                    join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
-                                    join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
-                                    join u in _db.Users on ad.ApplicationUser.Id equals u.Id
-                                    select new AdDTO
-                                    {
-                                        AdId = ad.AdId,
-                                        Title = ad.Title,
-                                        Description = ad.Description,
-                                        Price = ad.Price,
-                                        DateCreated = ad.DateCreated,
-                                        DateUpdated = ad.DateUpdated,
-                                        SelectedCityId = c.CityId,
-                                        SelectedCityAreaId = ca.CityAreaId,
-                                        SelectedCityArea = ca.Name,
-                                        SelectedCity = c.Name,
-                                        PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),
-                                        PhotosForEdit = aPhotos.ToList(),
-                                        PhotosAvgSizeList = _imageService.CreatingImageSrcForAvgSize(aPhotos.ToList()),
-                                        PhotosBigSizeList = _imageService.CreatingImageSrcForBigSize(aPhotos.ToList()),
-                                        AdViews = av.SumViews,
-                                        SelectedProductType = pt.Name,
-                                        SelectedProductTypeId = pt.ProductTypesId,
-                                        SelectedProductModel = pm.Name,
-                                        SelectedProductModelId = pm.ProductModelsId,
-                                        SelectedProductMemory = prm.Name,
-                                        SelectedProductMemoryId = prm.ProductMemoriesId,
-                                        SelectedProductColor = pc.Name,
-                                        SelectedProductColorId = pc.ProductColorsId,
-                                        SelectedProductStates = prs.Name,
-                                        SelectedProductStatesId = prs.ProductStatesId,
-                                        LastUpAd = au.LastUp,
-                                        AdStatusId = ad.AdStatusId,
-                                        IsModerate = ad.IsModerate,
-                                        User = new ApplicationUser
-                                        {   Id = u.Id,
-                                            Email = u.Email,
-                                            UserName = u.UserName,
-                                            PhoneNumber = u.PhoneNumber,
-                                            RegistrationDate = u.RegistrationDate
-                                        }
-
-                                    }).FirstOrDefaultAsync();
-
+                var adById = await _uof.AdRepository.FindAdByIdAsync(id);
                 operationDetails = new OperationDetails<AdDTO>(true, "", adById);
             }
             catch(Exception ex)
@@ -296,47 +188,7 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = (from ad in _db.Ads
-                           join au in _db.AdUps on ad.AdId equals au.AdId
-                           join c in _db.Cities on ad.City.CityId equals c.CityId
-                           join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
-                           join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
-                           join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.Ad.AdId into aPhotos
-                           join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
-                           join pt in _db.ProductTypes on ch.ProductTypesId equals pt.ProductTypesId
-                           where pt.ProductTypesId == productTypeId
-                           join pm in _db.ProductModels on ch.ProductModelsId equals pm.ProductModelsId
-                           join prm in _db.ProductMemories on ch.ProductMemoriesId equals prm.ProductMemoriesId
-                           join pc in _db.ProductColors on ch.ProductColorsId equals pc.ProductColorsId
-                           join prs in _db.ProductStates on ch.ProductStatesId equals prs.ProductStatesId
-                           join u in _db.Users on ad.ApplicationUser.Id equals u.Id
-                           select new AdDTO
-                           {
-                               AdId = ad.AdId,
-                               Title = ad.Title,
-                               Description = ad.Description,
-                               Price = ad.Price,
-                               DateCreated = ad.DateCreated,
-                               DateUpdated = ad.DateUpdated,
-                               SelectedCityArea = ca.Name,
-                               SelectedCity = c.Name,
-                               PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(aPhotos.ToList()),
-                               AdViews = av.SumViews,
-                               SelectedProductType = pt.Name,
-                               SelectedProductTypeId = pt.ProductTypesId,
-                               SelectedProductModel = pm.Name,
-                               SelectedProductModelId = pm.ProductModelsId,
-                               SelectedProductMemory = prm.Name,
-                               SelectedProductMemoryId = prm.ProductMemoriesId,
-                               SelectedProductColor = pc.Name,
-                               SelectedProductColorId = pc.ProductColorsId,
-                               SelectedProductStates = prs.Name,
-                               SelectedProductStatesId = prs.ProductStatesId,
-                               LastUpAd = au.LastUp,
-                               User = new ApplicationUser { Id = u.Id, Email = u.Email, UserName = u.UserName }
-
-                           }).OrderByDescending(x => x.LastUpAd);
-
+                var ads = _uof.AdRepository.FindAdsByProductTypeId(productTypeId);
                 operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
             }
             catch (Exception ex)
@@ -347,7 +199,7 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
-        public async Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUser(string userName)
+        public async Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUserName(string userName)
         {
             OperationDetails<IQueryable<AdDTO>> operationDetails =
                 new OperationDetails<IQueryable<AdDTO>>(false, "", null);
@@ -355,16 +207,15 @@ namespace AppleUsed.BLL.Services
             if (string.IsNullOrEmpty(userName))
                 return operationDetails;
 
-            var user = await _db.Users.Where(x => x.UserName == userName).FirstOrDefaultAsync();
-
             try
             {
-                var ads = GetAdQuery(null).Where(x => x.User.Id == user.Id);
 
-                foreach(var item in ads)
-                {
-                    item.NotDeliveredMessageCount = _conversationService.GetCountNotDeliveredMessageByAdId(item.AdId);
-                }
+                var ads = await _uof.AdRepository.GetAdsByUserName(userName);
+
+                //foreach (var item in ads)
+                //{
+                //    item.NotDeliveredMessageCount = _ads.GetCountNotDeliveredMessageByAdId(item.AdId);
+                //}
 
                 operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
             }
@@ -386,9 +237,8 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var activeAds = await GetActiveAds();
-                var ads = activeAds.Property.Where(x => x.User.Id == userId);
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+                var activeAds = _uof.AdRepository.FindActiveAdsByUserId(userId);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", activeAds);
             }
             catch (Exception ex)
             {
@@ -408,7 +258,7 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = GetAdQuery(null).Where(x => x.User.Id == userId);
+                var ads = _uof.AdRepository.FindAdsByUserId(userId);
                 operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
             }
             catch (Exception ex)
@@ -423,13 +273,20 @@ namespace AppleUsed.BLL.Services
         {
             AdDTO adDto = new AdDTO();
 
-            adDto.CityesList = await _cityService.GetCities().ToListAsync();
-            adDto.CityAreasList = await _cityAreasService.GetCityAreas().ToListAsync();
-            adDto.ProductTypesList = await _db.ProductTypes.ToListAsync();
-            adDto.ProductModelsList = await _productModelService.GetProductModels().ToListAsync();
-            adDto.ProductMemoriesList = await _db.ProductMemories.ToListAsync();
-            adDto.ProductColorsList = await _db.ProductColors.ToListAsync();
-            adDto.ProductStatesList = await _db.ProductStates.ToListAsync();
+            adDto.CityesList = 
+                await _uof.CityRepository.GetCities().ToListAsync();
+            adDto.CityAreasList = 
+                await _uof.CityAreasRepository.GetCityAreas().ToListAsync();
+            adDto.ProductTypesList = 
+                await _uof.ProductTypeRepository.GetProductTypes().ToListAsync();
+            adDto.ProductModelsList = 
+                await _uof.ProductModelRepository.GetProductModels().ToListAsync();
+            adDto.ProductMemoriesList = 
+                await _uof.ProductMemoriesRepository.GetProductMemories().ToListAsync();
+            adDto.ProductColorsList = 
+                await _uof.ProductColorsRepository.GetProductColors().ToListAsync();
+            adDto.ProductStatesList = 
+                await _uof.ProductStatesRepository.GetProductStates().ToListAsync();
 
             return adDto;
         }
@@ -445,46 +302,45 @@ namespace AppleUsed.BLL.Services
             if (String.IsNullOrEmpty(userName))
                 return operationDetails;
 
-            user = await _db.Users.Where(x => x.UserName == userName).FirstOrDefaultAsync();
-
+            user = await _uof.UserRepository.FindUserByUserName(userName);
             if (user == null)
                 return operationDetails;
-
-            ad.AdStatusId = (int)AdStatuses.Activated;
-            ad.IsModerate = true;
 
             var newAd = _dataService.TransformingAdDTOToAdEntities(ad);
             newAd.ApplicationUser = user;
 
             if(newAd.AdId == 0)
             {
+                newAd.AdStatusId = (int)AdStatuses.Activated;
+                newAd.IsModerate = true;
                 operationDetails = await CreateAd(user, newAd, productPhotos);
             }
             else
             {
-                ad.AdStatusId = (int)AdStatuses.InProgress;
-                ad.IsModerate = false;
-
+                newAd.AdStatusId = (int)AdStatuses.InProgress;
+                newAd.IsModerate = false;
                 operationDetails = await UpdateAd(user, newAd, productPhotos);
             }
 
             return operationDetails;
-        
         }   
 
-        private async Task<OperationDetails<int>> CreateAd(ApplicationUser user, Ad newAd, IFormFileCollection productPhotos)
+        private async Task<OperationDetails<int>> CreateAd(
+            ApplicationUser user, 
+            Ad newAd,
+            IFormFileCollection productPhotos)
         {
             OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
 
             try
             {
-                var addResult = await _db.Ads.AddAsync(newAd);
-                var saveChangesResult = await _db.SaveChangesAsync();
+                newAd.AdId = await _uof.AdRepository.AddAd(newAd);
                 operationDetails = new OperationDetails<int>(true, "", newAd.AdId);
             }
             catch (Exception ex)
             {
-                operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
+                operationDetails = 
+                    new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
             }
 
             newAd.AdViews = new AdViews { AdId = newAd.AdId, SumViews = 0 };
@@ -499,32 +355,33 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
-        private async Task<OperationDetails<int>> UpdateAd(ApplicationUser user, Ad updatedAd, IFormFileCollection productPhotos)
+        private async Task<OperationDetails<int>> UpdateAd(ApplicationUser user, Ad ad, IFormFileCollection productPhotos)
         {
-            OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
+            OperationDetails<int> operationDetails =
+                new OperationDetails<int>(false, "", 0);
 
-            if(updatedAd.AdId > 0)
+            if(ad.AdId > 0)
             {
-                var oldAd = await _db.Ads.Where(x => x.AdId == updatedAd.AdId).FirstOrDefaultAsync();
+                var oldAd = await _uof.AdRepository.FindAdByIdAsync(ad.AdId);
 
-                oldAd.Title = updatedAd.Title;
-                oldAd.Description = updatedAd.Description;
-                oldAd.Price = updatedAd.Price;
+                oldAd.Title = ad.Title;
+                oldAd.Description = ad.Description;
+                oldAd.Price = ad.Price;
                 oldAd.DateUpdated = DateTime.Now.Date;
-                oldAd.Characteristics.ProductTypesId = updatedAd.Characteristics.ProductTypesId;
-                oldAd.Characteristics.ProductModelsId = updatedAd.Characteristics.ProductModelsId;
-                oldAd.Characteristics.ProductMemoriesId = updatedAd.Characteristics.ProductMemoriesId;
-                oldAd.Characteristics.ProductColorsId = updatedAd.Characteristics.ProductColorsId;
-                oldAd.Characteristics.ProductStatesId = updatedAd.Characteristics.ProductStatesId;
-                oldAd.City = updatedAd.City;
+                oldAd.Characteristics.ProductTypesId = ad.Characteristics.ProductTypesId;
+                oldAd.Characteristics.ProductModelsId = ad.Characteristics.ProductModelsId;
+                oldAd.Characteristics.ProductMemoriesId = ad.Characteristics.ProductMemoriesId;
+                oldAd.Characteristics.ProductColorsId = ad.Characteristics.ProductColorsId;
+                oldAd.Characteristics.ProductStatesId = ad.Characteristics.ProductStatesId;
+                oldAd.City = ad.City;
 
                 if (productPhotos != null)
                 {
-                    var oldPhotos = await _db.AdPhotos.Where(x => x.Ad.AdId == oldAd.AdId).ToListAsync();
+                    var oldPhotos = _uof.AdPhotoRepository.FindPhotosByAdId(ad.AdId);
 
                     try
                     {
-                        _db.RemoveRange(oldPhotos);
+                       await _uof.AdPhotoRepository.RemovePhotosRange(oldPhotos.ToList());
                     }
                     catch (Exception ex)
                     {
@@ -543,15 +400,12 @@ namespace AppleUsed.BLL.Services
             OperationDetails<int> operationDetails = new OperationDetails<int>(true, "", 0);
 
             var binaryPhotoList = _imageService.GetPhotosHashList(productPhotos);
-            binaryPhotoList.ForEach(x => x.Ad = ad);
-            ad.Characteristics.Ad = ad;
+            binaryPhotoList.ForEach(x => x.AdId = ad.AdId);
+            ad.Characteristics.AdId = ad.AdId;
 
             try
             {
-                await _db.AdPhotos.AddRangeAsync(binaryPhotoList);
-                ad.Photos = binaryPhotoList;
-                _db.Update(ad);
-                await _db.SaveChangesAsync();
+                await _uof.AdPhotoRepository.AddPhotoRange(binaryPhotoList);
             }
             catch (Exception ex)
             {
@@ -567,7 +421,7 @@ namespace AppleUsed.BLL.Services
 
             if (id > 0)
             {
-                var ad = await _db.Ads.FindAsync(id);
+                var ad = await _uof.AdRepository.FindAdByIdAsync(id);
                 if(ad == null)
                     return new OperationDetails<int>(false, "Невозможно найти объявление , с таким идентификатором", 0);
 
@@ -577,12 +431,12 @@ namespace AppleUsed.BLL.Services
 
                 try
                 {
-                    _db.Update(ad);
-                    await _db.SaveChangesAsync();
+                    await _uof.AdRepository.UpdateAd(ad);
                 }
                 catch (Exception ex)
                 {
-                    operationDetails = new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
+                    operationDetails = 
+                        new OperationDetails<int>(false, ex.Message.FirstOrDefault().ToString(), 0);
                 }
             }
 
@@ -598,14 +452,12 @@ namespace AppleUsed.BLL.Services
             {
                 if (disposing)
                 {
-                    _db = null;
-                    _dataService = null;
+                    _uof.Dispose();
+                    _imageService.Dispose();
+
+                    _uof = null;
                     _imageService = null;
-                    _conversationService = null;
-                    _cityAreasService = null;
-                    _cityService = null;
-                    _productModelService = null;
-                    _adUpService = null;
+                    _dataService = null;
                 }
                 this.disposed = true;
             }

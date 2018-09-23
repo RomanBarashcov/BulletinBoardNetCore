@@ -9,43 +9,38 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.DAL.Repositories
 {
-    public class AdPhotoRepository : IAdPhotoRepository
+    public class ProductStatesRepository : IProductStatesRepository
     {
         private AppDbContext _db;
 
-        public AdPhotoRepository(AppDbContext db)
+        public ProductStatesRepository(AppDbContext db)
         {
             _db = db;
         }
 
-        public async Task<int> AddPhotoAsync(AdPhotos adPhoto)
+        public IQueryable<ProductStates> GetProductStates()
         {
-            await _db.AddAsync(adPhoto);
+            var productStates = _db.ProductStates;
+            return productStates;
+        }
+
+        public async Task<int> AddProductState(ProductStates productState)
+        {
+            await _db.ProductStates.AddAsync(productState);
             await _db.SaveChangesAsync();
-            return adPhoto.AdPhotosId;
+            return productState.ProductStatesId;
         }
 
-        public async Task AddPhotoRange(List<AdPhotos> adPhotos)
+        public async Task UpdateProductState(ProductStates productState)
         {
-            _db.AddRange(adPhotos);
-            await _db.SaveChangesAsync();
-        }
-
-        public IQueryable<AdPhotos> FindPhotosByAdId(int adId)
-        {
-            var photos = _db.AdPhotos.Where(x => x.AdId == adId);
-            return photos;
-        }
-
-        public async Task RemovePhoto(AdPhotos adPhoto)
-        {
-            _db.Remove(adPhoto);
+            _db.ProductStates.Update(productState);
             await _db.SaveChangesAsync();
         }
 
-        public async Task RemovePhotosRange(List<AdPhotos> adPhotos)
+        public async Task DeleteProductState(int id)
         {
-            _db.RemoveRange(adPhotos);
+            var oldItem = await _db.ProductColors.FindAsync(id);
+            _db.ProductColors.Remove(oldItem);
             await _db.SaveChangesAsync();
         }
 

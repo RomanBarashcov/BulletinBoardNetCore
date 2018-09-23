@@ -11,5 +11,6 @@ namespace AppleUsed.DAL.Interfaces
     {
         IQueryable<ApplicationUser> GetUsers();
         Task<ApplicationUser> FindByIdAsync(string userId);
+        Task<ApplicationUser> FindUserByUserName(string userName);
     }
 }

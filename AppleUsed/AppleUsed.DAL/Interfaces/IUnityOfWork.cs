@@ -18,7 +18,15 @@ namespace AppleUsed.DAL.Interfaces
 
         ICityRepository CityRepository { get; set; }
 
+        IProductTypeRepository ProductTypeRepository { get; set; }
+
         IProductModelRepository ProductModelRepository { get; set; }
+
+        IProductMemoriesRepository ProductMemoriesRepository { get; set; }
+
+        IProductColorsRepository ProductColorsRepository { get; set; }
+
+        IProductStatesRepository ProductStatesRepository { get; set; }
 
         IPurchaseRepository PurchaseRepository { get; set; }
 

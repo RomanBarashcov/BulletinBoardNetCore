@@ -2,50 +2,43 @@
 using AppleUsed.DAL.Identity;
 using AppleUsed.DAL.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AppleUsed.DAL.Repositories
 {
-    public class AdPhotoRepository : IAdPhotoRepository
+    public class ProductMemoriesReposiotry : IProductMemoriesRepository
     {
         private AppDbContext _db;
 
-        public AdPhotoRepository(AppDbContext db)
+        public ProductMemoriesReposiotry(AppDbContext db)
         {
             _db = db;
         }
 
-        public async Task<int> AddPhotoAsync(AdPhotos adPhoto)
+        public IQueryable<ProductMemories> GetProductMemories()
         {
-            await _db.AddAsync(adPhoto);
+            var productMeemmories = _db.ProductMemories;
+            return productMeemmories;
+        }
+
+        public async Task<int> AddProductMemorie(ProductMemories productMemories)
+        {
+            await _db.AddAsync(productMemories);
             await _db.SaveChangesAsync();
-            return adPhoto.AdPhotosId;
+            return productMemories.ProductMemoriesId;
         }
 
-        public async Task AddPhotoRange(List<AdPhotos> adPhotos)
+        public async Task UpdateProductMemorie(ProductMemories productMemories)
         {
-            _db.AddRange(adPhotos);
-            await _db.SaveChangesAsync();
-        }
-
-        public IQueryable<AdPhotos> FindPhotosByAdId(int adId)
-        {
-            var photos = _db.AdPhotos.Where(x => x.AdId == adId);
-            return photos;
-        }
-
-        public async Task RemovePhoto(AdPhotos adPhoto)
-        {
-            _db.Remove(adPhoto);
+            _db.Update(productMemories);
             await _db.SaveChangesAsync();
         }
 
-        public async Task RemovePhotosRange(List<AdPhotos> adPhotos)
+        public async Task DeleteProductMemorie(int id)
         {
-            _db.RemoveRange(adPhotos);
+            var oldItem = _db.ProductMemories.Where(x => x.ProductMemoriesId == id).FirstOrDefault();
+            _db.Remove(oldItem);
             await _db.SaveChangesAsync();
         }
 

@@ -30,7 +30,6 @@ namespace AppleUsed.DAL.Repositories
             {
                 await _db.AdUps.AddAsync(adUp);
                 await _db.SaveChangesAsync();
-                await _db.SaveChangesAsync();
             }
             catch (Exception ex)
             {

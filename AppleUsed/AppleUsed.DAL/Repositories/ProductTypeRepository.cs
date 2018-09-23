@@ -1,6 +1,6 @@
-﻿using AppleUsed.DAL.Identity;
+﻿using AppleUsed.DAL.Entities;
+using AppleUsed.DAL.Identity;
 using AppleUsed.DAL.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,31 +9,26 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.DAL.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class ProductTypeRepository : IProductTypeRepository
     {
-        private AppDbContext _db { get; set; }
+        private AppDbContext _db;
 
-        public UserRepository(AppDbContext db)
+        public ProductTypeRepository(AppDbContext db)
         {
             _db = db;
         }
 
-        public IQueryable<ApplicationUser> GetUsers()
+        public IQueryable<ProductTypes> GetProductTypes()
         {
-            var users = _db.Users;
-            return users;
+            var productTypes = _db.ProductTypes;
+            return productTypes;
         }
 
-        public async Task<ApplicationUser> FindByIdAsync(string userId)
+        public async Task<int> AdProductType(ProductTypes productType)
         {
-            var user = await _db.Users.FindAsync(userId);
-            return user;
-        }
-
-        public async Task<ApplicationUser> FindUserByUserName(string userName)
-        {
-            var user = await _db.Users.Where(x => x.UserName == userName).FirstOrDefaultAsync();
-            return user;
+            await _db.ProductTypes.AddAsync(productType);
+            await _db.SaveChangesAsync();
+            return productType.ProductTypesId;
         }
 
         private bool disposed = false;
