@@ -269,24 +269,33 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
-        public async Task<AdDTO> GetDataForCreatingAdOrDataForFilter()
+        public(
+            IQueryable<CityDTO> citiesDTO,
+            IQueryable<CityAreaDTO> cityAreasDTO,
+            IQueryable<ProductTypeDTO> productTypesDTO,
+            IQueryable<ProductModelsDTO> productModelsDTO,
+            IQueryable<ProductMemorieDTO> productMemoriesDTO,
+            IQueryable<ProductColorDTO> productColorsDTO,
+            IQueryable<ProductStateDTO> productStateDTO) GetDataForCreatingAdOrDataForFilter()
         {
-            AdDTO adDto = new AdDTO();
 
-            adDto.CityesList = 
-                await _uof.CityRepository.GetCities().ToListAsync();
-            adDto.CityAreasList = 
-                await _uof.CityAreasRepository.GetCityAreas().ToListAsync();
-            adDto.ProductTypesList = 
-                await _uof.ProductTypeRepository.GetProductTypes().ToListAsync();
-            adDto.ProductModelsList = 
-                await _uof.ProductModelRepository.GetProductModels().ToListAsync();
-            adDto.ProductMemoriesList = 
-                await _uof.ProductMemoriesRepository.GetProductMemories().ToListAsync();
-            adDto.ProductColorsList = 
-                await _uof.ProductColorsRepository.GetProductColors().ToListAsync();
-            adDto.ProductStatesList = 
-                await _uof.ProductStatesRepository.GetProductStates().ToListAsync();
+            var cities = 
+                _uof.CityRepository.GetCities().ToListAsync().GetAwaiter().GetResult();
+            var cityAreas =
+                _uof.CityAreasRepository.GetCityAreas().ToListAsync().GetAwaiter().GetResult();
+            var productTypes =
+                _uof.ProductTypeRepository.GetProductTypes().ToListAsync().GetAwaiter().GetResult();
+            var productModels = 
+                _uof.ProductModelRepository.GetProductModels().ToListAsync().GetAwaiter().GetResult();
+            var productMemories =
+                _uof.ProductMemoriesRepository.GetProductMemories().ToListAsync().GetAwaiter().GetResult();
+            var productColors =  
+                _uof.ProductColorsRepository.GetProductColors().ToListAsync().GetAwaiter().GetResult();
+            var productStates =
+                _uof.ProductStatesRepository.GetProductStates().ToListAsync().GetAwaiter().GetResult();
+
+
+            
 
             return adDto;
         }
