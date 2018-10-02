@@ -22,7 +22,7 @@ namespace AppleUsed.BLL.DTO
         public ICollection<AdPhotos> Photos { get; set; }
         public AdViews AdViews { get; set; }
         public Characteristics Characteristics { get; set; }
-        public  ICollection<Purchase> Purhcases { get; set; }
+        public ICollection<Purchase> Purhcases { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
         public int AdStatusId { get; set; }

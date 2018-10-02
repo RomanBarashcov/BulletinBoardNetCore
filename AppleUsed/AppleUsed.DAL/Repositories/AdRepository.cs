@@ -58,10 +58,15 @@ namespace AppleUsed.DAL.Repositories
                            {
                                CharacteristicsId = ch.CharacteristicsId,
                                ProductTypesId = ch.ProductTypesId,
+                               ProductType = pt,
                                ProductModelsId = ch.ProductModelsId,
+                               ProductModel = pm,
                                ProductMemoriesId = ch.ProductMemoriesId,
+                               ProductMemorie = prm,
                                ProductColorsId = ch.ProductColorsId,
-                               ProductStatesId = ch.ProductStatesId
+                               PorductColor = pc,
+                               ProductStatesId = ch.ProductStatesId,
+                               ProductState = prs
                            },
                            City = new City
                            {
