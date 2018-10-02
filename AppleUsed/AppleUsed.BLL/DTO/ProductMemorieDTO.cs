@@ -7,6 +7,6 @@ namespace AppleUsed.BLL.DTO
     public class ProductMemorieDTO
     {
         public int Id { get; set; }
-        public int Name { get; set; }
+        public int StorageSize { get; set; }
     }
 }

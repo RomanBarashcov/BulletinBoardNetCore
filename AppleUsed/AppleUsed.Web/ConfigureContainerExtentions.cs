@@ -49,8 +49,8 @@ namespace AppleUsed.Web
             serviceCollection.AddTransient<IImageService>(
                 s => new ImageService(new ImageCompressorService()));
 
-            serviceCollection.AddTransient<IDataService>(
-                s => new DataService(dbContext));
+            serviceCollection.AddTransient<IDataTransformerService>(
+                s => new DataTransformerService(dbContext));
 
             serviceCollection.AddTransient<ISeedService>(
                 s => new SeedService(dbContext));
@@ -66,7 +66,7 @@ namespace AppleUsed.Web
 
             serviceCollection.AddTransient<IAdService>(
                 s => new AdService(dbContext,
-                new DataService(dbContext),
+                new DataTransformerService(dbContext),
                 new ImageService(new ImageCompressorService()),
                 new ConversationService(dbContext),
                 new CityAreasService(dbContext),
@@ -86,7 +86,7 @@ namespace AppleUsed.Web
             serviceCollection.AddTransient<IPurchasesService>(
                s => new PurchasesService(new AppDbContext(optionsBuilder.Options),
                     new AdService(dbContext,
-                    new DataService(dbContext),
+                    new DataTransformerService(dbContext),
                     new ImageService(new ImageCompressorService()),
                     new ConversationService(dbContext),
                     new CityAreasService(dbContext),

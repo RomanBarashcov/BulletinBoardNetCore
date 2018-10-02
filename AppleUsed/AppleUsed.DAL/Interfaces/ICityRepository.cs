@@ -10,6 +10,8 @@ namespace AppleUsed.DAL.Interfaces
     {
         IQueryable<City> GetCities();
 
+        City FindCityAsync(int cityId);
+
         IQueryable<City> GetCitiesByCityAreaId(int cityAreaId);
     }
 }

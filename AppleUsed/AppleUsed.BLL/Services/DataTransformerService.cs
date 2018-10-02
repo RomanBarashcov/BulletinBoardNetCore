@@ -2,18 +2,19 @@
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
+using AppleUsed.DAL.Interfaces;
 using System;
 using System.Linq;
 
 namespace AppleUsed.BLL.Services
 {
-    public class DataService : IDataService, IDisposable
+    public class DataTransformerService : IDataTransformerService, IDisposable
     {
-        private readonly AppDbContext _db;
+        private readonly IUnityOfWork _uof;
 
-        public DataService(AppDbContext db)
+        public DataTransformerService(IUnityOfWork uof)
         {
-            _db = db;
+            _uof = uof;
         }
 
         public Ad TransformingAdDTOToAdEntities(AdDTO ad)
@@ -41,16 +42,24 @@ namespace AppleUsed.BLL.Services
                 Price = ad.Price,
                 DateCreated = DateTime.Now,
                 DateUpdated = DateTime.Now,
-                City = _db.Cities.Where(x => x.CityId == selectedCityId).FirstOrDefault(),
+                City = _uof.CityRepository.FindCityAsync(selectedCityId),
                 Characteristics = characteristics,
                 IsModerate = ad.IsModerate,
                 AdStatusId = ad.AdStatusId
-                
             };
 
             return Ad;
         }
 
+        public AdDTO TransformingAdToAdDTO(Ad ad)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<AdDTO> TransformingAdQueryToAdDTO(IQueryable<Ad> adQuery)
+        {
+            throw new NotImplementedException();
+        }
 
         private bool disposed = false;
 
@@ -67,5 +76,6 @@ namespace AppleUsed.BLL.Services
                 disposed = true;
             }
         }
+
     }
 }

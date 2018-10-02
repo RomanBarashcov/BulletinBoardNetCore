@@ -116,12 +116,24 @@ namespace AppleUsed.BLL.Services
             if (user == null)
                 return operationDetails;
 
-            var ads = await _adService.GetAdsByUser(user.UserName);
-            if(ads.Property == null)
+            var ads = _uof.AdRepository.FindAdsByUserId(userId);
+            if(ads == null)
                 return operationDetails;
 
-            var purchasesDTO = GetPurchaseDTOQueryJoinWithUserAds(ads);
-
+            var purchasesDTO = ads.SelectMany(x => x.Purhcases.Select(
+            p => new PurchaseDTO
+            { 
+                PurchaseId = p.PurchaseId,
+                TotalCost = p.TotalCost,
+                DateOfPayment = p.DateOfPayment,
+                StartDateService = p.StartDateService,
+                EndDateService = p.EndDateService,
+                IsPayed = p.IsPayed,
+                IsActive = p.IsActive,
+                ServicesId = p.ServicesId,
+                ServiceActiveTimeId = p.ServiceActiveTimeId,
+                AdId = p.AdId
+            }));
 
             operationDetails = new OperationDetails<IQueryable<PurchaseDTO>>(true, "", purchasesDTO);
 
@@ -136,7 +148,7 @@ namespace AppleUsed.BLL.Services
             if (purchase.AdId <= 0)
                 return operationDetails;
 
-            var ad = await _db.Ads.FindAsync(purchase.AdId);
+            var ad = await _uof.AdRepository.FindAdByIdAsync(purchase.AdId);
             if (ad == null)
                 return operationDetails;
 
@@ -176,7 +188,7 @@ namespace AppleUsed.BLL.Services
             if (purchase.AdId <= 0)
                 return operationDetails;
 
-            var ad = await _db.Ads.FindAsync(purchase.AdId);
+            var ad = await _uof.AdRepository.FindAdByIdAsync(purchase.AdId);
             if (ad == null)
                 return operationDetails;
 
@@ -215,7 +227,5 @@ namespace AppleUsed.BLL.Services
             var purchases = _uof.PurchaseRepository.GetAllUserPurchaseByAds(adsQuery);
             return purchases;
         }
-
-
     }
 }

@@ -26,6 +26,12 @@ namespace AppleUsed.BLL.Services
             return porductModels;
         }
 
+        public async Task<ProductModels> GetProductModelById(int productModelId)
+        {
+            var productModel = await _uof.ProductModelRepository.FindProductModelAsync(productModelId);
+            return productModel;
+        }
+
         public IQueryable<ProductModels> GetProductModelsByProductTypeId(int productTypeId)
         {
             var porductModels = _uof.ProductModelRepository

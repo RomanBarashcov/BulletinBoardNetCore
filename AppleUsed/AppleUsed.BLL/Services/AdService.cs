@@ -17,13 +17,13 @@ namespace AppleUsed.BLL.Services
     {
         private IUnityOfWork _uof;
         private IImageService _imageService;
-        private IDataService _dataService;
+        private IDataTransformerService _dataService;
         private IAdUpService _adUpService;
 
         public AdService(
             IUnityOfWork uof, 
             IImageService imageService, 
-            IDataService dataService,
+            IDataTransformerService dataService,
             IAdUpService adUpService)
         {
             _uof = uof;
@@ -45,7 +45,7 @@ namespace AppleUsed.BLL.Services
                     auExpression: null,
                     pExpression: null);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
             }
             catch(Exception ex)
             {
@@ -69,7 +69,7 @@ namespace AppleUsed.BLL.Services
                     auExpression: null,
                     pExpression: null);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
             }
             catch (Exception ex)
             {
@@ -93,7 +93,7 @@ namespace AppleUsed.BLL.Services
                         auExpression: null,
                         pExpression: null);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
             }
             catch (Exception ex)
             {
@@ -119,7 +119,7 @@ namespace AppleUsed.BLL.Services
                        .OrderBy(x => Guid.NewGuid())
                        .Take(12);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
             }
             catch (Exception ex)
             {
@@ -145,7 +145,7 @@ namespace AppleUsed.BLL.Services
                       .OrderBy(x => Guid.NewGuid())
                       .Take(5);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
             }
             catch (Exception ex)
             {
@@ -168,7 +168,8 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var adById = await _uof.AdRepository.FindAdByIdAsync(id);
-                operationDetails = new OperationDetails<AdDTO>(true, "", adById);
+                operationDetails = 
+                    new OperationDetails<AdDTO>(true, "", _dataService.TransformingAdToAdDTO(adById));
             }
             catch(Exception ex)
             {
@@ -189,7 +190,7 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var ads = _uof.AdRepository.FindAdsByProductTypeId(productTypeId);
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
             }
             catch (Exception ex)
             {
@@ -217,7 +218,7 @@ namespace AppleUsed.BLL.Services
                 //    item.NotDeliveredMessageCount = _ads.GetCountNotDeliveredMessageByAdId(item.AdId);
                 //}
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
             }
             catch (Exception ex)
             {
@@ -238,7 +239,7 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var activeAds = _uof.AdRepository.FindActiveAdsByUserId(userId);
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", activeAds);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(activeAds));
             }
             catch (Exception ex)
             {
@@ -259,7 +260,7 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var ads = _uof.AdRepository.FindAdsByUserId(userId);
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", ads);
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
             }
             catch (Exception ex)
             {
@@ -278,26 +279,41 @@ namespace AppleUsed.BLL.Services
             IQueryable<ProductColorDTO> productColorsDTO,
             IQueryable<ProductStateDTO> productStateDTO) GetDataForCreatingAdOrDataForFilter()
         {
-
             var cities = 
-                _uof.CityRepository.GetCities().ToListAsync().GetAwaiter().GetResult();
+                _uof.CityRepository.GetCities()
+                .Select(x => new CityDTO { Id = x.CityId, Name = x.Name });
+
             var cityAreas =
-                _uof.CityAreasRepository.GetCityAreas().ToListAsync().GetAwaiter().GetResult();
+                _uof.CityAreasRepository.GetCityAreas()
+                .Select(x => new CityAreaDTO { Id = x.CityAreaId, Name = x.Name, Cities = cities.ToList() });
+
             var productTypes =
-                _uof.ProductTypeRepository.GetProductTypes().ToListAsync().GetAwaiter().GetResult();
+                _uof.ProductTypeRepository.GetProductTypes()
+                .Select(x => new ProductTypeDTO { Id = x.ProductTypesId, Name = x.Name });
+
             var productModels = 
-                _uof.ProductModelRepository.GetProductModels().ToListAsync().GetAwaiter().GetResult();
+                _uof.ProductModelRepository.GetProductModels()
+                .Select(x => new ProductModelsDTO { Id = x.ProductModelsId, Name = x.Name, ProductTypeId = x.ProductTypes.ProductTypesId });
+
             var productMemories =
-                _uof.ProductMemoriesRepository.GetProductMemories().ToListAsync().GetAwaiter().GetResult();
+                _uof.ProductMemoriesRepository.GetProductMemories()
+                .Select(x => new ProductMemorieDTO { Id = x.ProductMemoriesId, StorageSize = x.StorageSize });
+
             var productColors =  
-                _uof.ProductColorsRepository.GetProductColors().ToListAsync().GetAwaiter().GetResult();
+                _uof.ProductColorsRepository.GetProductColors()
+                .Select(x => new ProductColorDTO { Id = x.ProductColorsId, Name = x.Name });
+
             var productStates =
-                _uof.ProductStatesRepository.GetProductStates().ToListAsync().GetAwaiter().GetResult();
+                _uof.ProductStatesRepository.GetProductStates()
+                .Select(x => new ProductStateDTO { Id = x.ProductStatesId, Name = x.Name });
 
-
-            
-
-            return adDto;
+            return (cities, 
+                    cityAreas, 
+                    productTypes, 
+                    productModels, 
+                    productMemories, 
+                    productColors,
+                    productStates);
         }
 
         public async Task<OperationDetails<int>> SaveAd(string userName, AdDTO ad, IFormFileCollection productPhotos)

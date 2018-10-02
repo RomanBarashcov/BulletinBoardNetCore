@@ -33,6 +33,22 @@ namespace AppleUsed.DAL.Repositories
             return cities;
         }
 
+        public City FindCityAsync(int cityId)
+        {
+            var city = (from c in _db.Cities.Where(c => c.CityId == cityId)
+                          join ca in _db.CityAreas
+                          on c.CityArea.CityAreaId equals ca.CityAreaId
+                          select new City
+                          {
+                              CityId = c.CityId,
+                              Name = c.Name,
+                              CityArea = ca
+
+                          }).FirstOrDefault();
+
+            return city;
+        }
+
         public IQueryable<City> GetCitiesByCityAreaId(int cityAreaId)
         {
             var cities = (from c in _db.Cities

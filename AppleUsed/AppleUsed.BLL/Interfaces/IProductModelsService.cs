@@ -11,6 +11,9 @@ namespace AppleUsed.BLL.Interfaces
     public interface IProductModelsService : IDisposable
     {
         IQueryable<ProductModels> GetProductModels();
+
+        Task<ProductModels> GetProductModelById(int productModelId);
+
         IQueryable<ProductModels> GetProductModelsByProductTypeId(int productTypeId);
     }
 }
