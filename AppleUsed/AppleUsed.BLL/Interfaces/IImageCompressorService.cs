@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AppleUsed.BLL.Interfaces
 {
-    public interface IImageCompressorService
+    public interface IImageCompressorService : IDisposable
     {
         string CompressingImageForSmallSize(byte[] inputImages);
         string CompressingImageForAvgSize(byte[] inputImages);

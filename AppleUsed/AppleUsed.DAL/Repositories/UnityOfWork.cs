@@ -1,7 +1,5 @@
 ﻿using AppleUsed.DAL.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AppleUsed.DAL.Repositories
 {

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AppleUsed.BLL.Services
 {
-    public class ImageCompressorService : IImageCompressorService, IDisposable
+    public class ImageCompressorService : IImageCompressorService
     {
         public ImageCompressorService() { }
 

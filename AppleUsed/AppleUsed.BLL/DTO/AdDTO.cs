@@ -27,7 +27,7 @@ namespace AppleUsed.BLL.DTO
 
         public int AdStatusId { get; set; }
         public bool IsModerate { get; set; }
-
+        public int NotDeliveredMessageCount { get; set; }
         //public int AdId { get; set; }
 
         //[Required]

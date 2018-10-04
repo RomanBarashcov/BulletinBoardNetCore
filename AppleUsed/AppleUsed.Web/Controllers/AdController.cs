@@ -64,7 +64,7 @@ namespace AppleUsed.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateAd()
         {
-            var dataForSelectList = await _adService.GetDataForCreatingAdOrDataForFilter();
+            var dataForSelectList = _adService.GetDataForCreatingAdOrDataForFilter();
             var model = _prepearingModel.PrepearingAdViewModel(dataForSelectList, new AdDTO());
             return View(model);
         }
@@ -176,6 +176,12 @@ namespace AppleUsed.Web.Controllers
             {
                 if (disposing)
                 {
+                    _adService.Dispose();
+                    _prepearingModel.Dispose();
+                    _cityService.Dispose();
+                    _productModelsService.Dispose();
+                    _adViewsService.Dispose();
+
                     _adService = null;
                     _prepearingModel = null;
                     _adFilter = null;

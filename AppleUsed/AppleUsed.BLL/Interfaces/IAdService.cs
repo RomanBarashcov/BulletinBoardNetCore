@@ -1,4 +1,5 @@
 ﻿using AppleUsed.BLL.DTO;
+using AppleUsed.BLL.Enums;
 using AppleUsed.BLL.Infrastructure;
 using AppleUsed.DAL.Entities;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Interfaces
 {
-    public interface IAdService
+    public interface IAdService : IDisposable
     {
         Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAds();
 
@@ -40,7 +41,11 @@ namespace AppleUsed.BLL.Interfaces
         IQueryable<ProductColorDTO> productColorsDTO,
         IQueryable<ProductStateDTO> productStateDTO) GetDataForCreatingAdOrDataForFilter();
 
-        Task<OperationDetails<int>> SaveAd(string userName, AdDTO ad, IFormFileCollection productPhotos);
+        Task<OperationDetails<int>> SaveAd(
+            string userName,
+            AdDTO ad, 
+            IFormFileCollection productPhotos,
+            Dictionary<SelectListProps, string> selectedValuesDictionary);
 
         Task<OperationDetails<int>> SetStatusAd(int id, int adStatus);
     }

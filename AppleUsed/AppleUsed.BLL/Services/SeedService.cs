@@ -2,8 +2,6 @@
 using AppleUsed.DAL.EF;
 using AppleUsed.DAL.Identity;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AppleUsed.BLL.Services
 {

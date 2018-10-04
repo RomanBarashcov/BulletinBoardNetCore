@@ -6,30 +6,33 @@ using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
 using AppleUsed.DAL.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
-    public class AdService : IAdService, IDisposable
+    public class AdService : IAdService
     {
         private IUnityOfWork _uof;
         private IImageService _imageService;
         private IDataTransformerService _dataService;
         private IAdUpService _adUpService;
+        private IConversationService _conversationService;
 
         public AdService(
             IUnityOfWork uof, 
             IImageService imageService, 
             IDataTransformerService dataService,
-            IAdUpService adUpService)
+            IAdUpService adUpService,
+            IConversationService converstionService)
         {
             _uof = uof;
             _imageService = imageService;
             _dataService = dataService;
             _adUpService = adUpService;
+            _conversationService = converstionService;
         }
 
         public async Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAds()
@@ -52,7 +55,6 @@ namespace AppleUsed.BLL.Services
                 operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
             }
             
-
             return operationDetails;
         }
 
@@ -75,7 +77,6 @@ namespace AppleUsed.BLL.Services
             {
                 operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
             }
-
 
             return operationDetails;
         }
@@ -126,7 +127,6 @@ namespace AppleUsed.BLL.Services
                 operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
             }
 
-
             return operationDetails;
         }
 
@@ -151,7 +151,6 @@ namespace AppleUsed.BLL.Services
             {
                 operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
             }
-
 
             return operationDetails;
         }
@@ -210,15 +209,16 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-
                 var ads = await _uof.AdRepository.GetAdsByUserName(userName);
+                var adsDTO = _dataService.TransformingAdQueryToAdDTO(ads);
 
-                //foreach (var item in ads)
-                //{
-                //    item.NotDeliveredMessageCount = _ads.GetCountNotDeliveredMessageByAdId(item.AdId);
-                //}
+                foreach (var item in adsDTO)
+                {
+                    item.NotDeliveredMessageCount = 
+                        _conversationService.GetCountNotDeliveredMessageByAdId(item.AdId);
+                }
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
+                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", adsDTO);
             }
             catch (Exception ex)
             {
@@ -316,7 +316,11 @@ namespace AppleUsed.BLL.Services
                     productStates);
         }
 
-        public async Task<OperationDetails<int>> SaveAd(string userName, AdDTO ad, IFormFileCollection productPhotos)
+        public async Task<OperationDetails<int>> SaveAd(
+            string userName, 
+            AdDTO ad,
+            IFormFileCollection productPhotos,
+            Dictionary<SelectListProps, string> selectedValuesDictionary)
         {
             OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
             ApplicationUser user = new ApplicationUser();
@@ -331,7 +335,7 @@ namespace AppleUsed.BLL.Services
             if (user == null)
                 return operationDetails;
 
-            var newAd = _dataService.TransformingAdDTOToAdEntities(ad);
+            var newAd = _dataService.TransformingAdDTOToAdEntities(ad, selectedValuesDictionary);
             newAd.ApplicationUser = user;
 
             if(newAd.AdId == 0)
@@ -479,6 +483,7 @@ namespace AppleUsed.BLL.Services
                 {
                     _uof.Dispose();
                     _imageService.Dispose();
+                    _dataService.Dispose();
 
                     _uof = null;
                     _imageService = null;

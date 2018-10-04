@@ -38,7 +38,7 @@ namespace AppleUsed.DAL.Repositories
 
         public IQueryable<Services> GetAllServices()
         {
-            var services = ServiceQuery(null);
+            var services = ServiceQuery(whereExpression: null);
             return services;
         }
 

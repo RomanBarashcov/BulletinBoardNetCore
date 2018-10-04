@@ -1,9 +1,7 @@
 ﻿using AppleUsed.BLL.DTO;
 using AppleUsed.BLL.Infrastructure;
 using AppleUsed.BLL.Interfaces;
-using AppleUsed.DAL.Identity;
 using AppleUsed.DAL.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
