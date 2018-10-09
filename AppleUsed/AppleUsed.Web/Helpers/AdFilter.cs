@@ -2,8 +2,6 @@
 using AppleUsed.Web.Filters;
 using AppleUsed.Web.Models.ViewModels.AccountViewModels;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,7 +16,11 @@ namespace AppleUsed.Web.Helpers
             _prepearingModel = prepearingModel;
         }
 
-        public async Task<IQueryable<AdDTO>> FilteringData(string titleFilter, string productState, IQueryable<AdDTO> adQueryResult, AdIndexViewModel model)
+        public async Task<IQueryable<AdDTO>> FilteringData(
+            string titleFilter,
+            string productState, 
+            IQueryable<AdDTO> adQueryResult, 
+            AdIndexViewModel model)
         {
             if (!string.IsNullOrEmpty(titleFilter))
             {
@@ -26,7 +28,10 @@ namespace AppleUsed.Web.Helpers
             }
 
             if(model.SearchFilter == null)
-                model.SearchFilter = new SearchFilterViewModel() { SelectedProductTypeId = adQueryResult.FirstOrDefault().SelectedProductTypeId };
+                model.SearchFilter = new SearchFilterViewModel()
+                {
+                    SelectedProductTypeId = adQueryResult.FirstOrDefault().Characteristics.ProductTypesId
+                };
 
             adQueryResult = new SerarchNavFilter(model, adQueryResult).SearchNavChanged();
 
@@ -47,9 +52,15 @@ namespace AppleUsed.Web.Helpers
             }
             else
             {
-                model.SortViewModel.SortOptionList = _prepearingModel.GetSerachSelectionOptionsList();
-                model.SearchFilter.ProductTypesOptionList = _prepearingModel.GetProductTypeSelectionOptionsList();
-                model.Filter.SelectedProductTypeId = model.SearchFilter.SelectedProductTypeId;
+                model.SortViewModel.SortOptionList = 
+                    _prepearingModel.GetSerachSelectionOptionsList();
+
+                model.SearchFilter.ProductTypesOptionList =
+                    _prepearingModel.GetProductTypeSelectionOptionsList();
+
+                model.Filter.SelectedProductTypeId = 
+                    model.SearchFilter.SelectedProductTypeId;
+
                 model.SimpleAds = adQueryResult.ToList();
             }
 

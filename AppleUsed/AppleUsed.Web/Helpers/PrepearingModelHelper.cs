@@ -22,20 +22,34 @@ namespace AppleUsed.Web.Helpers
 
         public PrepearingModelHelper() { }
 
-        public AdViewModel PrepearingAdViewModel(AdDTO dataForSelectList, AdDTO ad)
+        public AdViewModel PrepearingAdViewModel(IQueryable<CityDTO> citiesDTO,
+                                                IQueryable<CityAreaDTO> cityAreasDTO,
+                                                IQueryable<ProductTypeDTO> productTypesDTO,
+                                                IQueryable<ProductModelsDTO> productModelsDTO,
+                                                IQueryable<ProductMemorieDTO> productMemoriesDTO,
+                                                IQueryable<ProductColorDTO> productColorsDTO,
+                                                IQueryable<ProductStateDTO> productStateDTO, 
+                                                AdDTO ad)
         {
             AdViewModel prepearingModel = new AdViewModel { AdDTO = ad };
 
-            prepearingModel.CityAreasSelectList = new SelectList(dataForSelectList.CityAreasList, "CityAreaId", "Name");
-            prepearingModel.CityesSelectList = new SelectList(dataForSelectList.CityesList, "CityId", "Name");
+            prepearingModel.CityesSelectList = new SelectList(citiesDTO, "CityId", "Name");
+            prepearingModel.CityAreasSelectList = new SelectList(cityAreasDTO, "CityAreaId", "Name");
+            
+            if(ad.Characteristics.ProductType.ProductTypesId > 0)
+                prepearingModel.ProductModelsSelectList = new SelectList(productModelsDTO.Where(x => x.ProductTypeId == ad.Characteristics.ProductTypesId), "ProductModelsId", "Name");
 
-            if(ad.SelectedProductTypeId > 0)
-                prepearingModel.ProductModelsSelectList = new SelectList(dataForSelectList.ProductModelsList.Where(x => x.ProductTypes.ProductTypesId == ad.SelectedProductTypeId), "ProductModelsId", "Name");
+            prepearingModel.ProductTypesSelectList =
+                new SelectList(productTypesDTO, "ProductTypesId", "Name");
 
-            prepearingModel.ProductTypesSelectList = new SelectList(dataForSelectList.ProductTypesList, "ProductTypesId", "Name");
-            prepearingModel.ProductMemoriesSelectList = new SelectList(dataForSelectList.ProductMemoriesList, "ProductMemoriesId", "Name");
-            prepearingModel.ProductColorsSelectList = new SelectList(dataForSelectList.ProductColorsList, "ProductColorsId", "Name");
-            prepearingModel.ProductStatesSelectList = new SelectList(dataForSelectList.ProductStatesList, "ProductStatesId", "Name");
+            prepearingModel.ProductMemoriesSelectList =
+                new SelectList(productMemoriesDTO, "ProductMemoriesId", "Name");
+
+            prepearingModel.ProductColorsSelectList = 
+                new SelectList(productColorsDTO, "ProductColorsId", "Name");
+
+            prepearingModel.ProductStatesSelectList = 
+                new SelectList(productStateDTO, "ProductStatesId", "Name");
 
             return prepearingModel;
         }
@@ -43,7 +57,7 @@ namespace AppleUsed.Web.Helpers
         public async Task<AdIndexViewModel> PrepearingAdIndexViewModel(IQueryable<AdDTO> ads, int selectedProductTypeId)
         {
             AdIndexViewModel adIndexViewModel = new AdIndexViewModel { SimpleAds = ads.ToList() };
-            AdDTO dataForFilter = await _adService.GetDataForCreatingAdOrDataForFilter();
+            var dataForFilter = _adService.GetDataForCreatingAdOrDataForFilter();
 
             adIndexViewModel.SearchFilter = new SearchFilterViewModel();
             adIndexViewModel.SortViewModel = new SortViewModel();
@@ -53,9 +67,14 @@ namespace AppleUsed.Web.Helpers
             adIndexViewModel.Filter.ProductMemmories = new List<ProductMemmoriesFilter>();
             adIndexViewModel.Filter.ProductsColors = new List<ProductsColorFilter>();
 
-            adIndexViewModel.Filter.ProductsModelFilters = GetProductModelsDataForFilter(dataForFilter, selectedProductTypeId);
-            adIndexViewModel.Filter.ProductMemmories = GetProductMemmoriesDataForFilter(dataForFilter);
-            adIndexViewModel.Filter.ProductsColors = GetProductColorsDataFilter(dataForFilter);
+            adIndexViewModel.Filter.ProductsModelFilters =
+                GetProductModelsDataForFilter(dataForFilter.productModelsDTO, selectedProductTypeId);
+
+            adIndexViewModel.Filter.ProductMemmories = 
+                GetProductMemmoriesDataForFilter(dataForFilter.productMemoriesDTO);
+
+            adIndexViewModel.Filter.ProductsColors = 
+                GetProductColorsDataFilter(dataForFilter.productColorsDTO);
 
             adIndexViewModel.SortViewModel.SortOptionList = GetSerachSelectionOptionsList();
             adIndexViewModel.SearchFilter.ProductTypesOptionList = GetProductTypeSelectionOptionsList();
@@ -66,58 +85,62 @@ namespace AppleUsed.Web.Helpers
             return adIndexViewModel;
         }
 
-        private List<ProductsModelFilter> GetProductModelsDataForFilter(AdDTO dataForFilter, int selectedProductTypeId)
+        private List<ProductsModelFilter>
+            GetProductModelsDataForFilter(IQueryable<ProductModelsDTO> productModelsDTO, 
+            int selectedProductTypeId)
         {
-            var productModelsList = dataForFilter.ProductModelsList.Where(p => p.ProductTypes.ProductTypesId == selectedProductTypeId).OrderByDescending(x => x.ProductModelsId).ToList();
+            var productModelsList = productModelsDTO.Where(p => p.ProductTypeId == selectedProductTypeId).OrderByDescending(x => x.Id).ToList();
 
             List<ProductsModelFilter> productModelsForFilterList = new List<ProductsModelFilter>();
 
             for (int i = 0; i <= productModelsList.Count - 1; i++)
             {
                 productModelsForFilterList.Add(
-                    new ProductsModelFilter
-                    {
-                        Id = productModelsList[i].ProductModelsId,
-                        Name = productModelsList[i].Name
-                    });
+                new ProductsModelFilter
+                {
+                    Id = productModelsList[i].Id,
+                    Name = productModelsList[i].Name
+                });
             }
 
             return productModelsForFilterList;
         }
 
-        private List<ProductMemmoriesFilter> GetProductMemmoriesDataForFilter(AdDTO dataForFilter)
+        private List<ProductMemmoriesFilter> 
+            GetProductMemmoriesDataForFilter(IQueryable<ProductMemorieDTO> ProductMemoriesDTO)
         {
-            var productMemmoriesList = dataForFilter.ProductMemoriesList.OrderBy(x => x.ProductMemoriesId).ToList();
+            var productMemmoriesList = ProductMemoriesDTO.OrderBy(x => x.Id).ToList();
 
             List<ProductMemmoriesFilter> productMemmoriesForFilterList = new List<ProductMemmoriesFilter>();
 
             for (int i = 0; i <= productMemmoriesList.Count - 1; i++)
             {
                 productMemmoriesForFilterList.Add(
-                    new ProductMemmoriesFilter
-                    {
-                        Id = productMemmoriesList[i].ProductMemoriesId,
-                        Name = productMemmoriesList[i].Name
-                    });
+                new ProductMemmoriesFilter
+                {
+                    Id = productMemmoriesList[i].Id,
+                    StorageSize = productMemmoriesList[i].StorageSize
+                });
             }
 
             return productMemmoriesForFilterList;
         }
 
-        private List<ProductsColorFilter> GetProductColorsDataFilter(AdDTO dataForFilter)
+        private List<ProductsColorFilter> 
+            GetProductColorsDataFilter(IQueryable<ProductColorDTO> productColorDTO)
         {
-            var productColorsList = dataForFilter.ProductColorsList.OrderBy(x => x.ProductColorsId).ToList();
+            var productColorsList = productColorDTO.OrderBy(x => x.Id).ToList();
 
             List<ProductsColorFilter> productsColorForFilterList = new List<ProductsColorFilter>();
 
             for (int i = 0; i <= productColorsList.Count - 1; i++)
             {
                 productsColorForFilterList.Add(
-                    new ProductsColorFilter
-                    {
-                        Id = productColorsList[i].ProductColorsId,
-                        Name = productColorsList[i].Name
-                    });
+                new ProductsColorFilter
+                {
+                    Id = productColorsList[i].Id,
+                    Name = productColorsList[i].Name
+                });
             }
 
             return productsColorForFilterList;
@@ -138,8 +161,8 @@ namespace AppleUsed.Web.Helpers
 
         public SelectList GetProductTypeSelectionOptionsList()
         {
-            List<SelectOption> searchOptions = new List<SelectOption> {
-
+            List<SelectOption> searchOptions = new List<SelectOption>
+            {
                 new SelectOption { Name = "iPhone", ValueOption = 1 },
                 new SelectOption { Name = "iPad", ValueOption = 2 },
                 new SelectOption { Name = "Mac & Macbook", ValueOption = 3 },
@@ -215,6 +238,7 @@ namespace AppleUsed.Web.Helpers
             {
                 if (disposing)
                 {
+                    _adService.Dispose();
                     _adService = null;
                 }
                 this.disposed = true;

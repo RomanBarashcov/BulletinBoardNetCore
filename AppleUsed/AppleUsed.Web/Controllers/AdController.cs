@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AppleUsed.BLL.DTO;
+using AppleUsed.BLL.Enums;
 using AppleUsed.BLL.Interfaces;
 using AppleUsed.Web.Helpers;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
@@ -22,8 +24,8 @@ namespace AppleUsed.Web.Controllers
         private IAdViewsService _adViewsService;
 
         public AdController(
-            IAdService adService, 
-            ICityService cityService, 
+            IAdService adService,
+            ICityService cityService,
             IProductModelsService productModelsService,
             IAdViewsService adViewsService)
         {
@@ -63,7 +65,18 @@ namespace AppleUsed.Web.Controllers
         public async Task<IActionResult> CreateAd()
         {
             var dataForSelectList = _adService.GetDataForCreatingAdOrDataForFilter();
-            var model = _prepearingModel.PrepearingAdViewModel(dataForSelectList, new AdDTO());
+
+
+            var model = _prepearingModel.PrepearingAdViewModel(
+                dataForSelectList.citiesDTO,
+                dataForSelectList.cityAreasDTO,
+                dataForSelectList.productTypesDTO,
+                dataForSelectList.productModelsDTO,
+                dataForSelectList.productMemoriesDTO,
+                dataForSelectList.productColorsDTO,
+                dataForSelectList.productStateDTO,
+                new AdDTO());
+
             return View(model);
         }
 
@@ -96,11 +109,26 @@ namespace AppleUsed.Web.Controllers
         {
             if (!ModelState.IsValid)
                 return View("CreateAd", model);
-                
 
             string userName = User.Identity.Name;
 
-            var result = await _adService.SaveAd(userName, model.AdDTO, model.Photos);
+            Dictionary<SelectListProps, string> selectedValuesDictionary =
+                new Dictionary<SelectListProps, string>
+                {
+                    { SelectListProps.ProductType, model.AdDTO.SelectedProductType },
+                    { SelectListProps.ProductModel, model.AdDTO.SelectedProductModel },
+                    { SelectListProps.ProductMemorie, model.AdDTO.SelectedProductMemory },
+                    { SelectListProps.ProductColor, model.AdDTO.SelectedProductColor },
+                    { SelectListProps.ProductState, model.AdDTO.SelectedProductStates },
+                    { SelectListProps.City, model.AdDTO.SelectedCity }
+                };
+
+            var result = await _adService.SaveAd(
+                userName,
+                model.AdDTO, 
+                model.Photos,
+                selectedValuesDictionary);
+
             if (!result.Succedeed)
             {
                 ModelState.AddModelError("", result.Message);
@@ -122,14 +150,16 @@ namespace AppleUsed.Web.Controllers
             await _adViewsService.UpdateViewsAd(id ?? 0);
             model.AddDetails = getByIdReult.Property;
 
-            var similarAdsResult = await _adService.GetAdsByProductTypeId(model.AddDetails.SelectedProductTypeId);
+            var similarAdsResult = 
+                await _adService.GetAdsByProductTypeId(model.AddDetails.Characteristics.ProductTypesId);
+
             if(!similarAdsResult.Succedeed)
                 return View(model);
 
             var similarAds = similarAdsResult.Property;
             model.SimilarAds = await similarAds.OrderBy(x => Guid.NewGuid()).Take(4).ToListAsync();
 
-            var otherAdsByAuthorResult = await _adService.GetAdsByUserId(model.AddDetails.User.Id);
+            var otherAdsByAuthorResult = await _adService.GetAdsByUserId(model.AddDetails.ApplicationUser.Id);
 
             if(!otherAdsByAuthorResult.Succedeed)
                 return View(model);
@@ -155,11 +185,12 @@ namespace AppleUsed.Web.Controllers
                 Ads = operationDetails.Property.ToList(),
                 User = new UserDTO
                 {
-                    Id = operationDetails.Property.FirstOrDefault().User.Id,
-                    Email = operationDetails.Property.FirstOrDefault().User.Email,
-                    UserName = operationDetails.Property.FirstOrDefault().User.UserName,
-                    PhoneNumber = operationDetails.Property.FirstOrDefault().User.PhoneNumber,
-                    RegistrationDate = operationDetails.Property.FirstOrDefault().User.RegistrationDate
+                    Id = operationDetails.Property.FirstOrDefault().ApplicationUser.Id,
+                    Email = operationDetails.Property.FirstOrDefault().ApplicationUser.Email,
+                    UserName = operationDetails.Property.FirstOrDefault().ApplicationUser.UserName,
+                    PhoneNumber = operationDetails.Property.FirstOrDefault().ApplicationUser.PhoneNumber,
+                    RegistrationDate =
+                        operationDetails.Property.FirstOrDefault().ApplicationUser.RegistrationDate
                 }
             };
 

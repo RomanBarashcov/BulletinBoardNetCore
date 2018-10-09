@@ -8,7 +8,7 @@ namespace AppleUsed.Web.Models.ViewModels.AdViewModels
     public class ProductMemmoriesFilter
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public int StorageSize { get; set; }
         public bool Selected { get; set; }
     }
 }
