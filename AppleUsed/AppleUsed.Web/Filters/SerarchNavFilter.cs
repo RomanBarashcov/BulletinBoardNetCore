@@ -25,7 +25,7 @@ namespace AppleUsed.Web.Filters
             if (_model.SearchFilter != null)
             {
                 if(_model.SearchFilter.SelectedProductTypeId > 0)
-                    queryResult = _query.Where(x => x.SelectedProductTypeId == _model.SearchFilter.SelectedProductTypeId);
+                    queryResult = _query.Where(x => x.Characteristics.ProductTypesId == _model.SearchFilter.SelectedProductTypeId);
 
                 if (!String.IsNullOrEmpty(_model.SearchFilter.SearchByCity))
                     queryResult = queryResult.Where(x => x.SelectedCity.ToLower().Contains(_model.SearchFilter.SearchByCity.ToLower()));  

@@ -94,8 +94,18 @@ namespace AppleUsed.Web.Controllers
             if (!getAdByIdResult.Succedeed)
                 return View("Details", model);
 
-            var dataForSelectList = await _adService.GetDataForCreatingAdOrDataForFilter();
-            model = _prepearingModel.PrepearingAdViewModel(dataForSelectList, getAdByIdResult.Property);
+
+            var dataForSelectList = _adService.GetDataForCreatingAdOrDataForFilter();
+
+            model = _prepearingModel.PrepearingAdViewModel(
+                dataForSelectList.citiesDTO,
+                dataForSelectList.cityAreasDTO,
+                dataForSelectList.productTypesDTO,
+                dataForSelectList.productModelsDTO,
+                dataForSelectList.productMemoriesDTO,
+                dataForSelectList.productColorsDTO,
+                dataForSelectList.productStateDTO,
+                new AdDTO());
 
             ViewBag.AdId = id;
             return View("Details", model);
@@ -115,7 +125,23 @@ namespace AppleUsed.Web.Controllers
 
             string userName = User.Identity.Name;
 
-            var result = await _adService.SaveAd(userName, model.AdDTO, model.Photos);
+            Dictionary<SelectListProps, string> selectedValuesDictionary =
+               new Dictionary<SelectListProps, string>
+               {
+                    { SelectListProps.ProductType, model.AdDTO.SelectedProductType },
+                    { SelectListProps.ProductModel, model.AdDTO.SelectedProductModel },
+                    { SelectListProps.ProductMemorie, model.AdDTO.SelectedProductMemory },
+                    { SelectListProps.ProductColor, model.AdDTO.SelectedProductColor },
+                    { SelectListProps.ProductState, model.AdDTO.SelectedProductStates },
+                    { SelectListProps.City, model.AdDTO.SelectedCity }
+               };
+
+            var result = await _adService.SaveAd(
+                userName,
+                model.AdDTO,
+                model.Photos,
+                selectedValuesDictionary);
+
             if (!result.Succedeed)
             {
                 ModelState.AddModelError("", result.Message);

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace AppleUsed.DAL.Repositories
 {
-    public class ProductMemoriesReposiotry : IProductMemoriesRepository
+    public class ProductMemoriesRepository : IProductMemoriesRepository
     {
         private AppDbContext _db;
 
-        public ProductMemoriesReposiotry(AppDbContext db)
+        public ProductMemoriesRepository(AppDbContext db)
         {
             _db = db;
         }

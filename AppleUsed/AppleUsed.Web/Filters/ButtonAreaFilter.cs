@@ -35,12 +35,12 @@ namespace AppleUsed.Web.Filters
 
         private IQueryable<AdDTO> GetNewProduct()
         {
-            return _query.Where(x => x.SelectedProductStatesId == 1);
+            return _query.Where(x => x.Characteristics.ProductStatesId == 1);
         }
 
         private IQueryable<AdDTO> GetUsedProduct()
         {
-            return _query.Where(x => x.SelectedProductStatesId == 3);
+            return _query.Where(x => x.Characteristics.ProductStatesId == 3);
         }
 
         private bool disposed = false;
@@ -48,7 +48,6 @@ namespace AppleUsed.Web.Filters
         public void Dispose()
         {
             Dispose(true);
-            // подавляем финализацию
             GC.SuppressFinalize(this);
         }
 
@@ -58,10 +57,8 @@ namespace AppleUsed.Web.Filters
             {
                 if (disposing)
                 {
-
+                    _query = null;
                 }
-
-                _query = null;
                 disposed = true;
             }
         }

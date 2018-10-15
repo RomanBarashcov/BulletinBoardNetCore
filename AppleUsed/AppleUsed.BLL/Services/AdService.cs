@@ -48,7 +48,16 @@ namespace AppleUsed.BLL.Services
                     auExpression: null,
                     pExpression: null);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
+
+                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+
+                foreach(var item in adDTOQuery)
+                {
+                    item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
+                }
+
+                operationDetails = 
+                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
             }
             catch(Exception ex)
             {
@@ -71,7 +80,15 @@ namespace AppleUsed.BLL.Services
                     auExpression: null,
                     pExpression: null);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
+                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+
+                foreach (var item in adDTOQuery)
+                {
+                    item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
+                }
+
+                operationDetails =
+                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
             }
             catch (Exception ex)
             {
@@ -94,7 +111,16 @@ namespace AppleUsed.BLL.Services
                         auExpression: null,
                         pExpression: null);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
+                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+
+                foreach (var item in adDTOQuery)
+                {
+                    item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
+                }
+
+                operationDetails =
+                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
+
             }
             catch (Exception ex)
             {
@@ -120,7 +146,15 @@ namespace AppleUsed.BLL.Services
                        .OrderBy(x => Guid.NewGuid())
                        .Take(12);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
+                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+
+                foreach (var item in adDTOQuery)
+                {
+                    item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
+                }
+
+                operationDetails =
+                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
             }
             catch (Exception ex)
             {
@@ -145,7 +179,15 @@ namespace AppleUsed.BLL.Services
                       .OrderBy(x => Guid.NewGuid())
                       .Take(5);
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
+                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+
+                foreach (var item in adDTOQuery)
+                {
+                    item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
+                }
+
+                operationDetails =
+                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
             }
             catch (Exception ex)
             {
@@ -167,8 +209,13 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var adById = await _uof.AdRepository.FindAdByIdAsync(id);
+                var adDTO = _dataService.TransformingAdToAdDTO(adById);
+
+                adDTO.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(adDTO.Photos.ToList());
+                adDTO.PhotosAvgSizeList = _imageService.CreatingImageSrcForSmallSize(adDTO.Photos.ToList());
+
                 operationDetails = 
-                    new OperationDetails<AdDTO>(true, "", _dataService.TransformingAdToAdDTO(adById));
+                    new OperationDetails<AdDTO>(true, "", adDTO);
             }
             catch(Exception ex)
             {
@@ -189,7 +236,15 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var ads = _uof.AdRepository.FindAdsByProductTypeId(productTypeId);
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
+                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+
+                foreach (var item in adDTOQuery)
+                {
+                    item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
+                }
+
+                operationDetails =
+                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
             }
             catch (Exception ex)
             {
@@ -210,15 +265,19 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var ads = await _uof.AdRepository.GetAdsByUserName(userName);
-                var adsDTO = _dataService.TransformingAdQueryToAdDTO(ads);
+                var adsDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
 
-                foreach (var item in adsDTO)
+                foreach (var item in adsDTOQuery)
                 {
+                    item.PhotosSmallSizeList =
+                        _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
+
                     item.NotDeliveredMessageCount = 
                         _conversationService.GetCountNotDeliveredMessageByAdId(item.AdId);
                 }
 
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", adsDTO);
+                operationDetails =
+                    new OperationDetails<IQueryable<AdDTO>>(true, "", adsDTOQuery);
             }
             catch (Exception ex)
             {
@@ -239,7 +298,15 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var activeAds = _uof.AdRepository.FindActiveAdsByUserId(userId);
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(activeAds));
+                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(activeAds);
+
+                foreach (var item in adDTOQuery)
+                {
+                    item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
+                }
+
+                operationDetails =
+                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
             }
             catch (Exception ex)
             {
@@ -260,7 +327,15 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var ads = _uof.AdRepository.FindAdsByUserId(userId);
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(true, "", _dataService.TransformingAdQueryToAdDTO(ads));
+                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+
+                foreach (var item in adDTOQuery)
+                {
+                    item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
+                }
+
+                operationDetails =
+                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
             }
             catch (Exception ex)
             {

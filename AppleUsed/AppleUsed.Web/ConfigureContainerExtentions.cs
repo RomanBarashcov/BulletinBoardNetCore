@@ -32,8 +32,38 @@ namespace AppleUsed.Web
 
         public static void AddRepository(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IUserRepository, UserRepository>();
             serviceCollection.AddScoped<IUnityOfWork, UnityOfWork>();
+
+            serviceCollection.AddScoped<IAdRepository, AdRepository>();
+
+            serviceCollection.AddScoped<IAdPhotoRepository, AdPhotoRepository>();
+
+            serviceCollection.AddScoped<IAdUpRepository, AdUpRepository>();
+
+            serviceCollection.AddScoped<IAdViewsRepository, AdViewsRepository>();
+
+            serviceCollection.AddScoped<ICityAreasRepository, CityAreasRepository>();
+
+            serviceCollection.AddScoped<ICityRepository, CityRepository>();
+
+            serviceCollection.AddScoped<IProductTypeRepository, ProductTypeRepository>();
+
+            serviceCollection.AddScoped<IProductModelRepository, ProductModelRepository>();
+
+            serviceCollection.AddScoped<IProductMemoriesRepository, ProductMemoriesRepository> ();
+
+            serviceCollection.AddScoped<IProductColorsRepository, ProductColorsRepository > ();
+
+            serviceCollection.AddScoped<IProductStatesRepository, ProductStatesRepository > ();
+
+            serviceCollection.AddScoped<IPurchaseRepository, PurchaseRepository > ();
+
+            serviceCollection.AddScoped<IServiceActiveTimeRepository, ServiceActiveTimeRepository > ();
+
+            serviceCollection.AddScoped<IServiceRepository, ServiceRepository > ();
+
+            serviceCollection.AddScoped<IUserRepository, UserRepository > ();
+
         }
 
         public static void AddTransientServices(this IServiceCollection serviceCollection)
@@ -41,7 +71,22 @@ namespace AppleUsed.Web
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseSqlServer(GetDataConnectionStringFromConfig());
             var dbContext = new AppDbContext(optionsBuilder.Options);
-            var unitOfWork = new UnityOfWork(new UserRepository(dbContext));
+            var unitOfWork = new UnityOfWork(
+                new AdRepository(dbContext), 
+                new AdPhotoRepository(dbContext),
+                new AdUpRepository(dbContext),
+                new AdViewsRepository(dbContext),
+                new CityAreasRepository(dbContext),
+                new CityRepository(dbContext),
+                new ProductTypeRepository(dbContext),
+                new ProductModelRepository(dbContext),
+                new ProductMemoriesRepository(dbContext),
+                new ProductColorsRepository(dbContext),
+                new ProductStatesRepository(dbContext),
+                new PurchaseRepository(dbContext),
+                new ServiceActiveTimeRepository(dbContext),
+                new ServiceRepository(dbContext),
+                new UserRepository(dbContext));
 
 
             serviceCollection.AddTransient<IEmailSender, EmailSender>();
@@ -50,55 +95,45 @@ namespace AppleUsed.Web
                 s => new ImageService(new ImageCompressorService()));
 
             serviceCollection.AddTransient<IDataTransformerService>(
-                s => new DataTransformerService(dbContext));
+                s => new DataTransformerService(unitOfWork));
 
             serviceCollection.AddTransient<ISeedService>(
                 s => new SeedService(dbContext));
 
             serviceCollection.AddTransient<ICityAreasService>(
-                s => new CityAreasService(dbContext));
+                s => new CityAreasService(unitOfWork));
 
             serviceCollection.AddTransient<ICityService>(
-                s => new CityService(dbContext));
+                s => new CityService(unitOfWork));
 
             serviceCollection.AddTransient<IProductModelsService>(
-                s => new ProductModelService(dbContext));
+                s => new ProductModelService(unitOfWork));
+
 
             serviceCollection.AddTransient<IAdService>(
-                s => new AdService(dbContext,
-                new DataTransformerService(dbContext),
-                new ImageService(new ImageCompressorService()),
-                new ConversationService(dbContext),
-                new CityAreasService(dbContext),
-                new CityService(dbContext),
-                new ProductModelService(dbContext),
-                new AdUpService(dbContext)));
+                s => new AdService(unitOfWork,
+                     new ImageService(new ImageCompressorService()),
+                     new DataTransformerService(unitOfWork),
+                     new AdUpService(unitOfWork),
+                     new ConversationService(dbContext)));
 
             serviceCollection.AddTransient<IAdUpService>(
-                s => new AdUpService(dbContext));
+                s => new AdUpService(unitOfWork));
 
             serviceCollection.AddTransient<IAdViewsService>(
-                s => new AdViewsService(dbContext));
+                s => new AdViewsService(unitOfWork));
 
             serviceCollection.AddTransient<IConversationService>(
                 s => new ConversationService(new AppDbContext(optionsBuilder.Options)));
 
             serviceCollection.AddTransient<IPurchasesService>(
-               s => new PurchasesService(new AppDbContext(optionsBuilder.Options),
-                    new AdService(dbContext,
-                    new DataTransformerService(dbContext),
-                    new ImageService(new ImageCompressorService()),
-                    new ConversationService(dbContext),
-                    new CityAreasService(dbContext),
-                    new CityService(dbContext),
-                    new ProductModelService(dbContext),
-                    new AdUpService(dbContext))));
+               s => new PurchasesService(unitOfWork));
 
             serviceCollection.AddTransient<IServiceActiveTimeService>(
                 s => new ServiceActiveTimeService(dbContext));
 
             serviceCollection.AddTransient<IServicesService>(
-                s => new ServicesService(dbContext, new ServiceActiveTimeService(dbContext)));
+                s => new ServicesService(unitOfWork));
 
             serviceCollection.AddTransient<IUserService, UserService>();
 

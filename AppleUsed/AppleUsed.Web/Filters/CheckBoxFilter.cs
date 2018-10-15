@@ -52,12 +52,12 @@ namespace AppleUsed.Web.Filters
             var selectedByColors = _model.Filter.ProductsColors.Where(x => x.Selected).AsQueryable();
 
             if (selectedByModels.Count() == 0 && selectedByColors.Count() == 0 && selectedByMemories.Count() == 0)
-                return await _adList.Where(x => x.SelectedProductTypeId == selectedProductId).ToListAsync();
+                return await _adList.Where(x => x.Characteristics.ProductTypesId == selectedProductId).ToListAsync();
 
             if (selectedByModels.Count() > 0)
             {
                 var byModels = (from ad in _adList
-                                join smo in selectedByModels on ad.SelectedProductModelId equals smo.Id
+                                join smo in selectedByModels on ad.Characteristics.ProductModelsId equals smo.Id
                                 select ad).ToList();
 
                 ads.AddRange(byModels);
@@ -70,7 +70,7 @@ namespace AppleUsed.Web.Filters
                 if (selectedByModels.Count() > 0)
                 {
                     byMemories = (from ad in ads
-                                      join sm in selectedByMemories on ad.SelectedProductMemoryId equals sm.Id
+                                      join sm in selectedByMemories on ad.Characteristics.ProductMemoriesId equals sm.Id
                                       select ad).ToList();
 
                     ads = byMemories;
@@ -78,7 +78,7 @@ namespace AppleUsed.Web.Filters
                 else
                 {
                     byMemories = (from ad in _adList
-                                      join sm in selectedByMemories on ad.SelectedProductMemoryId equals sm.Id
+                                      join sm in selectedByMemories on ad.Characteristics.ProductMemoriesId equals sm.Id
                                       select ad).ToList();
 
                     ads.AddRange(byMemories);
@@ -93,7 +93,7 @@ namespace AppleUsed.Web.Filters
                 if (selectedByModels.Count() > 0 || selectedByMemories.Count() > 0)
                 {
                     byColors = (from ad in ads
-                                    join sc in selectedByColors on ad.SelectedProductColorId equals sc.Id
+                                    join sc in selectedByColors on ad.Characteristics.ProductColorsId equals sc.Id
                                     select ad).ToList();
 
                     ads = byColors;
@@ -101,7 +101,7 @@ namespace AppleUsed.Web.Filters
                 else
                 {
                     byColors = (from ad in _adList
-                                join sc in selectedByColors on ad.SelectedProductColorId equals sc.Id
+                                join sc in selectedByColors on ad.Characteristics.ProductColorsId equals sc.Id
                                 select ad).ToList();
 
                     ads.AddRange(byColors);
@@ -124,7 +124,6 @@ namespace AppleUsed.Web.Filters
         public void Dispose()
         {
             Dispose(true);
-            // подавляем финализацию
             GC.SuppressFinalize(this);
         }
 
@@ -134,12 +133,10 @@ namespace AppleUsed.Web.Filters
             {
                 if (disposing)
                 {
-
+                    _model = null;
+                    _adList = null;
                 }
 
-
-                _model = null;
-                _adList = null;
                 disposed = true;
             }
         }

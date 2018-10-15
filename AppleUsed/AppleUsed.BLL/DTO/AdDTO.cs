@@ -29,6 +29,9 @@ namespace AppleUsed.BLL.DTO
         public bool IsModerate { get; set; }
         public int NotDeliveredMessageCount { get; set; }
 
+        public List<string> PhotosSmallSizeList { get; set; }
+        public List<string> PhotosAvgSizeList { get; set; }
+        public List<string> PhotosBigSizeList { get; set; }
 
         public string SelectedProductType { get; set; }
 

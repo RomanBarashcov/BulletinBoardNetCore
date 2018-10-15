@@ -188,7 +188,7 @@ namespace AppleUsed.DAL.EF
 
                 for (int i = 0; i <= memoryArr.Length - 1; i++)
                 {
-                    productMemories.Add(new ProductMemories { StorageSize = memoryArr[i].ToString() });
+                    productMemories.Add(new ProductMemories { StorageSize = memoryArr[i] });
                 }
 
                 appDbContext.AddRange(productMemories);
