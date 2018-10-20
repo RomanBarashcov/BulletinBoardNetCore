@@ -10,7 +10,7 @@ using System.Text;
 namespace AppleUsed.BLL.DTO
 {
     [NotMapped]
-    public class AdDTO
+    public class AdDTO : BaseAdDTO
     {
         public int AdId { get; set; }
         public string Title { get; set; }
@@ -28,22 +28,6 @@ namespace AppleUsed.BLL.DTO
         public int AdStatusId { get; set; }
         public bool IsModerate { get; set; }
         public int NotDeliveredMessageCount { get; set; }
-
-        public List<string> PhotosSmallSizeList { get; set; }
-        public List<string> PhotosAvgSizeList { get; set; }
-        public List<string> PhotosBigSizeList { get; set; }
-
-        public string SelectedProductType { get; set; }
-
-        public string SelectedProductModel { get; set; }
-
-        public string SelectedProductMemory { get; set; }
-
-        public string SelectedProductColor { get; set; }
-
-        public string SelectedProductStates { get; set; }
-
-        public string SelectedCity { get; set; }
 
     }
 }

@@ -9,7 +9,7 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.5.0.1" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.9.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AppleUsed.DAL\AppleUsed.DAL.csproj" />

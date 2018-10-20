@@ -38,7 +38,7 @@ namespace AppleUsed.Web
             });
 
             services.AddDbContext();
-            //services.AddRepository();
+            services.AddRepository();
             services.AddTransientServices();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");

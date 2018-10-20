@@ -58,9 +58,9 @@
                         {
                             <li style="display:inline-block;margin:1px; width:104px">
                                 <input type="checkbox" asp-for="@Model.Filter.ProductMemmories[i].Selected" />
-                                <label asp-for="@Model.Filter.ProductMemmories[i].Selected">@Model.Filter.ProductMemmories[i].Name</label>
+                                <label asp-for="@Model.Filter.ProductMemmories[i].Selected">@Model.Filter.ProductMemmories[i].StorageSize</label>
                                 <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Id" />
-                                <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].Name" />
+                                <input type="hidden" asp-for="@Model.Filter.ProductMemmories[i].StorageSize" />
                             </li>
                         }
                     </ul>

@@ -32,37 +32,72 @@ namespace AppleUsed.Web
 
         public static void AddRepository(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IUnityOfWork, UnityOfWork>();
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseSqlServer(GetDataConnectionStringFromConfig());
+            var dbContext = new AppDbContext(optionsBuilder.Options);
 
-            serviceCollection.AddScoped<IAdRepository, AdRepository>();
+            serviceCollection.AddTransient<IUnityOfWork>(
+                r => new UnityOfWork(
+                     new AdRepository(dbContext),
+                     new AdPhotoRepository(dbContext),
+                     new AdUpRepository(dbContext),
+                     new AdViewsRepository(dbContext),
+                     new CityAreasRepository(dbContext),
+                     new CityRepository(dbContext),
+                     new ProductTypeRepository(dbContext),
+                     new ProductModelRepository(dbContext),
+                     new ProductMemoriesRepository(dbContext),
+                     new ProductColorsRepository(dbContext),
+                     new ProductStatesRepository(dbContext),
+                     new PurchaseRepository(dbContext),
+                     new ServiceActiveTimeRepository(dbContext),
+                     new ServiceRepository(dbContext),
+                     new UserRepository(dbContext)));
 
-            serviceCollection.AddScoped<IAdPhotoRepository, AdPhotoRepository>();
+            serviceCollection.AddTransient<IAdRepository>( 
+                r => new AdRepository(dbContext));
 
-            serviceCollection.AddScoped<IAdUpRepository, AdUpRepository>();
+            serviceCollection.AddTransient<IAdPhotoRepository>(
+                r => new AdPhotoRepository(dbContext));
 
-            serviceCollection.AddScoped<IAdViewsRepository, AdViewsRepository>();
+            serviceCollection.AddTransient<IAdUpRepository>( 
+                r => new AdUpRepository(dbContext));
 
-            serviceCollection.AddScoped<ICityAreasRepository, CityAreasRepository>();
+            serviceCollection.AddTransient<IAdViewsRepository>(
+                r => new AdViewsRepository(dbContext));
 
-            serviceCollection.AddScoped<ICityRepository, CityRepository>();
+            serviceCollection.AddTransient<ICityAreasRepository>(
+                r => new CityAreasRepository(dbContext));
 
-            serviceCollection.AddScoped<IProductTypeRepository, ProductTypeRepository>();
+            serviceCollection.AddTransient<ICityRepository>(
+                r => new CityRepository(dbContext));
 
-            serviceCollection.AddScoped<IProductModelRepository, ProductModelRepository>();
+            serviceCollection.AddTransient<IProductTypeRepository>(
+                r => new ProductTypeRepository(dbContext));
 
-            serviceCollection.AddScoped<IProductMemoriesRepository, ProductMemoriesRepository> ();
+            serviceCollection.AddTransient<IProductModelRepository>(
+                r => new ProductModelRepository(dbContext));
 
-            serviceCollection.AddScoped<IProductColorsRepository, ProductColorsRepository > ();
+            serviceCollection.AddTransient<IProductMemoriesRepository>(
+                r => new ProductMemoriesRepository(dbContext));
 
-            serviceCollection.AddScoped<IProductStatesRepository, ProductStatesRepository > ();
+            serviceCollection.AddTransient<IProductColorsRepository>(
+                r => new ProductColorsRepository(dbContext));
 
-            serviceCollection.AddScoped<IPurchaseRepository, PurchaseRepository > ();
+            serviceCollection.AddTransient<IProductStatesRepository>(
+                r => new ProductStatesRepository(dbContext));
 
-            serviceCollection.AddScoped<IServiceActiveTimeRepository, ServiceActiveTimeRepository > ();
+            serviceCollection.AddTransient<IPurchaseRepository>(
+                r => new PurchaseRepository(dbContext));
 
-            serviceCollection.AddScoped<IServiceRepository, ServiceRepository > ();
+            serviceCollection.AddTransient<IServiceActiveTimeRepository>(
+                r => new ServiceActiveTimeRepository(dbContext));
 
-            serviceCollection.AddScoped<IUserRepository, UserRepository > ();
+            serviceCollection.AddTransient<IServiceRepository>(
+                r => new ServiceRepository(dbContext));
+
+            serviceCollection.AddTransient<IUserRepository>( 
+                r => new UserRepository(dbContext));
 
         }
 

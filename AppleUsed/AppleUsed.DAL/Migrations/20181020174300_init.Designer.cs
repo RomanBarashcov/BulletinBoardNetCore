@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppleUsed.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20180901084622_AddedToApplicationUserRegistrationDate")]
-    partial class AddedToApplicationUserRegistrationDate
+    [Migration("20181020174300_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -55,9 +55,7 @@ namespace AppleUsed.DAL.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("CharacteristicsId")
-                        .IsUnique()
-                        .HasFilter("[CharacteristicsId] IS NOT NULL");
+                    b.HasIndex("CharacteristicsId");
 
                     b.HasIndex("CityId");
 
@@ -70,7 +68,7 @@ namespace AppleUsed.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AdId");
+                    b.Property<int>("AdId");
 
                     b.Property<string>("AdPhotoName");
 
@@ -144,7 +142,7 @@ namespace AppleUsed.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AdId");
+                    b.Property<int>("AdId");
 
                     b.Property<int>("ProductColorsId");
 
@@ -157,8 +155,6 @@ namespace AppleUsed.DAL.Migrations
                     b.Property<int>("ProductTypesId");
 
                     b.HasKey("CharacteristicsId");
-
-                    b.HasIndex("AdId");
 
                     b.ToTable("Characteristics");
                 });
@@ -260,7 +256,7 @@ namespace AppleUsed.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<int>("StorageSize");
 
                     b.HasKey("ProductMemoriesId");
 
@@ -326,6 +322,8 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<bool>("IsPayed");
 
+                    b.Property<int>("ServiceActiveTimeId");
+
                     b.Property<int>("ServicesId");
 
                     b.Property<DateTime>("StartDateService");
@@ -339,15 +337,32 @@ namespace AppleUsed.DAL.Migrations
                     b.ToTable("Purchases");
                 });
 
-            modelBuilder.Entity("AppleUsed.DAL.Entities.Services", b =>
+            modelBuilder.Entity("AppleUsed.DAL.Entities.ServiceActiveTime", b =>
                 {
-                    b.Property<int>("ServicesId")
+                    b.Property<int>("ServiceActiveTimeId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Cost");
 
                     b.Property<int>("DaysOfActiveService");
+
+                    b.Property<int>("ServiceId");
+
+                    b.Property<int?>("ServicesId");
+
+                    b.HasKey("ServiceActiveTimeId");
+
+                    b.HasIndex("ServicesId");
+
+                    b.ToTable("ServiceActiveTimes");
+                });
+
+            modelBuilder.Entity("AppleUsed.DAL.Entities.Services", b =>
+                {
+                    b.Property<int>("ServicesId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description");
 
@@ -532,8 +547,8 @@ namespace AppleUsed.DAL.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("AppleUsed.DAL.Entities.Characteristics", "Characteristics")
-                        .WithOne()
-                        .HasForeignKey("AppleUsed.DAL.Entities.Ad", "CharacteristicsId");
+                        .WithMany()
+                        .HasForeignKey("CharacteristicsId");
 
                     b.HasOne("AppleUsed.DAL.Entities.City", "City")
                         .WithMany()
@@ -542,16 +557,10 @@ namespace AppleUsed.DAL.Migrations
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.AdPhotos", b =>
                 {
-                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
+                    b.HasOne("AppleUsed.DAL.Entities.Ad")
                         .WithMany("Photos")
-                        .HasForeignKey("AdId");
-                });
-
-            modelBuilder.Entity("AppleUsed.DAL.Entities.Characteristics", b =>
-                {
-                    b.HasOne("AppleUsed.DAL.Entities.Ad", "Ad")
-                        .WithMany()
-                        .HasForeignKey("AdId");
+                        .HasForeignKey("AdId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.City", b =>
@@ -582,6 +591,13 @@ namespace AppleUsed.DAL.Migrations
                         .WithMany("Purhcases")
                         .HasForeignKey("AdId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AppleUsed.DAL.Entities.ServiceActiveTime", b =>
+                {
+                    b.HasOne("AppleUsed.DAL.Entities.Services")
+                        .WithMany("ServiceActiveTimes")
+                        .HasForeignKey("ServicesId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

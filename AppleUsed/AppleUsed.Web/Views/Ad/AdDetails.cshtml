@@ -26,7 +26,7 @@
             </blockquote>
         </div>
         <div class="btn-block">
-            @if (User.Identity.Name != Model.AddDetails.User.UserName)
+            @if (User.Identity.Name != Model.AddDetails.ApplicationUser.UserName)
             {
                 <p>
                     <button class="btn btn-lg btn-success btn-block">+380... Показать номер</button>
@@ -36,7 +36,7 @@
                     }
                     else
                     {
-                        @Html.ActionLink("Написать владельцу", "ConversationByAdIdAndContactId", "Chat", new { adId = Model.AddDetails.AdId, contactId = Model.AddDetails.User.Id }, new { @class = "btn btn-lg btn-success btn-block" })
+                        @Html.ActionLink("Написать владельцу", "ConversationByAdIdAndContactId", "Chat", new { adId = Model.AddDetails.AdId, contactId = Model.AddDetails.ApplicationUser.Id }, new { @class = "btn btn-lg btn-success btn-block" })
                     }
                 </p>
             }
@@ -50,13 +50,13 @@
         <div class="btn-block">
             <div class="thumbnail photo">
                 <div class="ad_location">
-                    <p><b><small class="ad_location_info"><span class="glyphicon glyphicon-map-marker"></span> г. @Model.AddDetails.SelectedCity @Model.AddDetails.SelectedCityArea  обл.</small></b></p>
+                    <p><b><small class="ad_location_info"><span class="glyphicon glyphicon-map-marker"></span> г. @Model.AddDetails.City.Name @Model.AddDetails.City.CityArea.Name  обл.</small></b></p>
                 </div>
                 <div class="caption">
                     <div class="col-lg-offset-4 user_img no_photo"></div>
-                    <p>@Model.AddDetails.User.UserName</p>
-                    <p><small> на AU с @Model.AddDetails.User.RegistrationDate.Day / @Model.AddDetails.User.RegistrationDate.Month / @Model.AddDetails.User.RegistrationDate.Year </small> </p>
-                    <p><a class="btn btn-success" asp-controller="Ad" asp-action="GetActiveAdsByUserId" asp-route-id="@Model.AddDetails.User.Id">Другие объявления автора</a></p>
+                    <p>@Model.AddDetails.ApplicationUser.UserName</p>
+                    <p><small> на AU с @Model.AddDetails.ApplicationUser.RegistrationDate.Day / @Model.AddDetails.ApplicationUser.RegistrationDate.Month / @Model.AddDetails.ApplicationUser.RegistrationDate.Year </small> </p>
+                    <p><a class="btn btn-success" asp-controller="Ad" asp-action="GetActiveAdsByUserId" asp-route-id="@Model.AddDetails.ApplicationUser.Id">Другие объявления автора</a></p>
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@
                         <th><span class="glyphicon glyphicon-repeat"></span> Обновленно : </th>
                         <td>@Model.AddDetails.DateUpdated</td>
                         <th><span class="glyphicon glyphicon-map-marker"></span> Город : </th>
-                        <td>@Model.AddDetails.SelectedCity, @Model.AddDetails.SelectedCityArea область</td>
+                        <td>@Model.AddDetails.City.Name, @Model.AddDetails.City.CityArea.Name область</td>
                         <th>Просмотров : </th>
                         <td>@Model.AddDetails.AdViews <span class="glyphicon glyphicon-eye-open"></span> </td>
                     </tr>
@@ -170,7 +170,7 @@
                         <small><span class="glyphicon glyphicon-repeat"></span> @ad.DateUpdated</small> |
                         <small><span class="glyphicon glyphicon-eye-open"></span> @ad.AdViews</small>
                         <br />
-                        <small><span class="glyphicon glyphicon-map-marker"></span> @ad.SelectedCity, @ad.SelectedCityArea область</small>
+                        <small><span class="glyphicon glyphicon-map-marker"></span> @ad.City.Name, @ad.City.CityArea.Name область</small>
                     </div>
                 </div>
             </div>

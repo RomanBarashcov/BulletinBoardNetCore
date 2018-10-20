@@ -46,7 +46,6 @@ namespace AppleUsed.Web.Controllers
             if (!result.Succedeed)
                 return View(model);
 
-
             var topAds = await _adService.GetActiveRandomTopAds();
             IQueryable<AdDTO> adQueryResult = result.Property;
             adQueryResult = await _adFilter.FilteringData(titleFilter, productState, adQueryResult, model);

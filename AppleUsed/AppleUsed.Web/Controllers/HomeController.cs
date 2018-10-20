@@ -31,13 +31,20 @@ namespace AppleUsed.Web.Controllers.Home
 
         public async Task<IActionResult> Index()
         {
-            HomeIndexViewModel model = new HomeIndexViewModel() { LatestAds = new List<AdDTO>(), VipAds = new List<AdDTO>() };
+            HomeIndexViewModel model = new HomeIndexViewModel()
+            {
+                LatestAds = new List<AdDTO>(),
+                VipAds = new List<AdDTO>()
+            };
 
             var latestAdsResult = await _adService.GetActiveAds();
             var vipAds = await _adService.GetActiveRandomVIPAds();
 
-            model.LatestAds = latestAdsResult.Property.OrderByDescending(x=>x.AdId).Take(12).ToList();
-            model.VipAds = vipAds.Property.ToList();
+            if(latestAdsResult.Property != null)
+                model.LatestAds = latestAdsResult.Property.OrderByDescending(x=>x.AdId).Take(12).ToList();
+
+            if (vipAds.Property != null)
+                model.VipAds = vipAds.Property.ToList();
 
             return View(model);
         }
