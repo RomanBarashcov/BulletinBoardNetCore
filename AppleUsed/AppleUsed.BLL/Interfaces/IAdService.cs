@@ -44,8 +44,7 @@ namespace AppleUsed.BLL.Interfaces
         Task<OperationDetails<int>> SaveAd(
             string userName,
             AdDTO ad, 
-            IFormFileCollection productPhotos,
-            Dictionary<SelectListProps, string> selectedValuesDictionary);
+            IFormFileCollection productPhotos);
 
         Task<OperationDetails<int>> SetStatusAd(int id, int adStatus);
     }

@@ -125,22 +125,10 @@ namespace AppleUsed.Web.Controllers
 
             string userName = User.Identity.Name;
 
-            Dictionary<SelectListProps, string> selectedValuesDictionary =
-               new Dictionary<SelectListProps, string>
-               {
-                    { SelectListProps.ProductType, model.AdDTO.SelectedProductType },
-                    { SelectListProps.ProductModel, model.AdDTO.SelectedProductModel },
-                    { SelectListProps.ProductMemorie, model.AdDTO.SelectedProductMemory },
-                    { SelectListProps.ProductColor, model.AdDTO.SelectedProductColor },
-                    { SelectListProps.ProductState, model.AdDTO.SelectedProductStates },
-                    { SelectListProps.City, model.AdDTO.SelectedCity }
-               };
-
             var result = await _adService.SaveAd(
                 userName,
                 model.AdDTO,
-                model.Photos,
-                selectedValuesDictionary);
+                model.Photos);
 
             if (!result.Succedeed)
             {

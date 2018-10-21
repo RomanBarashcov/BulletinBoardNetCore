@@ -18,33 +18,15 @@ namespace AppleUsed.BLL.Services
             _uof = uof;
         }
 
-        public Ad TransformingAdDTOToAdEntities(AdDTO ad, Dictionary<SelectListProps, string> selectedValuesDictionary)
+        public Ad TransformingAdDTOToAdEntities(AdDTO ad)
         {
-            int selectedProductTypeId = 
-                Convert.ToInt32(selectedValuesDictionary[SelectListProps.ProductType]);
-
-            int selectedProductModelId = 
-                Convert.ToInt32(selectedValuesDictionary[SelectListProps.ProductModel]);
-
-            int selectedProductMemorieId = 
-                Convert.ToInt32(selectedValuesDictionary[SelectListProps.ProductMemorie]);
-
-            int selectedProductColorsId = 
-                Convert.ToInt32(selectedValuesDictionary[SelectListProps.ProductColor]);
-
-            int selectedProductStatesId =
-                Convert.ToInt32(selectedValuesDictionary[SelectListProps.ProductState]);
-
-            int selectedCityId = 
-                Convert.ToInt32(selectedValuesDictionary[SelectListProps.City]);
-
             Characteristics characteristics = new Characteristics
             {
-                ProductTypesId = selectedProductTypeId,
-                ProductModelsId = selectedProductModelId,
-                ProductMemoriesId = selectedProductMemorieId,
-                ProductColorsId = selectedProductColorsId,
-                ProductStatesId = selectedProductStatesId
+                ProductTypesId = ad.SelectedProductTypeId,
+                ProductModelsId = ad.SelectedProductModelId,
+                ProductMemoriesId = ad.SelectedProductMemoryId,
+                ProductColorsId = ad.SelectedProductColorId,
+                ProductStatesId = ad.SelectedProductStateId
             };
 
             Ad Ad = new Ad
@@ -54,7 +36,7 @@ namespace AppleUsed.BLL.Services
                 Price = ad.Price,
                 DateCreated = DateTime.Now,
                 DateUpdated = DateTime.Now,
-                City = _uof.CityRepository.FindCityAsync(selectedCityId),
+                City = _uof.CityRepository.FindCity(ad.SelectedCityId),
                 Characteristics = characteristics,
                 IsModerate = ad.IsModerate,
                 AdStatusId = ad.AdStatusId

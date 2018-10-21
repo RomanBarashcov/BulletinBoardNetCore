@@ -11,8 +11,7 @@ namespace AppleUsed.BLL.Interfaces
     public interface IDataTransformerService : IDisposable
     {
         Ad TransformingAdDTOToAdEntities(
-                AdDTO ad, 
-                Dictionary<SelectListProps, string> selectedValuesDictionary
+                AdDTO ad
             );
 
         AdDTO TransformingAdToAdDTO(Ad ad);

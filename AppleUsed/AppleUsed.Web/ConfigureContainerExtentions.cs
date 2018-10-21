@@ -36,24 +36,6 @@ namespace AppleUsed.Web
             optionsBuilder.UseSqlServer(GetDataConnectionStringFromConfig());
             var dbContext = new AppDbContext(optionsBuilder.Options);
 
-            serviceCollection.AddTransient<IUnityOfWork>(
-                r => new UnityOfWork(
-                     new AdRepository(dbContext),
-                     new AdPhotoRepository(dbContext),
-                     new AdUpRepository(dbContext),
-                     new AdViewsRepository(dbContext),
-                     new CityAreasRepository(dbContext),
-                     new CityRepository(dbContext),
-                     new ProductTypeRepository(dbContext),
-                     new ProductModelRepository(dbContext),
-                     new ProductMemoriesRepository(dbContext),
-                     new ProductColorsRepository(dbContext),
-                     new ProductStatesRepository(dbContext),
-                     new PurchaseRepository(dbContext),
-                     new ServiceActiveTimeRepository(dbContext),
-                     new ServiceRepository(dbContext),
-                     new UserRepository(dbContext)));
-
             serviceCollection.AddTransient<IAdRepository>( 
                 r => new AdRepository(dbContext));
 
@@ -123,6 +105,7 @@ namespace AppleUsed.Web
                 new ServiceRepository(dbContext),
                 new UserRepository(dbContext));
 
+            serviceCollection.AddTransient<IUnityOfWork>(r => unitOfWork);
 
             serviceCollection.AddTransient<IEmailSender, EmailSender>();
             serviceCollection.AddTransient<IImageCompressorService, ImageCompressorService>();

@@ -33,23 +33,30 @@ namespace AppleUsed.Web.Helpers
         {
             AdViewModel prepearingModel = new AdViewModel { AdDTO = ad };
 
-            prepearingModel.CityesSelectList = new SelectList(citiesDTO, "CityId", "Name");
-            prepearingModel.CityAreasSelectList = new SelectList(cityAreasDTO, "CityAreaId", "Name");
-            
-            if(ad.Characteristics.ProductType.ProductTypesId > 0)
-                prepearingModel.ProductModelsSelectList = new SelectList(productModelsDTO.Where(x => x.ProductTypeId == ad.Characteristics.ProductTypesId), "ProductModelsId", "Name");
+            prepearingModel.CityesSelectList = new SelectList(citiesDTO, "Id", "Name");
+            prepearingModel.CityAreasSelectList = new SelectList(cityAreasDTO, "Id", "Name");
+
+            if (ad.Characteristics != null)
+            {
+                prepearingModel.ProductModelsSelectList = new SelectList(productModelsDTO.Where(x => x.ProductTypeId == ad.Characteristics.ProductTypesId), "Id", "Name");
+            }
+            else
+            {
+                prepearingModel.ProductModelsSelectList = new SelectList(productModelsDTO, "Id", "Name");
+            }
+                
 
             prepearingModel.ProductTypesSelectList =
-                new SelectList(productTypesDTO, "ProductTypesId", "Name");
+                new SelectList(productTypesDTO, "Id", "Name");
 
             prepearingModel.ProductMemoriesSelectList =
-                new SelectList(productMemoriesDTO, "ProductMemoriesId", "Name");
+                new SelectList(productMemoriesDTO, "Id", "StorageSize");
 
             prepearingModel.ProductColorsSelectList = 
-                new SelectList(productColorsDTO, "ProductColorsId", "Name");
+                new SelectList(productColorsDTO, "Id", "Name");
 
             prepearingModel.ProductStatesSelectList = 
-                new SelectList(productStateDTO, "ProductStatesId", "Name");
+                new SelectList(productStateDTO, "Id", "Name");
 
             return prepearingModel;
         }

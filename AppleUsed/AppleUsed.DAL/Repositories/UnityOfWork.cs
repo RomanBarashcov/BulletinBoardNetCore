@@ -156,37 +156,37 @@ namespace AppleUsed.DAL.Repositories
             {
                 if (disposing)
                 {
-                    _adRepository.Dispose();
-                    _adPhotoRepository.Dispose();
-                    _adUpRepository.Dispose();
-                    _adViewsRepository.Dispose();
-                    _cityAreasRepository.Dispose();
-                    _cityRepository.Dispose();
-                    _productTypeRepository.Dispose();
-                    _productModelRepository.Dispose();
-                    _productMemoriesRepository.Dispose();
-                    _productColorsRepository.Dispose();
-                    _productStatesRepository.Dispose();
-                    _purchaseRepository.Dispose();
-                    _serviceActiveTimeRepository.Dispose();
-                    _serviceRepository.Dispose();
-                    _userRepository.Dispose();
+                    //_adRepository.Dispose();
+                    //_adPhotoRepository.Dispose();
+                    //_adUpRepository.Dispose();
+                    //_adViewsRepository.Dispose();
+                    //_cityAreasRepository.Dispose();
+                    //_cityRepository.Dispose();
+                    //_productTypeRepository.Dispose();
+                    //_productModelRepository.Dispose();
+                    //_productMemoriesRepository.Dispose();
+                    //_productColorsRepository.Dispose();
+                    //_productStatesRepository.Dispose();
+                    //_purchaseRepository.Dispose();
+                    //_serviceActiveTimeRepository.Dispose();
+                    //_serviceRepository.Dispose();
+                    //_userRepository.Dispose();
 
-                    _adRepository = null;
-                    _adPhotoRepository = null;
-                    _adUpRepository = null;
-                    _adViewsRepository = null;
-                    _cityAreasRepository = null;
-                    _cityRepository = null;
-                    _productTypeRepository = null;
-                    _productModelRepository = null;
-                    _productMemoriesRepository = null;
-                    _productColorsRepository = null;
-                    _productStatesRepository = null;
-                    _purchaseRepository = null;
-                    _serviceActiveTimeRepository = null;
-                    _serviceRepository = null;
-                    _userRepository = null;
+                    //_adRepository = null;
+                    //_adPhotoRepository = null;
+                    //_adUpRepository = null;
+                    //_adViewsRepository = null;
+                    //_cityAreasRepository = null;
+                    //_cityRepository = null;
+                    //_productTypeRepository = null;
+                    //_productModelRepository = null;
+                    //_productMemoriesRepository = null;
+                    //_productColorsRepository = null;
+                    //_productStatesRepository = null;
+                    //_purchaseRepository = null;
+                    //_serviceActiveTimeRepository = null;
+                    //_serviceRepository = null;
+                    //_userRepository = null;
                 }
 
                 this.disposed = true;

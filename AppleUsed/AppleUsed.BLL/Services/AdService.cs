@@ -353,7 +353,7 @@ namespace AppleUsed.BLL.Services
             IQueryable<ProductMemorieDTO> productMemoriesDTO,
             IQueryable<ProductColorDTO> productColorsDTO,
             IQueryable<ProductStateDTO> productStateDTO) GetDataForCreatingAdOrDataForFilter()
-        {
+         {
             var cities = 
                 _uof.CityRepository.GetCities()
                 .Select(x => new CityDTO { Id = x.CityId, Name = x.Name });
@@ -394,8 +394,7 @@ namespace AppleUsed.BLL.Services
         public async Task<OperationDetails<int>> SaveAd(
             string userName, 
             AdDTO ad,
-            IFormFileCollection productPhotos,
-            Dictionary<SelectListProps, string> selectedValuesDictionary)
+            IFormFileCollection productPhotos)
         {
             OperationDetails<int> operationDetails = new OperationDetails<int>(false, "", 0);
             ApplicationUser user = new ApplicationUser();
@@ -410,7 +409,7 @@ namespace AppleUsed.BLL.Services
             if (user == null)
                 return operationDetails;
 
-            var newAd = _dataService.TransformingAdDTOToAdEntities(ad, selectedValuesDictionary);
+            var newAd = _dataService.TransformingAdDTOToAdEntities(ad);
             newAd.ApplicationUser = user;
 
             if(newAd.AdId == 0)
@@ -556,13 +555,13 @@ namespace AppleUsed.BLL.Services
             {
                 if (disposing)
                 {
-                    _uof.Dispose();
-                    _imageService.Dispose();
-                    _dataService.Dispose();
+                    //_uof.Dispose();
+                    //_imageService.Dispose();
+                    //_dataService.Dispose();
 
-                    _uof = null;
-                    _imageService = null;
-                    _dataService = null;
+                    //_uof = null;
+                    //_imageService = null;
+                    //_dataService = null;
                 }
                 this.disposed = true;
             }
