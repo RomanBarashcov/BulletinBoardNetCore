@@ -36,7 +36,7 @@ namespace AppleUsed.BLL.Services
                 Price = ad.Price,
                 DateCreated = DateTime.Now,
                 DateUpdated = DateTime.Now,
-                City = _uof.CityRepository.FindCity(ad.SelectedCityId),
+                CityId = ad.SelectedCityId,
                 Characteristics = characteristics,
                 IsModerate = ad.IsModerate,
                 AdStatusId = ad.AdStatusId

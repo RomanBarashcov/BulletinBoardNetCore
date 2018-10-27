@@ -68,6 +68,7 @@ namespace AppleUsed.DAL.Repositories
                                ProductStatesId = ch.ProductStatesId,
                                ProductState = prs
                            },
+                           CityId = c.CityId,
                            City = new City
                            {
                                CityId = c.CityId,
@@ -110,7 +111,7 @@ namespace AppleUsed.DAL.Repositories
                                UserName = u.UserName
                            }
 
-                       }).OrderByDescending(x => x.DateUpdated);
+                       });
 
             return ads;
         }

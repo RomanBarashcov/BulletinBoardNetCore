@@ -39,7 +39,7 @@ namespace AppleUsed.BLL.Services
         {
             OperationDetails<int> operationDetail = new OperationDetails<int>(false, "", 0);
 
-            var ad = await _uof.AdUpRepository.FindByAdIdAsync(adId);
+            var ad = await _uof.AdRepository.FindAdByIdAsync(adId);
 
             if(ad != null)
             {
@@ -55,7 +55,6 @@ namespace AppleUsed.BLL.Services
                  var result = await _uof.AdUpRepository.AddAsync(adUp);
                  if(result != 0)
                     operationDetail = new OperationDetails<int>(true, "", result);
-
             }
 
             return operationDetail;
