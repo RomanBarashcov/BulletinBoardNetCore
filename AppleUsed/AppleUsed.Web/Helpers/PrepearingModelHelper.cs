@@ -38,7 +38,7 @@ namespace AppleUsed.Web.Helpers
 
             if (ad.Characteristics != null)
             {
-                prepearingModel.ProductModelsSelectList = new SelectList(productModelsDTO.Where(x => x.ProductTypeId == ad.Characteristics.ProductTypesId), "Id", "Name");
+                prepearingModel.ProductModelsSelectList = new SelectList(productModelsDTO.Where(x => x.ProductTypeId == ad.Characteristics.ProductType.ProductTypesId), "Id", "Name");
             }
             else
             {
@@ -61,9 +61,9 @@ namespace AppleUsed.Web.Helpers
             return prepearingModel;
         }
 
-        public async Task<AdIndexViewModel> PrepearingAdIndexViewModel(IQueryable<AdDTO> ads, int selectedProductTypeId)
+        public async Task<AdIndexViewModel> PrepearingAdIndexViewModel(List<AdDTO> ads, int selectedProductTypeId)
         {
-            AdIndexViewModel adIndexViewModel = new AdIndexViewModel { SimpleAds = ads.ToList() };
+            AdIndexViewModel adIndexViewModel = new AdIndexViewModel { SimpleAds = ads };
             var dataForFilter = _adService.GetDataForCreatingAdOrDataForFilter();
 
             adIndexViewModel.SearchFilter = new SearchFilterViewModel();

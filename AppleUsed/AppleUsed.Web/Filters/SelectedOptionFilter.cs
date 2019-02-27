@@ -9,15 +9,15 @@ namespace AppleUsed.Web.Filters
     public class SelectedOptionFilter : IDisposable
     {
         private string _filteredbySelectOption;
-        private IQueryable<AdDTO> _query;
+        private List<AdDTO> _query;
 
-        public SelectedOptionFilter(string filteredbySelectOption, IQueryable<AdDTO> ads)
+        public SelectedOptionFilter(string filteredbySelectOption, List<AdDTO> ads)
         {
             _filteredbySelectOption = filteredbySelectOption;
             _query = ads;
         }
 
-        public IQueryable<AdDTO> SelectedOptionChanged()
+        public List<AdDTO> SelectedOptionChanged()
         {
             if(_filteredbySelectOption == null)
                 return _query;
@@ -25,13 +25,13 @@ namespace AppleUsed.Web.Filters
             switch (_filteredbySelectOption)
             {
                 case "1":
-                    return _query.OrderByDescending(x => x.DateUpdated);
+                    return _query.OrderByDescending(x => x.DateUpdated).ToList();
                 case "2":
-                    return _query.OrderBy(x => x.DateUpdated);
+                    return _query.OrderBy(x => x.DateUpdated).ToList();
                 case "3":
-                    return _query.OrderByDescending(x => x.Price);
+                    return _query.OrderByDescending(x => x.Price).ToList();
                 case "4":
-                    return _query.OrderBy(x => x.Price);
+                    return _query.OrderBy(x => x.Price).ToList();
                 default:
                     return _query;
             }

@@ -47,10 +47,14 @@ namespace AppleUsed.Web.Controllers
                 return View(model);
 
             var topAds = await _adService.GetActiveRandomTopAds();
-            IQueryable<AdDTO> adQueryResult = result.Property;
+            List<AdDTO> adQueryResult = result.Property;
             adQueryResult = await _adFilter.FilteringData(titleFilter, productState, adQueryResult, model);
             model = await _adFilter.PrepearingFilter(adQueryResult, model);
-            model.TopAds = topAds.Property.ToList();
+
+            if(topAds.Property.Count() > 0)
+            {
+                model.TopAds = topAds.Property.ToList();
+            }
 
             int count = model.SimpleAds.Count();
             PageViewModel pageViewModel = new PageViewModel(count, page, pageSize);
@@ -138,7 +142,7 @@ namespace AppleUsed.Web.Controllers
             model.AddDetails = getByIdReult.Property;
 
             var similarAdsResult = 
-                await _adService.GetAdsByProductTypeId(model.AddDetails.Characteristics.ProductTypesId);
+                await _adService.GetAdsByProductTypeId(model.AddDetails.Characteristics.ProductType.ProductTypesId);
 
             if(!similarAdsResult.Succedeed)
                 return View(model);

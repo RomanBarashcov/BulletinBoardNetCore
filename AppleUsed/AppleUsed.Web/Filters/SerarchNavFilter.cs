@@ -10,25 +10,25 @@ namespace AppleUsed.Web.Filters
     public class SerarchNavFilter
     {
         private AdIndexViewModel _model;
-        private IQueryable<AdDTO> _query;
+        private List<AdDTO> _query;
 
-        public SerarchNavFilter(AdIndexViewModel model, IQueryable<AdDTO> ads)
+        public SerarchNavFilter(AdIndexViewModel model, List<AdDTO> ads)
         {
             _model = model;
             _query = ads;
         }
 
-        public IQueryable<AdDTO> SearchNavChanged()
+        public List<AdDTO> SearchNavChanged()
         {
-            IQueryable<AdDTO> queryResult = _query;
+            List<AdDTO> queryResult = _query;
 
             if (_model.SearchFilter != null)
             {
                 if(_model.SearchFilter.SelectedProductTypeId > 0)
-                    queryResult = _query.Where(x => x.Characteristics.ProductTypesId == _model.SearchFilter.SelectedProductTypeId);
+                    queryResult = _query.Where(x => x.Characteristics.ProductType.ProductTypesId == _model.SearchFilter.SelectedProductTypeId).ToList();
 
                 if (!String.IsNullOrEmpty(_model.SearchFilter.SearchByCity))
-                    queryResult = queryResult.Where(x => x.SelectedCity.ToLower().Contains(_model.SearchFilter.SearchByCity.ToLower()));  
+                    queryResult = queryResult.Where(x => x.SelectedCity.ToLower().Contains(_model.SearchFilter.SearchByCity.ToLower())).ToList();  
             }
            
             return queryResult;

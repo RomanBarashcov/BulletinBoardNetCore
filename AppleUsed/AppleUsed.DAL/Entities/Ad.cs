@@ -18,9 +18,6 @@ namespace AppleUsed.DAL.Entities
         public DateTime DateUpdated { get; set; }
 
         [ForeignKey("CityId")]
-        public int CityId { get; set; }
-
-        [NotMapped]
         public City City { get; set; }
 
         public virtual ICollection<AdPhotos> Photos { get; set; }

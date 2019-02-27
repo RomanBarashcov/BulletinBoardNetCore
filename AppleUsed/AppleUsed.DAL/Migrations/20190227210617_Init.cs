@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AppleUsed.DAL.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -91,24 +91,6 @@ namespace AppleUsed.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Characteristics",
-                columns: table => new
-                {
-                    CharacteristicsId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ProductTypesId = table.Column<int>(nullable: false),
-                    ProductModelsId = table.Column<int>(nullable: false),
-                    ProductMemoriesId = table.Column<int>(nullable: false),
-                    ProductColorsId = table.Column<int>(nullable: false),
-                    ProductStatesId = table.Column<int>(nullable: false),
-                    AdId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Characteristics", x => x.CharacteristicsId);
                 });
 
             migrationBuilder.CreateTable(
@@ -401,6 +383,54 @@ namespace AppleUsed.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Characteristics",
+                columns: table => new
+                {
+                    CharacteristicsId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ProductTypesId = table.Column<int>(nullable: true),
+                    ProductModelsId = table.Column<int>(nullable: true),
+                    ProductMemoriesId = table.Column<int>(nullable: true),
+                    ProductColorsId = table.Column<int>(nullable: true),
+                    ProductStatesId = table.Column<int>(nullable: true),
+                    AdId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Characteristics", x => x.CharacteristicsId);
+                    table.ForeignKey(
+                        name: "FK_Characteristics_ProductColors_ProductColorsId",
+                        column: x => x.ProductColorsId,
+                        principalTable: "ProductColors",
+                        principalColumn: "ProductColorsId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Characteristics_ProductMemories_ProductMemoriesId",
+                        column: x => x.ProductMemoriesId,
+                        principalTable: "ProductMemories",
+                        principalColumn: "ProductMemoriesId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Characteristics_ProductModels_ProductModelsId",
+                        column: x => x.ProductModelsId,
+                        principalTable: "ProductModels",
+                        principalColumn: "ProductModelsId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Characteristics_ProductStates_ProductStatesId",
+                        column: x => x.ProductStatesId,
+                        principalTable: "ProductStates",
+                        principalColumn: "ProductStatesId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Characteristics_ProductTypes_ProductTypesId",
+                        column: x => x.ProductTypesId,
+                        principalTable: "ProductTypes",
+                        principalColumn: "ProductTypesId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Ads",
                 columns: table => new
                 {
@@ -562,6 +592,31 @@ namespace AppleUsed.DAL.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Characteristics_ProductColorsId",
+                table: "Characteristics",
+                column: "ProductColorsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Characteristics_ProductMemoriesId",
+                table: "Characteristics",
+                column: "ProductMemoriesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Characteristics_ProductModelsId",
+                table: "Characteristics",
+                column: "ProductModelsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Characteristics_ProductStatesId",
+                table: "Characteristics",
+                column: "ProductStatesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Characteristics_ProductTypesId",
+                table: "Characteristics",
+                column: "ProductTypesId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cities_CityAreaId",
                 table: "Cities",
                 column: "CityAreaId");
@@ -617,18 +672,6 @@ namespace AppleUsed.DAL.Migrations
                 name: "ConversationMessages");
 
             migrationBuilder.DropTable(
-                name: "ProductColors");
-
-            migrationBuilder.DropTable(
-                name: "ProductMemories");
-
-            migrationBuilder.DropTable(
-                name: "ProductModels");
-
-            migrationBuilder.DropTable(
-                name: "ProductStates");
-
-            migrationBuilder.DropTable(
                 name: "Purchases");
 
             migrationBuilder.DropTable(
@@ -639,9 +682,6 @@ namespace AppleUsed.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Conversations");
-
-            migrationBuilder.DropTable(
-                name: "ProductTypes");
 
             migrationBuilder.DropTable(
                 name: "Ads");
@@ -662,7 +702,22 @@ namespace AppleUsed.DAL.Migrations
                 name: "Cities");
 
             migrationBuilder.DropTable(
+                name: "ProductColors");
+
+            migrationBuilder.DropTable(
+                name: "ProductMemories");
+
+            migrationBuilder.DropTable(
+                name: "ProductModels");
+
+            migrationBuilder.DropTable(
+                name: "ProductStates");
+
+            migrationBuilder.DropTable(
                 name: "CityAreas");
+
+            migrationBuilder.DropTable(
+                name: "ProductTypes");
         }
     }
 }

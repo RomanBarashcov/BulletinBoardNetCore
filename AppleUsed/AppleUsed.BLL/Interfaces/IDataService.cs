@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Interfaces
 {
@@ -15,6 +16,6 @@ namespace AppleUsed.BLL.Interfaces
             );
 
         AdDTO TransformingAdToAdDTO(Ad ad);
-        IQueryable<AdDTO> TransformingAdQueryToAdDTO(IQueryable<Ad> adQuery);
+        Task<List<AdDTO>> TransformingAdListToAdDTOList(List<Ad> adList);
     }
 }

@@ -6,6 +6,7 @@ using AppleUsed.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AppleUsed.BLL.Services
 {
@@ -22,11 +23,11 @@ namespace AppleUsed.BLL.Services
         {
             Characteristics characteristics = new Characteristics
             {
-                ProductTypesId = ad.SelectedProductTypeId,
-                ProductModelsId = ad.SelectedProductModelId,
-                ProductMemoriesId = ad.SelectedProductMemoryId,
-                ProductColorsId = ad.SelectedProductColorId,
-                ProductStatesId = ad.SelectedProductStateId
+                ProductType = new ProductTypes { ProductTypesId = ad.SelectedProductTypeId },
+                ProductModel = new ProductModels { ProductModelsId = ad.SelectedProductModelId },
+                ProductMemorie = new ProductMemories { ProductMemoriesId = ad.SelectedProductMemoryId },
+                ProductColor = new ProductColors { ProductColorsId = ad.SelectedProductColorId },
+                ProductState = new ProductStates { ProductStatesId = ad.SelectedProductStateId }
             };
 
             Ad Ad = new Ad
@@ -36,7 +37,7 @@ namespace AppleUsed.BLL.Services
                 Price = ad.Price,
                 DateCreated = DateTime.Now,
                 DateUpdated = DateTime.Now,
-                CityId = ad.SelectedCityId,
+                City = new City { CityId = ad.SelectedCityId },
                 Characteristics = characteristics,
                 IsModerate = ad.IsModerate,
                 AdStatusId = ad.AdStatusId
@@ -68,9 +69,9 @@ namespace AppleUsed.BLL.Services
             return adDTO;
         }
 
-        public IQueryable<AdDTO> TransformingAdQueryToAdDTO(IQueryable<Ad> adQuery)
+        public async Task<List<AdDTO>> TransformingAdListToAdDTOList(List<Ad> adList)
         {
-            var adDTOQuery = adQuery.Select(ad => new AdDTO
+            var adDTOList = await adList.Select(ad => new AdDTO
             {
                 AdId = ad.AdId,
                 Title = ad.Title,
@@ -86,9 +87,9 @@ namespace AppleUsed.BLL.Services
                 IsModerate = ad.IsModerate,
                 Purhcases = ad.Purhcases,
                 ApplicationUser = ad.ApplicationUser
-            });
+            }).ToListAsync();
 
-            return adDTOQuery;
+            return adDTOList;
         }
 
         private bool disposed = false;

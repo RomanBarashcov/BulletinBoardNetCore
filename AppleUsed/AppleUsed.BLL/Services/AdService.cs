@@ -35,10 +35,10 @@ namespace AppleUsed.BLL.Services
             _conversationService = converstionService;
         }
 
-        public async Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAds()
+        public async Task<OperationDetails<List<AdDTO>>> GetActiveAds()
         {
-            OperationDetails<IQueryable<AdDTO>> operationDetails = 
-                new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+            OperationDetails<List<AdDTO>> operationDetails = 
+                new OperationDetails<List<AdDTO>>(false, "", null);
 
             try
             {
@@ -46,31 +46,31 @@ namespace AppleUsed.BLL.Services
                     x => x.AdStatusId == (int)AdStatuses.Activated && x.IsModerate,
                     ptExpression: null, 
                     auExpression: null,
-                    pExpression: null);
+                    pExpression: null).ToList();
 
 
-                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
 
-                foreach(var item in adDTOQuery)
+                foreach(var item in adDTOList)
                 {
                     item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
                 }
 
                 operationDetails = 
-                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
+                    new OperationDetails<List<AdDTO>>(true, "", adDTOList);
             }
             catch(Exception ex)
             {
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+                operationDetails = new OperationDetails<List<AdDTO>>(false, ex.Message, null);
             }
             
             return operationDetails;
         }
 
-        public async Task<OperationDetails<IQueryable<AdDTO>>> GetInProgressAds()
+        public async Task<OperationDetails<List<AdDTO>>> GetInProgressAds()
         {
-            OperationDetails<IQueryable<AdDTO>> operationDetails =
-                new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+            OperationDetails<List<AdDTO>> operationDetails =
+                new OperationDetails<List<AdDTO>>(false, "", null);
 
             try
             {
@@ -78,30 +78,30 @@ namespace AppleUsed.BLL.Services
                     x => x.AdStatusId == (int)AdStatuses.InProgress,
                     ptExpression: null, 
                     auExpression: null,
-                    pExpression: null);
+                    pExpression: null).ToList();
 
-                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
 
-                foreach (var item in adDTOQuery)
+                foreach (var item in adDTOList)
                 {
                     item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
                 }
 
                 operationDetails =
-                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
+                    new OperationDetails<List<AdDTO>>(true, "", adDTOList);
             }
             catch (Exception ex)
             {
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+                operationDetails = new OperationDetails<List<AdDTO>>(false, ex.Message, null);
             }
 
             return operationDetails;
         }
 
-        public async Task<OperationDetails<IQueryable<AdDTO>>> GetDeactivatedAds()
+        public async Task<OperationDetails<List<AdDTO>>> GetDeactivatedAds()
         {
-            OperationDetails<IQueryable<AdDTO>> operationDetails =
-                new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+            OperationDetails<List<AdDTO>> operationDetails =
+                new OperationDetails<List<AdDTO>>(false, "", null);
 
             try
             {
@@ -109,32 +109,32 @@ namespace AppleUsed.BLL.Services
                         x => x.AdStatusId == (int)AdStatuses.Deactivated,
                         ptExpression: null,
                         auExpression: null,
-                        pExpression: null);
+                        pExpression: null).ToList();
 
-                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
 
-                foreach (var item in adDTOQuery)
+                foreach (var item in adDTOList)
                 {
                     item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
                 }
 
                 operationDetails =
-                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
+                    new OperationDetails<List<AdDTO>>(true, "", adDTOList);
 
             }
             catch (Exception ex)
             {
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+                operationDetails = new OperationDetails<List<AdDTO>>(false, ex.Message, null);
             }
 
 
             return operationDetails;
         }
 
-        public async Task<OperationDetails<IQueryable<AdDTO>>> GetActiveRandomVIPAds()
+        public async Task<OperationDetails<List<AdDTO>>> GetActiveRandomVIPAds()
         {
-            OperationDetails<IQueryable<AdDTO>> operationDetails =
-                new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+            OperationDetails<List<AdDTO>> operationDetails =
+                new OperationDetails<List<AdDTO>>(false, "", null);
 
             try
             {
@@ -144,30 +144,30 @@ namespace AppleUsed.BLL.Services
                        auExpression: null,
                        p => p.ServicesId == (int)AdPurchaseTypes.VipAd && p.IsActive)
                        .OrderBy(x => Guid.NewGuid())
-                       .Take(12);
+                       .Take(12).ToList();
 
-                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
 
-                foreach (var item in adDTOQuery)
+                foreach (var item in adDTOList)
                 {
                     item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
                 }
 
                 operationDetails =
-                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
+                    new OperationDetails<List<AdDTO>>(true, "", adDTOList);
             }
             catch (Exception ex)
             {
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+                operationDetails = new OperationDetails<List<AdDTO>>(false, ex.Message, null);
             }
 
             return operationDetails;
         }
 
-        public async Task<OperationDetails<IQueryable<AdDTO>>> GetActiveRandomTopAds()
+        public async Task<OperationDetails<List<AdDTO>>> GetActiveRandomTopAds()
         {
-            OperationDetails<IQueryable<AdDTO>> operationDetails =
-                new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+            OperationDetails<List<AdDTO>> operationDetails =
+                new OperationDetails<List<AdDTO>>(false, "", null);
 
             try
             {
@@ -177,21 +177,21 @@ namespace AppleUsed.BLL.Services
                       auExpression: null,
                       p => p.ServicesId == (int)AdPurchaseTypes.TopAd && p.IsActive)
                       .OrderBy(x => Guid.NewGuid())
-                      .Take(5);
+                      .Take(5).ToList();
 
-                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
 
-                foreach (var item in adDTOQuery)
+                foreach (var item in adDTOList)
                 {
                     item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
                 }
 
                 operationDetails =
-                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
+                    new OperationDetails<List<AdDTO>>(true, "", adDTOList);
             }
             catch (Exception ex)
             {
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+                operationDetails = new OperationDetails<List<AdDTO>>(false, ex.Message, null);
             }
 
             return operationDetails;
@@ -225,39 +225,39 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
-        public async Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByProductTypeId(int productTypeId)
+        public async Task<OperationDetails<List<AdDTO>>> GetAdsByProductTypeId(int productTypeId)
         {
-            OperationDetails<IQueryable<AdDTO>> operationDetails = 
-                new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+            OperationDetails<List<AdDTO>> operationDetails = 
+                new OperationDetails<List<AdDTO>>(false, "", null);
 
             if (productTypeId == 0)
                 return operationDetails;
 
             try
             {
-                var ads = _uof.AdRepository.FindAdsByProductTypeId(productTypeId);
-                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+                var ads = _uof.AdRepository.FindAdsByProductTypeId(productTypeId).ToList();
+                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
 
-                foreach (var item in adDTOQuery)
+                foreach (var item in adDTOList)
                 {
                     item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
                 }
 
                 operationDetails =
-                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
+                    new OperationDetails<List<AdDTO>>(true, "", adDTOList);
             }
             catch (Exception ex)
             {
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+                operationDetails = new OperationDetails<List<AdDTO>>(false, ex.Message, null);
             }
 
             return operationDetails;
         }
 
-        public async Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUserName(string userName)
+        public async Task<OperationDetails<List<AdDTO>>> GetAdsByUserName(string userName)
         {
-            OperationDetails<IQueryable<AdDTO>> operationDetails =
-                new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+            OperationDetails<List<AdDTO>> operationDetails =
+                new OperationDetails<List<AdDTO>>(false, "", null);
 
             if (string.IsNullOrEmpty(userName))
                 return operationDetails;
@@ -265,9 +265,9 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var ads = await _uof.AdRepository.GetAdsByUserName(userName);
-                var adsDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads.ToList());
 
-                foreach (var item in adsDTOQuery)
+                foreach (var item in adDTOList)
                 {
                     item.PhotosSmallSizeList =
                         _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
@@ -277,49 +277,49 @@ namespace AppleUsed.BLL.Services
                 }
 
                 operationDetails =
-                    new OperationDetails<IQueryable<AdDTO>>(true, "", adsDTOQuery);
+                    new OperationDetails<List<AdDTO>>(true, "", adDTOList);
             }
             catch (Exception ex)
             {
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+                operationDetails = new OperationDetails<List<AdDTO>>(false, ex.Message, null);
             }
 
             return operationDetails;
         }
 
-        public async Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAdsByUserId(string userId)
+        public async Task<OperationDetails<List<AdDTO>>> GetActiveAdsByUserId(string userId)
         {
-            OperationDetails<IQueryable<AdDTO>> operationDetails =
-              new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+            OperationDetails<List<AdDTO>> operationDetails =
+              new OperationDetails<List<AdDTO>>(false, "", null);
 
             if (string.IsNullOrEmpty(userId))
                 return operationDetails;
 
             try
             {
-                var activeAds = _uof.AdRepository.FindActiveAdsByUserId(userId);
-                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(activeAds);
+                var activeAds = _uof.AdRepository.FindActiveAdsByUserId(userId).ToList();
+                var adDTOList = await _dataService.TransformingAdListToAdDTOList(activeAds);
 
-                foreach (var item in adDTOQuery)
+                foreach (var item in adDTOList)
                 {
                     item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
                 }
 
                 operationDetails =
-                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
+                    new OperationDetails<List<AdDTO>>(true, "", adDTOList);
             }
             catch (Exception ex)
             {
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+                operationDetails = new OperationDetails<List<AdDTO>>(false, ex.Message, null);
             }
 
             return operationDetails;
         }
 
-        public async Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUserId(string userId)
+        public async Task<OperationDetails<List<AdDTO>>> GetAdsByUserId(string userId)
         {
-            OperationDetails<IQueryable<AdDTO>> operationDetails =
-              new OperationDetails<IQueryable<AdDTO>>(false, "", null);
+            OperationDetails<List<AdDTO>> operationDetails =
+              new OperationDetails<List<AdDTO>>(false, "", null);
 
             if (string.IsNullOrEmpty(userId))
                 return operationDetails;
@@ -327,19 +327,19 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var ads = _uof.AdRepository.FindAdsByUserId(userId);
-                var adDTOQuery = _dataService.TransformingAdQueryToAdDTO(ads);
+                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads.ToList());
 
-                foreach (var item in adDTOQuery)
+                foreach (var item in adDTOList)
                 {
                     item.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(item.Photos.ToList());
                 }
 
                 operationDetails =
-                    new OperationDetails<IQueryable<AdDTO>>(true, "", adDTOQuery);
+                    new OperationDetails<List<AdDTO>>(true, "", adDTOList);
             }
             catch (Exception ex)
             {
-                operationDetails = new OperationDetails<IQueryable<AdDTO>>(false, ex.Message, null);
+                operationDetails = new OperationDetails<List<AdDTO>>(false, ex.Message, null);
             }
 
             return operationDetails;
@@ -471,11 +471,11 @@ namespace AppleUsed.BLL.Services
                 oldAd.Description = ad.Description;
                 oldAd.Price = ad.Price;
                 oldAd.DateUpdated = DateTime.Now.Date;
-                oldAd.Characteristics.ProductTypesId = ad.Characteristics.ProductTypesId;
-                oldAd.Characteristics.ProductModelsId = ad.Characteristics.ProductModelsId;
-                oldAd.Characteristics.ProductMemoriesId = ad.Characteristics.ProductMemoriesId;
-                oldAd.Characteristics.ProductColorsId = ad.Characteristics.ProductColorsId;
-                oldAd.Characteristics.ProductStatesId = ad.Characteristics.ProductStatesId;
+                oldAd.Characteristics.ProductType = ad.Characteristics.ProductType;
+                oldAd.Characteristics.ProductModel = ad.Characteristics.ProductModel;
+                oldAd.Characteristics.ProductMemorie = ad.Characteristics.ProductMemorie;
+                oldAd.Characteristics.ProductColor = ad.Characteristics.ProductColor;
+                oldAd.Characteristics.ProductState = ad.Characteristics.ProductState;
                 oldAd.City = ad.City;
 
                 if (productPhotos != null)

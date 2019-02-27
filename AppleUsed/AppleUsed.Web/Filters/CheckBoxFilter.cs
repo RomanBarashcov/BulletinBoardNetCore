@@ -11,15 +11,15 @@ namespace AppleUsed.Web.Filters
     public class CheckBoxFilter : IDisposable
     { 
         private AdIndexViewModel _model;
-        private IQueryable<AdDTO> _adList;
+        private List<AdDTO> _adList;
 
-        public CheckBoxFilter(AdIndexViewModel model, IQueryable<AdDTO> adList)
+        public CheckBoxFilter(AdIndexViewModel model, List<AdDTO> adList)
         {
             _model = model;
             _adList = adList;
         }
 
-        public async Task<IQueryable<AdDTO>> GetFilteredAdsData()
+        public async Task<List<AdDTO>> GetFilteredAdsData()
         {
             if (_model.Filter != null)
             {
@@ -27,7 +27,7 @@ namespace AppleUsed.Web.Filters
 
                 List<AdDTO> ads = await GetAdsWithApplyedFilterByCheckBoxes();
                 List<AdDTO> filteringWithPrice = GetAdsWithApplyedFilterByPrice(ads);
-                return filteringWithPrice.AsQueryable();
+                return filteringWithPrice;
             }
 
             return _adList;
@@ -52,12 +52,12 @@ namespace AppleUsed.Web.Filters
             var selectedByColors = _model.Filter.ProductsColors.Where(x => x.Selected).AsQueryable();
 
             if (selectedByModels.Count() == 0 && selectedByColors.Count() == 0 && selectedByMemories.Count() == 0)
-                return await _adList.Where(x => x.Characteristics.ProductTypesId == selectedProductId).ToListAsync();
+                return await _adList.Where(x => x.Characteristics.ProductType.ProductTypesId == selectedProductId).ToListAsync();
 
             if (selectedByModels.Count() > 0)
             {
                 var byModels = (from ad in _adList
-                                join smo in selectedByModels on ad.Characteristics.ProductModelsId equals smo.Id
+                                join smo in selectedByModels on ad.Characteristics.ProductModel.ProductModelsId equals smo.Id
                                 select ad).ToList();
 
                 ads.AddRange(byModels);
@@ -70,7 +70,7 @@ namespace AppleUsed.Web.Filters
                 if (selectedByModels.Count() > 0)
                 {
                     byMemories = (from ad in ads
-                                      join sm in selectedByMemories on ad.Characteristics.ProductMemoriesId equals sm.Id
+                                      join sm in selectedByMemories on ad.Characteristics.ProductMemorie.ProductMemoriesId equals sm.Id
                                       select ad).ToList();
 
                     ads = byMemories;
@@ -78,7 +78,7 @@ namespace AppleUsed.Web.Filters
                 else
                 {
                     byMemories = (from ad in _adList
-                                      join sm in selectedByMemories on ad.Characteristics.ProductMemoriesId equals sm.Id
+                                      join sm in selectedByMemories on ad.Characteristics.ProductMemorie.ProductMemoriesId equals sm.Id
                                       select ad).ToList();
 
                     ads.AddRange(byMemories);
@@ -93,15 +93,13 @@ namespace AppleUsed.Web.Filters
                 if (selectedByModels.Count() > 0 || selectedByMemories.Count() > 0)
                 {
                     byColors = (from ad in ads
-                                    join sc in selectedByColors on ad.Characteristics.ProductColorsId equals sc.Id
+                                    join sc in selectedByColors on ad.Characteristics.ProductColor.ProductColorsId equals sc.Id
                                     select ad).ToList();
-
-                    ads = byColors;
                 }
                 else
                 {
                     byColors = (from ad in _adList
-                                join sc in selectedByColors on ad.Characteristics.ProductColorsId equals sc.Id
+                                join sc in selectedByColors on ad.Characteristics.ProductColor.ProductColorsId equals sc.Id
                                 select ad).ToList();
 
                     ads.AddRange(byColors);

@@ -2,6 +2,7 @@
 using AppleUsed.Web.Filters;
 using AppleUsed.Web.Models.ViewModels.AccountViewModels;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,21 +17,21 @@ namespace AppleUsed.Web.Helpers
             _prepearingModel = prepearingModel;
         }
 
-        public async Task<IQueryable<AdDTO>> FilteringData(
+        public async Task<List<AdDTO>> FilteringData(
             string titleFilter,
             string productState, 
-            IQueryable<AdDTO> adQueryResult, 
+            List<AdDTO> adQueryResult, 
             AdIndexViewModel model)
         {
             if (!string.IsNullOrEmpty(titleFilter))
             {
-                adQueryResult = adQueryResult.Where(x => x.Title.ToLower().Contains(titleFilter.ToLower()));
+                adQueryResult = adQueryResult.Where(x => x.Title.ToLower().Contains(titleFilter.ToLower())).ToList();
             }
 
             if(model.SearchFilter == null)
                 model.SearchFilter = new SearchFilterViewModel()
                 {
-                    SelectedProductTypeId = adQueryResult.FirstOrDefault().Characteristics.ProductTypesId
+                    SelectedProductTypeId = adQueryResult.FirstOrDefault().Characteristics.ProductType.ProductTypesId
                 };
 
             adQueryResult = new SerarchNavFilter(model, adQueryResult).SearchNavChanged();
@@ -44,7 +45,7 @@ namespace AppleUsed.Web.Helpers
             return adQueryResult;
         }
 
-        public async Task<AdIndexViewModel> PrepearingFilter(IQueryable<AdDTO> adQueryResult, AdIndexViewModel model)
+        public async Task<AdIndexViewModel> PrepearingFilter(List<AdDTO> adQueryResult, AdIndexViewModel model)
         {
             if (model.Filter == null)
             {

@@ -10,15 +10,15 @@ namespace AppleUsed.Web.Filters
     public class ButtonAreaFilter : IDisposable
     {
         private string _filteredByState;
-        private IQueryable<AdDTO> _query;
+        private List<AdDTO> _query;
 
-        public ButtonAreaFilter(string filteredByState, IQueryable<AdDTO> ads)
+        public ButtonAreaFilter(string filteredByState, List<AdDTO> ads)
         {
             _filteredByState = filteredByState;
             _query = ads;
         }
 
-        public IQueryable<AdDTO> GetFilteredAdsData()
+        public List<AdDTO> GetFilteredAdsData()
         {
             switch(_filteredByState)
             {
@@ -33,14 +33,14 @@ namespace AppleUsed.Web.Filters
             }
         }
 
-        private IQueryable<AdDTO> GetNewProduct()
+        private List<AdDTO> GetNewProduct()
         {
-            return _query.Where(x => x.Characteristics.ProductStatesId == 1);
+            return _query.Where(x => x.Characteristics.ProductState.ProductStatesId == 1).ToList();
         }
 
-        private IQueryable<AdDTO> GetUsedProduct()
+        private List<AdDTO> GetUsedProduct()
         {
-            return _query.Where(x => x.Characteristics.ProductStatesId == 3);
+            return _query.Where(x => x.Characteristics.ProductState.ProductStatesId == 3).ToList();
         }
 
         private bool disposed = false;

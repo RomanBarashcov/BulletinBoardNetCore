@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppleUsed.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20181027184737_MinorUpdate")]
-    partial class MinorUpdate
+    [Migration("20190227210617_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,7 +35,7 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<int?>("CharacteristicsId");
 
-                    b.Property<int>("CityId");
+                    b.Property<int?>("CityId");
 
                     b.Property<DateTime>("DateCreated");
 
@@ -56,6 +56,8 @@ namespace AppleUsed.DAL.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("CharacteristicsId");
+
+                    b.HasIndex("CityId");
 
                     b.ToTable("Ads");
                 });
@@ -142,17 +144,27 @@ namespace AppleUsed.DAL.Migrations
 
                     b.Property<int>("AdId");
 
-                    b.Property<int>("ProductColorsId");
+                    b.Property<int?>("ProductColorsId");
 
-                    b.Property<int>("ProductMemoriesId");
+                    b.Property<int?>("ProductMemoriesId");
 
-                    b.Property<int>("ProductModelsId");
+                    b.Property<int?>("ProductModelsId");
 
-                    b.Property<int>("ProductStatesId");
+                    b.Property<int?>("ProductStatesId");
 
-                    b.Property<int>("ProductTypesId");
+                    b.Property<int?>("ProductTypesId");
 
                     b.HasKey("CharacteristicsId");
+
+                    b.HasIndex("ProductColorsId");
+
+                    b.HasIndex("ProductMemoriesId");
+
+                    b.HasIndex("ProductModelsId");
+
+                    b.HasIndex("ProductStatesId");
+
+                    b.HasIndex("ProductTypesId");
 
                     b.ToTable("Characteristics");
                 });
@@ -547,6 +559,10 @@ namespace AppleUsed.DAL.Migrations
                     b.HasOne("AppleUsed.DAL.Entities.Characteristics", "Characteristics")
                         .WithMany()
                         .HasForeignKey("CharacteristicsId");
+
+                    b.HasOne("AppleUsed.DAL.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.AdPhotos", b =>
@@ -555,6 +571,29 @@ namespace AppleUsed.DAL.Migrations
                         .WithMany("Photos")
                         .HasForeignKey("AdId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AppleUsed.DAL.Entities.Characteristics", b =>
+                {
+                    b.HasOne("AppleUsed.DAL.Entities.ProductColors", "ProductColor")
+                        .WithMany()
+                        .HasForeignKey("ProductColorsId");
+
+                    b.HasOne("AppleUsed.DAL.Entities.ProductMemories", "ProductMemorie")
+                        .WithMany()
+                        .HasForeignKey("ProductMemoriesId");
+
+                    b.HasOne("AppleUsed.DAL.Entities.ProductModels", "ProductModel")
+                        .WithMany()
+                        .HasForeignKey("ProductModelsId");
+
+                    b.HasOne("AppleUsed.DAL.Entities.ProductStates", "ProductState")
+                        .WithMany()
+                        .HasForeignKey("ProductStatesId");
+
+                    b.HasOne("AppleUsed.DAL.Entities.ProductTypes", "ProductType")
+                        .WithMany()
+                        .HasForeignKey("ProductTypesId");
                 });
 
             modelBuilder.Entity("AppleUsed.DAL.Entities.City", b =>

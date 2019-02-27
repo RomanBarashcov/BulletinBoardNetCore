@@ -13,23 +13,23 @@ namespace AppleUsed.BLL.Interfaces
 {
     public interface IAdService : IDisposable
     {
-        Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAds();
+        Task<OperationDetails<List<AdDTO>>> GetActiveAds();
 
-        Task<OperationDetails<IQueryable<AdDTO>>> GetInProgressAds();
+        Task<OperationDetails<List<AdDTO>>> GetInProgressAds();
 
-        Task<OperationDetails<IQueryable<AdDTO>>> GetDeactivatedAds();
+        Task<OperationDetails<List<AdDTO>>> GetDeactivatedAds();
 
-        Task<OperationDetails<IQueryable<AdDTO>>> GetActiveRandomVIPAds();
+        Task<OperationDetails<List<AdDTO>>> GetActiveRandomVIPAds();
 
-        Task<OperationDetails<IQueryable<AdDTO>>> GetActiveRandomTopAds();
+        Task<OperationDetails<List<AdDTO>>> GetActiveRandomTopAds();
 
-        Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByProductTypeId(int productTypeId);
+        Task<OperationDetails<List<AdDTO>>> GetAdsByProductTypeId(int productTypeId);
 
-        Task<OperationDetails<IQueryable<AdDTO>>> GetActiveAdsByUserId(string userId);
+        Task<OperationDetails<List<AdDTO>>> GetActiveAdsByUserId(string userId);
 
-        Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUserId(string userId);
+        Task<OperationDetails<List<AdDTO>>> GetAdsByUserId(string userId);
 
-        Task<OperationDetails<IQueryable<AdDTO>>> GetAdsByUserName(string userName);
+        Task<OperationDetails<List<AdDTO>>> GetAdsByUserName(string userName);
 
         Task<OperationDetails<AdDTO>> GetAdById(int id);
 
