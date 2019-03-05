@@ -9,8 +9,6 @@ using AppleUsed.Web.Helpers;
 using AppleUsed.Web.Models.ViewModels.AdViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-
 
 namespace AppleUsed.Web.Controllers
 {
@@ -148,7 +146,7 @@ namespace AppleUsed.Web.Controllers
                 return View(model);
 
             var similarAds = similarAdsResult.Property;
-            model.SimilarAds = await similarAds.OrderBy(x => Guid.NewGuid()).Take(4).ToListAsync();
+            model.SimilarAds = similarAds.OrderBy(x => Guid.NewGuid()).Take(4).ToList();
 
             var otherAdsByAuthorResult = await _adService.GetAdsByUserId(model.AddDetails.ApplicationUser.Id);
 
@@ -156,7 +154,7 @@ namespace AppleUsed.Web.Controllers
                 return View(model);
 
             var otherAdsByAuthor = otherAdsByAuthorResult.Property;
-            model.OtherAdsByAuthor = await otherAdsByAuthor.Take(5).ToListAsync();
+            model.OtherAdsByAuthor = otherAdsByAuthor.Take(5).ToList();
 
             return View(model);
         }

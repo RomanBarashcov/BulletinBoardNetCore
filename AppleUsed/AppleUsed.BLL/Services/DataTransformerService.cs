@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 namespace AppleUsed.BLL.Services
 {
     public class DataTransformerService : IDataTransformerService
@@ -69,9 +68,9 @@ namespace AppleUsed.BLL.Services
             return adDTO;
         }
 
-        public async Task<List<AdDTO>> TransformingAdListToAdDTOList(List<Ad> adList)
+        public List<AdDTO> TransformingAdListToAdDTOList(List<Ad> adList)
         {
-            var adDTOList = await adList.Select(ad => new AdDTO
+            var adDTOList = adList.Select(ad => new AdDTO
             {
                 AdId = ad.AdId,
                 Title = ad.Title,
@@ -87,7 +86,7 @@ namespace AppleUsed.BLL.Services
                 IsModerate = ad.IsModerate,
                 Purhcases = ad.Purhcases,
                 ApplicationUser = ad.ApplicationUser
-            }).ToListAsync();
+            }).ToList();
 
             return adDTOList;
         }

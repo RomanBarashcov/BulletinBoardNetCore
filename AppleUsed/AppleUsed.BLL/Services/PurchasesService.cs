@@ -116,7 +116,7 @@ namespace AppleUsed.BLL.Services
             if (user == null)
                 return operationDetails;
 
-            var ads = _uof.AdRepository.FindAdsByUserId(userId);
+            var ads = await _uof.AdRepository.FindAdsByUserId(userId);
             if(ads == null)
                 return operationDetails;
 
@@ -133,7 +133,7 @@ namespace AppleUsed.BLL.Services
                 ServicesId = p.ServicesId,
                 ServiceActiveTimeId = p.ServiceActiveTimeId,
                 AdId = p.AdId
-            }));
+            })).AsQueryable();
 
             operationDetails = new OperationDetails<IQueryable<PurchaseDTO>>(true, "", purchasesDTO);
 

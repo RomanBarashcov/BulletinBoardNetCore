@@ -52,7 +52,7 @@ namespace AppleUsed.Web.Filters
             var selectedByColors = _model.Filter.ProductsColors.Where(x => x.Selected).AsQueryable();
 
             if (selectedByModels.Count() == 0 && selectedByColors.Count() == 0 && selectedByMemories.Count() == 0)
-                return await _adList.Where(x => x.Characteristics.ProductType.ProductTypesId == selectedProductId).ToListAsync();
+                return _adList.Where(x => x.Characteristics.ProductType.ProductTypesId == selectedProductId).ToList();
 
             if (selectedByModels.Count() > 0)
             {

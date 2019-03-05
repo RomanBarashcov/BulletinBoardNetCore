@@ -6,6 +6,7 @@ using AppleUsed.DAL.Entities;
 using AppleUsed.DAL.Identity;
 using AppleUsed.DAL.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,14 +43,14 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = _uof.AdRepository.GetAdQuery(
+                var ads = await _uof.AdRepository.GetAdQuery(
                     x => x.AdStatusId == (int)AdStatuses.Activated && x.IsModerate,
                     ptExpression: null, 
                     auExpression: null,
-                    pExpression: null).ToList();
+                    pExpression: null).ToListAsync();
 
 
-                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
+                var adDTOList = _dataService.TransformingAdListToAdDTOList(ads);
 
                 foreach(var item in adDTOList)
                 {
@@ -74,13 +75,13 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = _uof.AdRepository.GetAdQuery(
+                var ads = await _uof.AdRepository.GetAdQuery(
                     x => x.AdStatusId == (int)AdStatuses.InProgress,
                     ptExpression: null, 
                     auExpression: null,
-                    pExpression: null).ToList();
+                    pExpression: null).ToListAsync();
 
-                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
+                var adDTOList = _dataService.TransformingAdListToAdDTOList(ads);
 
                 foreach (var item in adDTOList)
                 {
@@ -105,13 +106,13 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = _uof.AdRepository.GetAdQuery(
+                var ads = await _uof.AdRepository.GetAdQuery(
                         x => x.AdStatusId == (int)AdStatuses.Deactivated,
                         ptExpression: null,
                         auExpression: null,
-                        pExpression: null).ToList();
+                        pExpression: null).ToListAsync();
 
-                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
+                var adDTOList = _dataService.TransformingAdListToAdDTOList(ads);
 
                 foreach (var item in adDTOList)
                 {
@@ -138,15 +139,15 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = _uof.AdRepository.GetAdQuery(
+                var ads = await _uof.AdRepository.GetAdQuery(
                        x => x.AdStatusId == (int)AdStatuses.Deactivated,
                        ptExpression: null,
                        auExpression: null,
                        p => p.ServicesId == (int)AdPurchaseTypes.VipAd && p.IsActive)
                        .OrderBy(x => Guid.NewGuid())
-                       .Take(12).ToList();
+                       .Take(12).ToListAsync();
 
-                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
+                var adDTOList = _dataService.TransformingAdListToAdDTOList(ads);
 
                 foreach (var item in adDTOList)
                 {
@@ -171,15 +172,15 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = _uof.AdRepository.GetAdQuery(
+                var ads = await _uof.AdRepository.GetAdQuery(
                       x => x.AdStatusId == (int)AdStatuses.Deactivated,
                       ptExpression: null,
                       auExpression: null,
                       p => p.ServicesId == (int)AdPurchaseTypes.TopAd && p.IsActive)
                       .OrderBy(x => Guid.NewGuid())
-                      .Take(5).ToList();
+                      .Take(5).ToListAsync();
 
-                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
+                var adDTOList = _dataService.TransformingAdListToAdDTOList(ads);
 
                 foreach (var item in adDTOList)
                 {
@@ -235,8 +236,8 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = _uof.AdRepository.FindAdsByProductTypeId(productTypeId).ToList();
-                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads);
+                var ads = await _uof.AdRepository.FindAdsByProductTypeId(productTypeId);
+                var adDTOList = _dataService.TransformingAdListToAdDTOList(ads);
 
                 foreach (var item in adDTOList)
                 {
@@ -265,7 +266,7 @@ namespace AppleUsed.BLL.Services
             try
             {
                 var ads = await _uof.AdRepository.GetAdsByUserName(userName);
-                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads.ToList());
+                var adDTOList = _dataService.TransformingAdListToAdDTOList(ads);
 
                 foreach (var item in adDTOList)
                 {
@@ -297,8 +298,8 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var activeAds = _uof.AdRepository.FindActiveAdsByUserId(userId).ToList();
-                var adDTOList = await _dataService.TransformingAdListToAdDTOList(activeAds);
+                var activeAds = await _uof.AdRepository.FindActiveAdsByUserId(userId);
+                var adDTOList = _dataService.TransformingAdListToAdDTOList(activeAds);
 
                 foreach (var item in adDTOList)
                 {
@@ -326,8 +327,8 @@ namespace AppleUsed.BLL.Services
 
             try
             {
-                var ads = _uof.AdRepository.FindAdsByUserId(userId);
-                var adDTOList = await _dataService.TransformingAdListToAdDTOList(ads.ToList());
+                var ads = await _uof.AdRepository.FindAdsByUserId(userId);
+                var adDTOList = _dataService.TransformingAdListToAdDTOList(ads);
 
                 foreach (var item in adDTOList)
                 {

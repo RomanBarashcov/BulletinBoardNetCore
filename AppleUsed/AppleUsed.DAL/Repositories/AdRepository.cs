@@ -29,6 +29,7 @@ namespace AppleUsed.DAL.Repositories
         {
             var ads = _db.Ads.
                 Include(x => x.City).
+                Include(x => x.City.CityArea).
                 Include(x => x.AdViews).
                 Include(x => x.Characteristics).
                 Include(x => x.Characteristics.ProductType).
@@ -69,47 +70,48 @@ namespace AppleUsed.DAL.Repositories
             return ads;
         }
 
-        public IQueryable<Ad> FindAdsByProductTypeId(int productTypeId)
+        public async Task<List<Ad>> FindAdsByProductTypeId(int productTypeId)
         {
-            var ads = GetAdQuery(
+            var ads = await GetAdQuery(
                 adExpression: null,
                 x => x.ProductTypesId == productTypeId,
                 auExpression: null,
-                pExpression: null);
+                pExpression: null).ToListAsync();
+
             return ads;
         }
 
-        public async Task<IQueryable<Ad>> GetAdsByUserName(string userName)
+        public async Task<List<Ad>> GetAdsByUserName(string userName)
         {
             var user = await _db.Users.Where(x => x.UserName == userName).FirstOrDefaultAsync();
 
-            var ads = GetAdQuery(
+            var ads = await GetAdQuery(
                 adExpression: null,
                 ptExpression: null,
                 x=> x.Id == user.Id,
-                pExpression: null);
+                pExpression: null).ToListAsync();
 
             return ads;
         }
 
-        public IQueryable<Ad> FindActiveAdsByUserId(string userId)
+        public async Task<List<Ad>> FindActiveAdsByUserId(string userId)
         {
-                var activeAds = GetAdQuery(
+                var activeAds = await GetAdQuery(
                     x => x.AdStatusId == (int)AdStatuses.Activated && x.IsModerate, 
                     ptExpression: null, 
                     x => x.Id == userId,
-                    pExpression: null);
+                    pExpression: null).ToListAsync();
 
             return activeAds;
         }
 
-        public IQueryable<Ad> FindAdsByUserId(string userId)
+        public async Task<List<Ad>> FindAdsByUserId(string userId)
         {
-            var ads = GetAdQuery(
+            var ads = await GetAdQuery(
                     adExpression: null,
                     ptExpression: null,
                     x => x.Id == userId,
-                    pExpression: null);
+                    pExpression: null).ToListAsync();
 
             return ads;
         }

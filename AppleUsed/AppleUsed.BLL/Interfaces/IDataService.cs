@@ -16,6 +16,6 @@ namespace AppleUsed.BLL.Interfaces
             );
 
         AdDTO TransformingAdToAdDTO(Ad ad);
-        Task<List<AdDTO>> TransformingAdListToAdDTOList(List<Ad> adList);
+       List<AdDTO> TransformingAdListToAdDTOList(List<Ad> adList);
     }
 }

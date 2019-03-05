@@ -19,13 +19,13 @@ namespace AppleUsed.DAL.Interfaces
 
         Task<Ad> FindAdByIdAsync(int id);
 
-        IQueryable<Ad> FindAdsByProductTypeId(int productTypeId);
+        Task<List<Ad>> FindAdsByProductTypeId(int productTypeId);
 
-        Task<IQueryable<Ad>> GetAdsByUserName(string userName);
+        Task<List<Ad>> GetAdsByUserName(string userName);
 
-        IQueryable<Ad> FindActiveAdsByUserId(string userId);
+        Task<List<Ad>> FindActiveAdsByUserId(string userId);
 
-        IQueryable<Ad> FindAdsByUserId(string userId);
+        Task<List<Ad>> FindAdsByUserId(string userId);
 
         Task<int> AddAd(Ad ad);
 
