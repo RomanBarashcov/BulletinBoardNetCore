@@ -29,33 +29,21 @@ namespace AppleUsed.DAL.Repositories
         {
             var ads = _db.Ads.
                 Include(x => x.City).
-                Include(x => x.City.CityArea).
+                    ThenInclude(c => c.CityArea).
                 Include(x => x.AdViews).
                 Include(x => x.Characteristics).
-                Include(x => x.Characteristics.ProductType).
-                Include(x => x.Characteristics.ProductModel).
-                Include(x => x.Characteristics.ProductMemorie).
-                Include(x => x.Characteristics.ProductColor).
-                Include(x => x.Characteristics.ProductState).
+                    ThenInclude(c => c.ProductType).
+                Include(x => x.Characteristics).
+                    ThenInclude(c => c.ProductModel).
+                Include(x => x.Characteristics).
+                    ThenInclude(c => c.ProductMemorie).
+                Include(x => x.Characteristics)
+                    .ThenInclude(c => c.ProductColor).
+                Include(x => x.Characteristics).
+                    ThenInclude(c => c.ProductState).
                 Include(x => x.Purhcases).
                 Include(x => x.ApplicationUser).
-                Select(ad => new Ad
-                {
-                    AdId = ad.AdId,
-                    Title = ad.Title,
-                    Description = ad.Description,
-                    Price = ad.Price,
-                    DateCreated = ad.DateCreated,
-                    DateUpdated = ad.DateUpdated,
-                    Characteristics = ad.Characteristics,
-                    City = ad.City,
-                    Photos = ad.Photos.ToList(),
-                    AdViews = ad.AdViews,
-                    AdStatusId = ad.AdStatusId,
-                    IsModerate = ad.IsModerate,
-                    Purhcases = ad.Purhcases,
-                    ApplicationUser = ad.ApplicationUser
-                });
+                Include(x => x.Photos);
 
             return ads;
         }
