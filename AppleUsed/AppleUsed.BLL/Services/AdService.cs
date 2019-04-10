@@ -213,7 +213,7 @@ namespace AppleUsed.BLL.Services
                 var adDTO = _dataService.TransformingAdToAdDTO(adById);
 
                 adDTO.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(adDTO.Photos.ToList());
-                adDTO.PhotosAvgSizeList = _imageService.CreatingImageSrcForSmallSize(adDTO.Photos.ToList());
+                adDTO.PhotosAvgSizeList = _imageService.CreatingImageSrcForAvgSize(adDTO.Photos.ToList());
 
                 operationDetails = 
                     new OperationDetails<AdDTO>(true, "", adDTO);

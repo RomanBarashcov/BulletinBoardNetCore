@@ -27,23 +27,86 @@ namespace AppleUsed.DAL.Repositories
            Expression<Func<ApplicationUser, bool>> auExpression,
            Expression<Func<Purchase, bool>> pExpression)
         {
-            var ads = _db.Ads.
-                Include(x => x.City).
-                    ThenInclude(c => c.CityArea).
-                Include(x => x.AdViews).
-                Include(x => x.Characteristics).
-                    ThenInclude(c => c.ProductType).
-                Include(x => x.Characteristics).
-                    ThenInclude(c => c.ProductModel).
-                Include(x => x.Characteristics).
-                    ThenInclude(c => c.ProductMemorie).
-                Include(x => x.Characteristics)
-                    .ThenInclude(c => c.ProductColor).
-                Include(x => x.Characteristics).
-                    ThenInclude(c => c.ProductState).
-                Include(x => x.Purhcases).
-                Include(x => x.ApplicationUser).
-                Include(x => x.Photos);
+            var adQuery = adExpression == null ? _db.Ads : _db.Ads.Where(adExpression);
+            var productTypeQuery = ptExpression == null ? _db.ProductTypes : _db.ProductTypes.Where(ptExpression);
+            var applicationUserQuery = auExpression == null ? _db.Users : _db.Users.Where(auExpression);
+            var purchaseQuery = pExpression == null ? _db.Purchases : _db.Purchases.Where(pExpression);
+
+            var ads = (from ad in adQuery
+                       join au in _db.AdUps on ad.AdId equals au.AdId
+                       join c in _db.Cities on ad.City.CityId equals c.CityId
+                       join ca in _db.CityAreas on c.CityArea.CityAreaId equals ca.CityAreaId
+                       join ap in _db.AdPhotos.ToList() on ad.AdId equals ap.AdId into aPhotos
+                       join av in _db.AdViews on ad.AdViews.AdViewsId equals av.AdViewsId
+                       join ch in _db.Characteristics on ad.Characteristics.CharacteristicsId equals ch.CharacteristicsId
+                       join pt in productTypeQuery on ch.ProductType.ProductTypesId equals pt.ProductTypesId
+                       join pm in _db.ProductModels on ch.ProductModel.ProductModelsId equals pm.ProductModelsId
+                       join prm in _db.ProductMemories on ch.ProductMemorie.ProductMemoriesId equals prm.ProductMemoriesId
+                       join pc in _db.ProductColors on ch.ProductColor.ProductColorsId equals pc.ProductColorsId
+                       join prs in _db.ProductStates on ch.ProductState.ProductStatesId equals prs.ProductStatesId
+                       join sp in purchaseQuery on ad.AdId equals sp.AdId into servicePurchses
+                       join u in applicationUserQuery on ad.ApplicationUser.Id equals u.Id
+                       select new Ad
+                       {
+                           AdId = ad.AdId,
+                           Title = ad.Title,
+                           Description = ad.Description,
+                           Price = ad.Price,
+                           DateCreated = ad.DateCreated,
+                           DateUpdated = ad.DateUpdated,
+                           Characteristics = new Characteristics
+                           {
+                               CharacteristicsId = ch.CharacteristicsId,
+                               ProductType = ch.ProductType,
+                               ProductModel = ch.ProductModel,
+                               ProductMemorie = ch.ProductMemorie,
+                               ProductColor = ch.ProductColor,
+                               ProductState = ch.ProductState
+                           },
+                           City = new City
+                           {
+                               CityId = c.CityId,
+                               Name = c.Name,
+                               CityArea = new CityArea
+                               {
+                                   CityAreaId = ca.CityAreaId,
+                                   Name = ca.Name
+                               }
+                           },
+
+                           Photos = aPhotos.ToList(),
+
+                           AdViews = new AdViews
+                           {
+                               AdId = av.AdId,
+                               AdViewsId = av.AdViewsId,
+                               SumViews = av.SumViews
+                           },
+                           AdStatusId = ad.AdStatusId,
+                           IsModerate = ad.IsModerate,
+                           Purhcases = servicePurchses.Select(x =>
+                              new Purchase
+                              {
+                                  PurchaseId = x.PurchaseId,
+                                  TotalCost = x.TotalCost,
+                                  DateOfPayment = x.DateOfPayment,
+                                  StartDateService = x.StartDateService,
+                                  EndDateService = x.EndDateService,
+                                  IsPayed = x.IsActive,
+                                  IsActive = x.IsPayed,
+                                  ServicesId = x.ServicesId,
+                                  ServiceActiveTimeId = x.ServiceActiveTimeId,
+                                  AdId = x.AdId
+                              }).ToList(),
+                           ApplicationUser = new ApplicationUser
+                           {
+                               Id = u.Id,
+                               Email = u.Email,
+                               UserName = u.UserName
+                           }
+
+                       });
+
 
             return ads;
         }

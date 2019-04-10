@@ -9,9 +9,9 @@
 <div class="row">
     <div class="col-lg-4">
         <ul class="breadcrumb">
-            <li><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductType"> <span class="glyphicon glyphicon-home"></span> Назад </a></li>
-            <li><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductType"> @Model.AddDetails.SelectedProductType</a></li>
-            <li class="active"><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.SelectedProductModel">@Model.AddDetails.SelectedProductModel</a></li>
+            <li><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.Characteristics.ProductType.Name"> <span class="glyphicon glyphicon-home"></span> Назад </a></li>
+            <li><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.Characteristics.ProductType.Name"> @Model.AddDetails.Characteristics.ProductType.Name</a></li>
+            <li class="active"><a asp-action="Index" asp-route-titleFilter="@Model.AddDetails.Characteristics.ProductModel.Name">@Model.AddDetails.Characteristics.ProductModel.Name</a></li>
         </ul>
     </div>
 </div>
@@ -83,7 +83,7 @@
                         <th><span class="glyphicon glyphicon-map-marker"></span> Город : </th>
                         <td>@Model.AddDetails.City.Name, @Model.AddDetails.City.CityArea.Name область</td>
                         <th>Просмотров : </th>
-                        <td>@Model.AddDetails.AdViews <span class="glyphicon glyphicon-eye-open"></span> </td>
+                        <td>@Model.AddDetails.AdViews.SumViews <span class="glyphicon glyphicon-eye-open"></span> </td>
                     </tr>
                 </thead>
             </table>
@@ -96,27 +96,27 @@
                 <thead>
                     <tr>
                         <th> Тип : </th>
-                        <td>@Model.AddDetails.SelectedProductType</td>
+                        <td>@Model.AddDetails.Characteristics.ProductType.Name</td>
                         <th>
                             Память :
                         </th>
                         <td>
-                            @Model.AddDetails.SelectedProductMemory
+                            @Model.AddDetails.Characteristics.ProductMemorie.StorageSize <span>GB</span>
                         </td>
                     </tr>
                     <tr>
                         <th> Модель : </th>
-                        <td>@Model.AddDetails.SelectedProductModel</td>
+                        <td>@Model.AddDetails.Characteristics.ProductModel.Name</td>
                         <th>
                             Цвет :
                         </th>
                         <td>
-                            @Model.AddDetails.SelectedProductColor
+                            @Model.AddDetails.Characteristics.ProductColor.Name
                         </td>
                     </tr>
                     <tr>
                         <th> Состояние :</th>
-                        <td>@Model.AddDetails.SelectedProductStates</td>
+                        <td>@Model.AddDetails.Characteristics.ProductState.Name</td>
                     </tr>
 
                 </thead>
@@ -168,7 +168,7 @@
                             <b>Цена : @ad.Price .грн</b>
                         </p>
                         <small><span class="glyphicon glyphicon-repeat"></span> @ad.DateUpdated</small> |
-                        <small><span class="glyphicon glyphicon-eye-open"></span> @ad.AdViews</small>
+                        <small><span class="glyphicon glyphicon-eye-open"></span> @ad.AdViews.SumViews</small>
                         <br />
                         <small><span class="glyphicon glyphicon-map-marker"></span> @ad.City.Name, @ad.City.CityArea.Name область</small>
                     </div>
