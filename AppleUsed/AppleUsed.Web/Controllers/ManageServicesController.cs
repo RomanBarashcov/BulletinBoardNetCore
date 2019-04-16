@@ -34,7 +34,7 @@ namespace AppleUsed.Web.Controllers
         {
             var model = new ServicesIndexViewModel() { Ad = new AdDTO()};
 
-            var operationDetails = await _adService.GetAdById(id);
+            var operationDetails = await _adService.GetAdById(id, dataForEdit: false);
             if (!operationDetails.Succedeed)
                 return View("Index", model.StatusMessage = operationDetails.Message);
 

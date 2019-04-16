@@ -31,7 +31,7 @@ namespace AppleUsed.BLL.Interfaces
 
         Task<OperationDetails<List<AdDTO>>> GetAdsByUserName(string userName);
 
-        Task<OperationDetails<AdDTO>> GetAdById(int id);
+        Task<OperationDetails<AdDTO>> GetAdById(int id, bool dataForEdit);
 
         (IQueryable<CityDTO> citiesDTO,
         IQueryable<CityAreaDTO> cityAreasDTO,

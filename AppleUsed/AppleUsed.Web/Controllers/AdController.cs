@@ -132,7 +132,7 @@ namespace AppleUsed.Web.Controllers
         {
             AdDetailsViewModel model = new AdDetailsViewModel();
 
-            var getByIdReult = await _adService.GetAdById(id ?? 0);
+            var getByIdReult = await _adService.GetAdById(id ?? 0, dataForEdit: false);
             if(!getByIdReult.Succedeed)
                 return View(model);
 

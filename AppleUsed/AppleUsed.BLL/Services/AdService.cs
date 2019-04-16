@@ -198,7 +198,7 @@ namespace AppleUsed.BLL.Services
             return operationDetails;
         }
 
-        public async Task<OperationDetails<AdDTO>> GetAdById(int id)
+        public async Task<OperationDetails<AdDTO>> GetAdById(int id, bool dataForEdit = false)
         {
             
             OperationDetails<AdDTO> operationDetails = 
@@ -214,6 +214,11 @@ namespace AppleUsed.BLL.Services
 
                 adDTO.PhotosSmallSizeList = _imageService.CreatingImageSrcForSmallSize(adDTO.Photos.ToList());
                 adDTO.PhotosAvgSizeList = _imageService.CreatingImageSrcForAvgSize(adDTO.Photos.ToList());
+
+                if (dataForEdit)
+                {
+                    adDTO.PhotosForEdit = adDTO.Photos.ToList();
+                }
 
                 operationDetails = 
                     new OperationDetails<AdDTO>(true, "", adDTO);
@@ -557,12 +562,12 @@ namespace AppleUsed.BLL.Services
                 if (disposing)
                 {
                     //_uof.Dispose();
-                    //_imageService.Dispose();
-                    //_dataService.Dispose();
+                    _imageService.Dispose();
+                    _dataService.Dispose();
 
-                    //_uof = null;
-                    //_imageService = null;
-                    //_dataService = null;
+                    _uof = null;
+                    _imageService = null;
+                    _dataService = null;
                 }
                 this.disposed = true;
             }

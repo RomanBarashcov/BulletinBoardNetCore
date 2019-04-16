@@ -15,7 +15,7 @@
         <div class="btn-block">
             <div class="thumbnail photo">
                 <div class="ad_location">
-                    <p><b><small class="ad_location_info"><span class="glyphicon glyphicon-map-marker"></span> г. @Model.Ads.FirstOrDefault().SelectedCity @Model.Ads.FirstOrDefault().SelectedCityArea  обл.</small></b></p>
+                    <p><b><small class="ad_location_info"><span class="glyphicon glyphicon-map-marker"></span> г. @Model.Ads.FirstOrDefault().City.Name @Model.Ads.FirstOrDefault().City.CityArea.Name  обл.</small></b></p>
                 </div>
                 <div class="caption">
                     <div class="col-lg-offset-4 user_img no_photo"></div>
@@ -53,9 +53,9 @@
 
                                 <div class="location">
                                     <p>
-                                        <span class="glyphicon glyphicon-map-marker"></span>г. @item.SelectedCity |
+                                        <span class="glyphicon glyphicon-map-marker"></span>г. @item.City.Name |
                                         <span class="glyphicon glyphicon-refresh"></span> @item.DateUpdated |
-                                        <b>Просмотров : </b>@item.AdViews <span class="glyphicon glyphicon-eye-open"></span>
+                                        <b>Просмотров : </b>@item.AdViews.SumViews <span class="glyphicon glyphicon-eye-open"></span>
                                     </p>
                                 </div>
 

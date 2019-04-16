@@ -90,7 +90,7 @@ namespace AppleUsed.Web.Controllers
         {
             AdViewModel model = new AdViewModel();
 
-            var getAdByIdResult = await _adService.GetAdById(id);
+            var getAdByIdResult = await _adService.GetAdById(id, dataForEdit: true);
             if (!getAdByIdResult.Succedeed)
                 return View("Details", model);
 
@@ -105,7 +105,7 @@ namespace AppleUsed.Web.Controllers
                 dataForSelectList.productMemoriesDTO,
                 dataForSelectList.productColorsDTO,
                 dataForSelectList.productStateDTO,
-                new AdDTO());
+                getAdByIdResult.Property);
 
             ViewBag.AdId = id;
             return View("Details", model);

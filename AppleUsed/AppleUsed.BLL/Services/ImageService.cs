@@ -1,11 +1,9 @@
 ﻿using AppleUsed.BLL.Interfaces;
 using AppleUsed.DAL.Entities;
-using ImageMagick;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace AppleUsed.BLL.Services
 {

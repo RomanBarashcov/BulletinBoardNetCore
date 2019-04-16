@@ -63,7 +63,7 @@ namespace AppleUsed.Web.Controllers
             ViewBag.RecivedId = contactId;
             ViewBag.AdId = adId;
 
-            var getAdByIdResult = await _adService.GetAdById(adId);
+            var getAdByIdResult = await _adService.GetAdById(adId, dataForEdit: false);
             if (!getAdByIdResult.Succedeed)
                 return View("Conversations", model);
 

@@ -43,7 +43,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-4">Выберите категорию : </label>
                 <div class="col-sm-8">
-                    <select asp-for="AdDTO.SelectedProductType" asp-items="Model.ProductTypesSelectList" id="ProductType" class="form-control">
+                    <select asp-for="AdDTO.Characteristics.ProductType.ProductTypesId" asp-items="Model.ProductTypesSelectList" id="ProductType" class="form-control">
                         <option selected="selected" disabled="disabled">Выберите модель</option>
                     </select>
                 </div>
@@ -52,7 +52,7 @@
             <div class="form-group" id="ProductModel">
                 <label class="control-label col-sm-4">Выберите модель : </label>
                 <div class="col-sm-8">
-                    <select asp-for="AdDTO.SelectedProductModel" asp-items="Model.ProductModelsSelectList" id="ProductModelItems" class="form-control">
+                    <select asp-for="AdDTO.Characteristics.ProductModel.ProductModelsId" asp-items="Model.ProductModelsSelectList" id="ProductModelItems" class="form-control">
                         <option selected="selected" disabled="disabled"> </option>
                     </select>
                 </div>
@@ -61,7 +61,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-4">Память : </label>
                 <div class="col-sm-8">
-                    <select asp-for="AdDTO.SelectedProductMemory" asp-items="Model.ProductMemoriesSelectList" class="form-control">
+                    <select asp-for="AdDTO.Characteristics.ProductMemorie.ProductMemoriesId" asp-items="Model.ProductMemoriesSelectList" class="form-control">
                         <option selected="selected" disabled="disabled"> </option>
                     </select>
                 </div>
@@ -70,7 +70,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-4">Цвет : </label>
                 <div class="col-sm-8">
-                    <select asp-for="AdDTO.SelectedProductColor" asp-items="Model.ProductColorsSelectList" class="form-control">
+                    <select asp-for="AdDTO.Characteristics.ProductColor.ProductColorsId" asp-items="Model.ProductColorsSelectList" class="form-control">
                         <option selected="selected" disabled="disabled"> </option>
                     </select>
                 </div>
@@ -79,7 +79,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-4">Состояние : </label>
                 <div class="col-sm-8">
-                    <select asp-for="AdDTO.SelectedProductStates" asp-items="Model.ProductStatesSelectList" class="form-control">
+                    <select asp-for="AdDTO.Characteristics.ProductState.ProductStatesId" asp-items="Model.ProductStatesSelectList" class="form-control">
                         <option selected="selected" disabled="disabled"> </option>
                     </select>
                 </div>
@@ -96,7 +96,7 @@
             <div class="form-group" id="Areas">
                 <label class="control-label col-sm-4">Ваша Область  : </label>
                 <div class="col-sm-8">
-                    <select asp-for="AdDTO.SelectedCityArea" asp-items="Model.CityAreasSelectList" id="AreasList" class="form-control">
+                    <select asp-for="AdDTO.City.CityArea.CityAreaId" asp-items="Model.CityAreasSelectList" id="AreasList" class="form-control">
                         <option selected="selected" disabled="disabled"> </option>
                     </select>
                 </div>
@@ -105,7 +105,7 @@
             <div class="form-group" id="CityAreas">
                 <label class="control-label col-sm-4">Ваш город  : </label>
                 <div class="col-sm-8">
-                    <select asp-for="AdDTO.SelectedCity" asp-items="Model.CityesSelectList" id="CityAreasList" class="form-control">
+                    <select asp-for="AdDTO.City.CityId" asp-items="Model.CityesSelectList" id="CityAreasList" class="form-control">
                         <option selected="selected" disabled="disabled"> </option>
                     </select>
                 </div>
